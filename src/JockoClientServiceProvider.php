@@ -4,7 +4,6 @@ namespace Code16\JockoClient;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Code16\JockoClient\Commands\JockoClientCommand;
 
 class JockoClientServiceProvider extends PackageServiceProvider
 {
