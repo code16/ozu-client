@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Code16\JockoClient\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class JockoClientCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'jocko-client';
 
     public $description = 'My command';
 
