@@ -2,9 +2,9 @@
 
 namespace Code16\JockoClient\Tests;
 
+use Code16\JockoClient\JockoClientServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Code16\JockoClient\JockoClientServiceProvider;
 
 class TestCase extends Orchestra
 {

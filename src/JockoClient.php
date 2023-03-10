@@ -17,7 +17,8 @@ class JockoClient
         return $this->getCollections()[$collectionKey]['items'];
     }
 
-    public function getConfig(): array {
+    public function getConfig(): array
+    {
         return $this->http()->get('config')->json();
     }
 
