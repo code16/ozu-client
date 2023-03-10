@@ -17,9 +17,6 @@ class JockoClientServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('jocko-client')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_jocko-client_table')
-            ->hasCommand(JockoClientCommand::class);
+            ->hasConfigFile();
     }
 }
