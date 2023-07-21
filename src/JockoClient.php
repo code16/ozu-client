@@ -9,22 +9,36 @@ class JockoClient
 {
     public function getCollection(string $collectionKey): array
     {
-        return $this->http()->get("/collections/$collectionKey")->json('data');
+        return $this->http()
+            ->get($this->url("/collections/$collectionKey"))
+            ->json('data');
     }
 
     public function getSettings(): array
     {
-        return $this->http()->get('/settings')->json('data');
+        return $this->http()
+            ->get($this->url('/settings'))
+            ->json('data');
+    }
+
+    public function searchUrl(string $collectionKey): string
+    {
+        return $this->url("/search/$collectionKey");
+    }
+
+    protected function url(string $endpoint = ''): string
+    {
+        $host = rtrim(config('jocko-client.api_host'), '/');
+        $websiteKey = config('jocko-client.website_key');
+        $endpoint = ltrim($endpoint, '/');
+
+        return "$host/api/v2/$websiteKey/$endpoint";
     }
 
     protected function http(): PendingRequest
     {
-        $host = config('jocko-client.api_host');
-        $token = config('jocko-client.api_token');
-        $websiteKey = config('jocko-client.website_key');
-
-        return Http::baseUrl(rtrim($host, '/') . '/api/v2/' . $websiteKey)
-            ->withToken($token)
-            ->acceptJson();
+        return Http::withToken(config('jocko-client.api_token'))
+            ->acceptJson()
+            ->throw();
     }
 }
