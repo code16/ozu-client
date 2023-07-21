@@ -7,25 +7,24 @@ use Illuminate\Support\Facades\Http;
 
 class JockoClient
 {
-    public function getCollections(): array
-    {
-        return $this->http()->get('collections')->json();
-    }
-
     public function getCollection(string $collectionKey): array
     {
-        return $this->getCollections()[$collectionKey]['items'];
+        return $this->http()->get("/collections/$collectionKey")->json('data');
     }
 
-    public function getConfig(): array
+    public function getSettings(): array
     {
-        return $this->http()->get('config')->json();
+        return $this->http()->get('/settings')->json('data');
     }
 
     protected function http(): PendingRequest
     {
-        return Http::baseUrl(config('jocko-client.api_url'))
-            ->withToken(config('jocko-client.api_token'))
+        $host = config('jocko-client.api_host');
+        $token = config('jocko-client.api_token');
+        $websiteKey = config('jocko-client.website_key');
+
+        return Http::baseUrl(rtrim($host, '/') . '/api/v2/' . $websiteKey)
+            ->withToken($token)
             ->acceptJson();
     }
 }
