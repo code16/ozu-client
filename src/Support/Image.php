@@ -9,6 +9,16 @@ class Image
     ) {
     }
 
+    public static function make(string $url): static
+    {
+        return new static($url);
+    }
+
+    public static function collection(?array $visuals): ImageCollection
+    {
+        return ImageCollection::make($visuals)->mapInto(static::class);
+    }
+
     public function thumbnail(?int $width = null, ?int $height = null, ?float $scale = 1): string
     {
         $width = $width ? $width * $scale : null;
