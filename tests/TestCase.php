@@ -2,7 +2,7 @@
 
 namespace Code16\JockoClient\Tests;
 
-use Code16\JockoClient\JockoClientServiceProvider;
+use Code16\JockoClient\JockoServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -20,7 +20,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            JockoClientServiceProvider::class,
+            JockoServiceProvider::class,
         ];
     }
 

@@ -5,8 +5,16 @@ namespace Code16\JockoClient;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
-class JockoClient
+class Client
 {
+    public function __construct(
+        protected string $apiHost,
+        protected string $apiKey,
+        protected string $websiteKey,
+        protected bool $shouldCache,
+    ) {
+    }
+
     public function getCollection(string $collectionKey): array
     {
         return $this->http()
@@ -26,10 +34,23 @@ class JockoClient
         return $this->url("/search/$collectionKey");
     }
 
+    /**
+     * env: JOCKO_SHOULD_CACHE
+     */
+    public function shouldCache(): bool
+    {
+        return $this->shouldCache;
+    }
+
+    public function apiKey(): string
+    {
+        return $this->apiKey;
+    }
+
     protected function url(string $endpoint = ''): string
     {
-        $host = rtrim(config('jocko-client.api_host'), '/');
-        $websiteKey = config('jocko-client.website_key');
+        $host = rtrim($this->apiHost, '/');
+        $websiteKey = $this->websiteKey;
         $endpoint = ltrim($endpoint, '/');
 
         return "$host/api/v2/$websiteKey/$endpoint";
@@ -37,7 +58,7 @@ class JockoClient
 
     protected function http(): PendingRequest
     {
-        return Http::withToken(config('jocko-client.api_token'))
+        return Http::withToken($this->apiKey)
             ->acceptJson()
             ->throw();
     }
