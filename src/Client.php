@@ -9,7 +9,7 @@ class Client
 {
     public function __construct(
         protected string $apiHost,
-        protected string $apiKey,
+        protected ?string $apiKey,
         protected string $websiteKey,
         protected bool $shouldCache,
     ) {
@@ -42,7 +42,7 @@ class Client
         return $this->shouldCache;
     }
 
-    public function apiKey(): string
+    public function apiKey(): ?string
     {
         return $this->apiKey;
     }
