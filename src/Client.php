@@ -31,7 +31,7 @@ class Client
 
     public function searchUrl(string $collectionKey): string
     {
-        return $this->url("/search/$collectionKey");
+        return $this->url("/collections/$collectionKey/search");
     }
 
     /**
