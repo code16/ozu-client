@@ -19,7 +19,7 @@ class Image
         return ImageCollection::make($visuals)->mapInto(static::class);
     }
 
-    public function thumbnail(?int $width = null, ?int $height = null, ?float $scale = 1): string
+    public function thumbnail(?int $width = null, ?int $height = null, ?float $scale = 1, bool $crop = false): string
     {
         $width = $width ? $width * $scale : null;
         $height = $height ? $height * $scale : null;
@@ -28,8 +28,13 @@ class Image
         return $this->src . '?tr=' . implode(',', array_keys(array_filter([
             "w-$width" => $width,
             "h-$height" => $height,
-            "c-at_max" => true,
+            "c-at_max" => !$crop,
         ])));
+    }
+
+    public function thumbnailFit(?int $width = null, ?int $height = null, ?float $scale = 1): string
+    {
+        return $this->thumbnail($width, $height, $scale, true);
     }
 
     // https://image-component.nextjs.gallery/ "responsive" mode
