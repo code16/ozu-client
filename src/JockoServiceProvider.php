@@ -14,6 +14,7 @@ class JockoServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('jocko-client')
+            ->hasViews('jocko')
             ->hasConfigFile();
     }
 
@@ -25,6 +26,7 @@ class JockoServiceProvider extends PackageServiceProvider
                 apiKey: config('jocko-client.api_key'),
                 websiteKey: config('jocko-client.website_key'),
                 shouldCache: config('jocko-client.should_cache'),
+                isExporting: request()->header('User-Agent') === 'Symfony',
             );
         });
     }

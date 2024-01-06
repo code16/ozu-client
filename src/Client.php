@@ -12,6 +12,7 @@ class Client
         protected ?string $apiKey,
         protected string $websiteKey,
         protected bool $shouldCache,
+        protected bool $isExporting,
     ) {
     }
 
@@ -39,7 +40,17 @@ class Client
      */
     public function shouldCache(): bool
     {
-        return $this->shouldCache;
+        return $this->shouldCache || $this->isExporting;
+    }
+
+    public function isExporting(): bool
+    {
+        return $this->isExporting;
+    }
+
+    public function isLivePreview(): bool
+    {
+        return ! $this->isExporting && app()->environment('production');
     }
 
     public function apiKey(): ?string
