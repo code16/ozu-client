@@ -2,6 +2,9 @@
 
 namespace Code16\JockoClient;
 
+use Code16\JockoClient\Http\Middleware\PreviewAuthenticate;
+use Code16\JockoClient\Services\Auth\PreviewGuard;
+use Illuminate\Contracts\Http\Kernel;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -15,11 +18,14 @@ class JockoServiceProvider extends PackageServiceProvider
         $package
             ->name('jocko-client')
             ->hasViews('jocko')
+            ->hasRoute('web')
             ->hasConfigFile();
     }
 
-    public function packageRegistered()
+    public function register()
     {
+        parent::register();
+
         $this->app->singleton(Client::class, function () {
             return new Client(
                 apiHost: config('jocko-client.api_host'),
@@ -27,7 +33,25 @@ class JockoServiceProvider extends PackageServiceProvider
                 websiteKey: config('jocko-client.website_key'),
                 shouldCache: config('jocko-client.should_cache'),
                 isExporting: request()->hasHeader('X-Laravel-Export'),
+                isPreview: config('jocko-client.preview'),
             );
         });
+
+        $this->app['config']->set('auth.guards.jocko-preview', [
+            'driver' => 'jocko-preview',
+        ]);
+
+        $this->app['auth']->extend('jocko-preview', function ($app, $name, array $config) {
+            return new PreviewGuard($app['session.store']);
+        });
+    }
+
+    public function boot()
+    {
+        parent::boot();
+
+        if(config('jocko-client.preview')) {
+            $this->app[Kernel::class]->appendMiddlewareToGroup('web', PreviewAuthenticate::class);
+        }
     }
 }
