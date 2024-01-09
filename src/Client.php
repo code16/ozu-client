@@ -13,6 +13,7 @@ class Client
         protected string $websiteKey,
         protected bool $shouldCache,
         protected bool $isExporting,
+        protected bool $isPreview,
     ) {
     }
 
@@ -48,9 +49,9 @@ class Client
         return $this->isExporting;
     }
 
-    public function isLivePreview(): bool
+    public function isPreview(): bool
     {
-        return ! $this->isExporting && app()->environment('production');
+        return $this->isPreview && !$this->isExporting;
     }
 
     public function apiKey(): ?string
