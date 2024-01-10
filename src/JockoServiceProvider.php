@@ -32,17 +32,8 @@ class JockoServiceProvider extends PackageServiceProvider
                 apiKey: config('jocko-client.api_key'),
                 websiteKey: config('jocko-client.website_key'),
                 shouldCache: config('jocko-client.should_cache'),
-                isExporting: request()->hasHeader('X-Laravel-Export'),
                 isPreview: config('jocko-client.preview'),
             );
-        });
-
-        $this->app['config']->set('auth.guards.jocko-preview', [
-            'driver' => 'jocko-preview',
-        ]);
-
-        $this->app['auth']->extend('jocko-preview', function ($app, $name, array $config) {
-            return new PreviewGuard($app['session.store']);
         });
     }
 
@@ -51,6 +42,14 @@ class JockoServiceProvider extends PackageServiceProvider
         parent::boot();
 
         if(config('jocko-client.preview')) {
+            config()->set('auth.guards.jocko-preview', [
+                'driver' => 'jocko-preview',
+            ]);
+
+            $this->app['auth']->extend('jocko-preview', function ($app, $name, array $config) {
+                return new PreviewGuard($app['session.store']);
+            });
+
             $this->app[Kernel::class]->appendMiddlewareToGroup('web', PreviewAuthenticate::class);
         }
     }

@@ -12,7 +12,6 @@ class Client
         protected ?string $apiKey,
         protected string $websiteKey,
         protected bool $shouldCache,
-        protected bool $isExporting,
         protected bool $isPreview,
     ) {
     }
@@ -41,17 +40,17 @@ class Client
      */
     public function shouldCache(): bool
     {
-        return $this->shouldCache || $this->isExporting;
+        return $this->shouldCache || $this->isExporting();
     }
 
     public function isExporting(): bool
     {
-        return $this->isExporting;
+        return request()->hasHeader('X-Laravel-Export');
     }
 
     public function isPreview(): bool
     {
-        return $this->isPreview && !$this->isExporting;
+        return $this->isPreview && !$this->isExporting();
     }
 
     public function apiKey(): ?string
