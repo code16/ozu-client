@@ -2,7 +2,7 @@
 
 namespace Code16\JockoClient\View\Components;
 
-use Code16\LaravelContentRenderer\View\Components\Content as ContentComponent;
+use Code16\ContentRenderer\View\Components\Content as ContentComponent;
 
 class Content extends ContentComponent
 {
