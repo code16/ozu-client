@@ -4,7 +4,11 @@ namespace Code16\JockoClient;
 
 use Code16\JockoClient\Http\Middleware\PreviewAuthenticate;
 use Code16\JockoClient\Services\Auth\PreviewGuard;
+use Code16\JockoClient\View\Components\Content;
+use Code16\JockoClient\View\Components\File;
+use Code16\JockoClient\View\Components\Image;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -17,7 +21,6 @@ class JockoServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('jocko-client')
-            ->hasViews('jocko')
             ->hasRoute('web')
             ->hasConfigFile();
     }
@@ -52,5 +55,17 @@ class JockoServiceProvider extends PackageServiceProvider
 
             $this->app[Kernel::class]->appendMiddlewareToGroup('web', PreviewAuthenticate::class);
         }
+
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'jocko');
+
+        $this->publishes([
+            __DIR__.'/../resources/views/components/file.blade.php' => resource_path('views/vendor/jocko/components/file.blade.php'),
+            __DIR__.'/../resources/views/components/image.blade.php' => resource_path('views/vendor/jocko/components/image.blade.php'),
+        ], 'jocko-views');
+
+        Blade::componentNamespace('Code16\\JockoClient\\View\\Components\\Content', 'jocko-content');
+        Blade::component(Content::class, 'jocko-content');
+        Blade::component(Image::class, 'jocko-image');
+        Blade::component(File::class, 'jocko-file');
     }
 }
