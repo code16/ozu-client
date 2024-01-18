@@ -4,10 +4,14 @@ namespace Code16\JockoClient;
 
 use Code16\JockoClient\Http\Middleware\PreviewAuthenticate;
 use Code16\JockoClient\Services\Auth\PreviewGuard;
+use Code16\JockoClient\Support\Pagination\StaticLengthAwarePaginator;
+use Code16\JockoClient\Support\Pagination\StaticPaginator;
 use Code16\JockoClient\View\Components\Content;
 use Code16\JockoClient\View\Components\File;
 use Code16\JockoClient\View\Components\Image;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -38,6 +42,9 @@ class JockoServiceProvider extends PackageServiceProvider
                 isPreview: config('jocko-client.preview'),
             );
         });
+
+        $this->app->bind(Paginator::class, StaticPaginator::class);
+        $this->app->bind(LengthAwarePaginator::class, StaticLengthAwarePaginator::class);
     }
 
     public function boot()
