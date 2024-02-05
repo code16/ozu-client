@@ -21,7 +21,7 @@ class Image
 
     public static function collection(?array $visuals): ImageCollection
     {
-        return ImageCollection::make($visuals)->mapInto(static::class);
+        return ImageCollection::make($visuals)->map(fn ($visual) => static::make($visual));
     }
 
     public function thumbnail(?int $width = null, ?int $height = null, ?float $scale = 1, bool $crop = false): string
