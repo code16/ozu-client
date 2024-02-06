@@ -3,6 +3,7 @@
 namespace Code16\JockoClient;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class Client
@@ -10,6 +11,7 @@ class Client
     public function __construct(
         protected string $apiHost,
         protected ?string $apiKey,
+        protected string $apiVersion,
         protected string $websiteKey,
         protected bool $shouldCache,
         protected bool $isPreview,
@@ -28,6 +30,12 @@ class Client
         return $this->http()
             ->get($this->url('/settings'))
             ->json('data');
+    }
+
+    public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
+    {
+        $this->http()
+            ->post($this->url(sprintf('/collections/%s/configure', $collectionKey)), $collectionData);
     }
 
     public function searchUrl(string $collectionKey): string
@@ -60,11 +68,13 @@ class Client
 
     protected function url(string $endpoint = ''): string
     {
-        $host = rtrim($this->apiHost, '/');
-        $websiteKey = $this->websiteKey;
-        $endpoint = ltrim($endpoint, '/');
-
-        return "$host/api/v2/$websiteKey/$endpoint";
+        return sprintf(
+            '%s/api/%s/%s/%s',
+            rtrim($this->apiHost, '/'),
+            $this->apiVersion,
+            $this->websiteKey,
+            ltrim($endpoint, '/'),
+        );
     }
 
     protected function http(): PendingRequest

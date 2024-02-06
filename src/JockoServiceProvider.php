@@ -26,6 +26,10 @@ class JockoServiceProvider extends PackageServiceProvider
         $package
             ->name('jocko-client')
             ->hasRoute('web')
+            ->hasMigrations(['create_jocko_tables'])->runsMigrations()
+            ->hasCommands([
+                Console\ConfigureCmsCommand::class,
+            ])
             ->hasConfigFile();
     }
 
@@ -37,6 +41,7 @@ class JockoServiceProvider extends PackageServiceProvider
             return new Client(
                 apiHost: config('jocko-client.api_host'),
                 apiKey: config('jocko-client.api_key'),
+                apiVersion: config('jocko-client.api_version'),
                 websiteKey: config('jocko-client.website_key'),
                 shouldCache: config('jocko-client.should_cache'),
                 isPreview: config('jocko-client.preview'),
