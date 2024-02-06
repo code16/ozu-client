@@ -3,6 +3,8 @@
 namespace Code16\JockoClient\Console;
 
 use Code16\JockoClient\Facades\Jocko;
+use Code16\JockoClient\JockoCms\Form\JockoField;
+use Code16\JockoClient\JockoCms\JockoCollectionFormConfig;
 use Code16\JockoClient\JockoCms\JockoCollectionListConfig;
 use Code16\JockoClient\JockoCms\JockoCollectionConfig;
 use Code16\JockoClient\JockoCms\List\JockoColumn;
@@ -11,7 +13,6 @@ use Illuminate\Console\Command;
 class ConfigureCmsCommand extends Command
 {
     protected $signature = 'jocko:configure-cms';
-
     protected $description = 'Send CMS configuration to Jocko.';
 
     public function handle(): void
@@ -21,6 +22,7 @@ class ConfigureCmsCommand extends Command
                 $model = new $collectionClassName;
                 $collection = $collectionClassName::configureJockoCollection(new JockoCollectionConfig());
                 $list = $collectionClassName::configureJockoCollectionList(new JockoCollectionListConfig());
+                $form = $collectionClassName::configureJockoCollectionForm(new JockoCollectionFormConfig());
 
                 return [
                     'key' => $model->jockoCollectionKey(),
@@ -40,7 +42,17 @@ class ConfigureCmsCommand extends Command
                                 'label' => $column->label(),
                                 'size' => $column->size(),
                             ])
-                    ]
+                    ],
+                    'form' => [
+                        'fields' => $form
+                            ->customFields()
+                            ->map(fn (JockoField $field) => [
+                                'type' => $field->type(),
+                                'key' => $field->key(),
+                                'label' => $field->label(),
+                                'validationRules' => $field->validationRules(),
+                            ])
+                    ],
                 ];
             })
             ->each(function (array $collection) {
