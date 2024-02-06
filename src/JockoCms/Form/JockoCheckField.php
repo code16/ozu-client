@@ -15,4 +15,11 @@ class JockoCheckField extends JockoField
     {
         return 'check';
     }
+
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'text' => $this->text,
+        ]);
+    }
 }

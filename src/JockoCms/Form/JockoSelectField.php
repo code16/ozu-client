@@ -48,4 +48,14 @@ class JockoSelectField extends JockoField
     {
         return 'select';
     }
+
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'multiple' => $this->multiple,
+            'display' => $this->display,
+            'clearable' => $this->clearable,
+            'options' => $this->options,
+        ]);
+    }
 }

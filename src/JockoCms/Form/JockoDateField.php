@@ -17,4 +17,11 @@ class JockoDateField extends JockoField
     {
         return 'date';
     }
+
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'hasTime' => $this->hasTime,
+        ]);
+    }
 }

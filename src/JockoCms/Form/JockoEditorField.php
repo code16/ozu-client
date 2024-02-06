@@ -45,4 +45,15 @@ class JockoEditorField extends JockoField
     {
         return 'editor';
     }
+
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'withoutParagraphs' => $this->withoutParagraphs,
+            'hideToolbar' => $this->hideToolbar,
+            'toolbar' => $this->toolbar,
+            'height' => $this->height,
+            'maxHeight' => $this->maxHeight,
+        ]);
+    }
 }

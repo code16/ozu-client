@@ -46,12 +46,7 @@ class ConfigureCmsCommand extends Command
                     'form' => [
                         'fields' => $form
                             ->customFields()
-                            ->map(fn (JockoField $field) => [
-                                'type' => $field->type(),
-                                'key' => $field->key(),
-                                'label' => $field->label(),
-                                'validationRules' => $field->validationRules(),
-                            ])
+                            ->map(fn (JockoField $field) => $field->toArray())
                     ],
                 ];
             })

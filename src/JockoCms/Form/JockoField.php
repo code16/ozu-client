@@ -53,23 +53,6 @@ abstract class JockoField
         return new JockoEditorField($key);
     }
 
-    abstract public function type(): string;
-
-    public function key(): string
-    {
-        return $this->key;
-    }
-
-    public function label(): string
-    {
-        return $this->label;
-    }
-
-    public function validationRules(): array
-    {
-        return $this->validationRules;
-    }
-
     public function setLabel(string $label): self
     {
         $this->label = $label;
@@ -96,5 +79,19 @@ abstract class JockoField
         $this->isUpdatable = $isUpdatable;
 
         return $this;
+    }
+
+    abstract public function type(): string;
+
+    public function toArray(): array
+    {
+        return [
+            'type' => $this->type(),
+            'key' => $this->key,
+            'label' => $this->label,
+            'validationRules' => $this->validationRules,
+            'helpMessage' => $this->helpMessage,
+            'isUpdatable' => $this->isUpdatable,
+        ];
     }
 }

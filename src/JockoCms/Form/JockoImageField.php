@@ -5,7 +5,7 @@ namespace Code16\JockoClient\JockoCms\Form;
 class JockoImageField extends JockoField
 {
     private string|array|null $fileFilter = null;
-    private int $maxFileSize = 5;
+    private int $maxFileSizeInMB = 5;
     private bool $hasLegend = false;
 
     public function setHasLegend(bool $hasLegend = true): self
@@ -22,20 +22,24 @@ class JockoImageField extends JockoField
         return $this;
     }
 
-    public function setMaxFileSize(int $maxFileSize): self
+    public function setMaxFileSizeInMB(int $maxFileSizeInMB): self
     {
-        $this->maxFileSize = $maxFileSize;
+        $this->maxFileSizeInMB = $maxFileSizeInMB;
 
         return $this;
-    }
-
-    public function hasLegend(): bool
-    {
-        return $this->hasLegend;
     }
 
     public function type(): string
     {
         return 'image';
+    }
+
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'hasLegend' => $this->hasLegend,
+            'fileFilter' => $this->fileFilter,
+            'maxFileSize' => $this->maxFileSizeInMB,
+        ]);
     }
 }

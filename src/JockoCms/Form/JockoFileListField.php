@@ -6,6 +6,7 @@ class JockoFileListField extends JockoField
 {
     protected int $maxItems = 10;
     protected bool $hasLegend = false;
+    private int $maxFileSizeInMB = 5;
 
     public function setMaxItems(int $maxItems): self
     {
@@ -21,21 +22,24 @@ class JockoFileListField extends JockoField
         return $this;
     }
 
-    public function hasLegend(): bool
+    public function setMaxFileSize(int $maxFileSizeInMB): self
     {
-        return $this->hasLegend;
-    }
+        $this->maxFileSizeInMB = $maxFileSizeInMB;
 
-    private function buildUploadField(): SharpFormUploadField
-    {
-        return SharpFormUploadField::make('file')
-            ->setMaxFileSize(5)
-            ->setStorageDisk('local')
-            ->setStorageBasePath(sprintf('data/%s/Posts/{id}', CurrentSharpWebsite::getKey()));
+        return $this;
     }
 
     public function type(): string
     {
         return 'fileList';
+    }
+
+    public function toArray(): array
+    {
+        return array_merge(parent::toArray(), [
+            'maxItems' => $this->maxItems,
+            'hasLegend' => $this->hasLegend,
+            'maxFileSize' => $this->maxFileSizeInMB,
+        ]);
     }
 }
