@@ -13,33 +13,34 @@ class MediaFactory extends Factory
     public function definition()
     {
         return [
-            'file_name' => sprintf('%s/%s/%s.jpg', $this->faker->word, $this->faker->word, $this->faker->word),
-            'mime_type' => 'image/jpeg',
-            'disk' => 'local',
-            'size' => $this->faker->numberBetween(100, 100000),
         ];
     }
 
-    public function withFile(string $path, bool $randomFileName = true)
+    public function image(string $key): Factory
     {
-        return $this->state(function (array $attributes) use ($path, $randomFileName) {
-            $type = class_basename($attributes['model_type']);
-            $modelId = $attributes['model_id'];
-            $filename = basename($path);
-            if ($randomFileName) {
-                $filename = sprintf(
-                    '%s-%s.%s',
-                    $this->faker->word,
-                    $this->faker->word,
-                    \Str::afterLast($filename, '.')
-                );
-            }
+        return $this
+            ->state(function (array $attributes) use ($key) {
+                return [
+                    'model_key' => $key,
+                    'file_name' => sprintf('data/medias/%s.jpg', $this->faker->unique()->slug()),
+                    'mime_type' => 'image/jpeg',
+                    'disk' => 'local',
+                    'size' => $this->faker->numberBetween(100, 100000),
+                ];
+            });
+    }
+
+    public function withFile(?string $fileName = null)
+    {
+        return $this->state(function (array $attributes) use ($fileName) {
+            $fileName = $fileName ?: fake()->slug() . '.jpg';
+            $path = base_path('vendor/code16/jocko-client/database/fixtures/images/1.jpg');
 
             Storage::disk('local')
-                ->put("/data/$type/$modelId/$filename", file_get_contents($path));
+                ->put("/data/medias/$fileName", file_get_contents($path));
 
             return [
-                'file_name' => "data/$type/$modelId/$filename",
+                'file_name' => "data/medias/$fileName",
             ];
         });
     }
