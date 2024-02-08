@@ -3,12 +3,14 @@
 namespace Code16\JockoClient;
 
 use Code16\JockoClient\Http\Middleware\PreviewAuthenticate;
+use Code16\JockoClient\Listeners\ClearSushiCache;
 use Code16\JockoClient\Services\Auth\PreviewGuard;
 use Code16\JockoClient\Support\Pagination\StaticLengthAwarePaginator;
 use Code16\JockoClient\Support\Pagination\StaticPaginator;
 use Code16\JockoClient\View\Components\Content;
 use Code16\JockoClient\View\Components\File;
 use Code16\JockoClient\View\Components\Image;
+use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -69,6 +71,8 @@ class JockoServiceProvider extends PackageServiceProvider
             __DIR__.'/../resources/views/components/file.blade.php' => resource_path('views/vendor/jocko/components/file.blade.php'),
             __DIR__.'/../resources/views/components/image.blade.php' => resource_path('views/vendor/jocko/components/image.blade.php'),
         ], 'jocko-views');
+
+        $this->app['events']->listen(CommandStarting::class, ClearSushiCache::class);
 
         Blade::componentNamespace('Code16\\JockoClient\\View\\Components\\Content', 'jocko-content');
         Blade::component(Content::class, 'jocko-content');
