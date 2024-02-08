@@ -14,10 +14,10 @@ abstract class JockoModel extends Model
     use Sushi {
         Sushi::setSqliteConnection as sushiSetSqliteConnection;
     }
-    use ManagesSushiCache {
-        ManagesSushiCache::sushiCacheDirectory insteadof Sushi;
-        ManagesSushiCache::sushiShouldCache insteadof Sushi;
-    }
+//    use ManagesSushiCache {
+//        ManagesSushiCache::sushiCacheDirectory insteadof Sushi;
+//        ManagesSushiCache::sushiShouldCache insteadof Sushi;
+//    }
     use ManagesSushiConnections {
         ManagesSushiConnections::resolveConnection insteadof Sushi;
         ManagesSushiConnections::setSqliteConnection insteadof Sushi;

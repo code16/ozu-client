@@ -2,7 +2,9 @@
 
 namespace Code16\JockoClient;
 
+use Closure;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class Client
@@ -18,21 +20,35 @@ class Client
 
     public function getCollection(string $collectionKey): array
     {
-        return $this->http()
-            ->get($this->url("/collections/$collectionKey"))
-            ->json('data');
+        return $this->withCache($collectionKey, fn () =>
+            $this->http()
+                ->get($this->url("/collections/$collectionKey"))
+                ->json('data')
+        );
     }
 
     public function getSettings(): array
     {
-        return $this->http()
-            ->get($this->url('/settings'))
-            ->json('data');
+        return $this->withCache('settings', fn () =>
+            $this->http()
+                ->get($this->url('/settings'))
+                ->json('data')
+        );
     }
 
     public function searchUrl(string $collectionKey): string
     {
         return $this->url("/collections/$collectionKey/search");
+    }
+
+    public function withCache(string $key, Closure $callback)
+    {
+        if(! $this->shouldCache()) {
+            Cache::forget("jocko:$key");
+            return $callback();
+        }
+
+        return Cache::rememberForever("jocko:$key", $callback);
     }
 
     /**
