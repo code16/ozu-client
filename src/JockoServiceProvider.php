@@ -3,6 +3,7 @@
 namespace Code16\JockoClient;
 
 use Code16\JockoClient\Http\Middleware\PreviewAuthenticate;
+use Code16\JockoClient\Jobs\CrawlSiteHandler;
 use Code16\JockoClient\Services\Auth\PreviewGuard;
 use Code16\JockoClient\Support\Pagination\StaticLengthAwarePaginator;
 use Code16\JockoClient\Support\Pagination\StaticPaginator;
@@ -10,6 +11,7 @@ use Code16\JockoClient\View\Components\Content;
 use Code16\JockoClient\View\Components\File;
 use Code16\JockoClient\View\Components\Image;
 use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -72,6 +74,10 @@ class JockoServiceProvider extends PackageServiceProvider
                 Artisan::call('cache:clear', [], $event->output);
             }
         });
+
+        $this->app[Dispatcher::class]->map([
+            \Spatie\Export\Jobs\CrawlSite::class => CrawlSiteHandler::class,
+        ]);
 
         $this->publishes([
             __DIR__.'/../resources/views/components/file.blade.php' => resource_path('views/vendor/jocko/components/file.blade.php'),
