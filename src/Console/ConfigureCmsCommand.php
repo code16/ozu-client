@@ -29,6 +29,8 @@ class ConfigureCmsCommand extends Command
                     'label' => $collection->label(),
                     'icon' => $collection->icon(),
                     'hasPublicationState' => $collection->hasPublicationState(),
+                    'isCreatable' => $collection->isCreatable(),
+                    'isDeletable' => $collection->isDeletable(),
                     'order' => $k+1,
                     'list' => [
                         'isReorderable' => $list->isReorderable(),
