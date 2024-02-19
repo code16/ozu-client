@@ -3,7 +3,6 @@
 namespace Code16\JockoClient;
 
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class Client
@@ -18,68 +17,71 @@ class Client
     ) {
     }
 
-    public function getCollection(string $collectionKey): array
-    {
-        return $this->http()
-            ->get($this->url("/collections/$collectionKey"))
-            ->json('data');
-    }
-
-    public function getSettings(): array
-    {
-        return $this->http()
-            ->get($this->url('/settings'))
-            ->json('data');
-    }
+//    public function getSettings(): array
+//    {
+//        return $this->http()
+//            ->get($this->url('/settings'))
+//            ->json('data');
+//    }
 
     public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
     {
-        $this->http()
-            ->post($this->url(sprintf('/collections/%s/configure', $collectionKey)), $collectionData);
+        $this->http()->post(
+            sprintf('/collections/%s/configure', $collectionKey),
+            $collectionData
+        );
     }
 
-    public function searchUrl(string $collectionKey): string
-    {
-        return $this->url("/collections/$collectionKey/search");
-    }
-
-    /**
-     * env: JOCKO_SHOULD_CACHE
-     */
-    public function shouldCache(): bool
-    {
-        return $this->shouldCache || $this->isExporting();
-    }
-
-    public function isExporting(): bool
-    {
-        return request()->hasHeader('X-Laravel-Export');
-    }
-
-    public function isPreview(): bool
-    {
-        return $this->isPreview && !$this->isExporting();
-    }
+//    public function searchUrl(string $collectionKey): string
+//    {
+//        return $this->url("/collections/$collectionKey/search");
+//    }
+//
+//    /**
+//     * env: JOCKO_SHOULD_CACHE
+//     */
+//    public function shouldCache(): bool
+//    {
+//        return $this->shouldCache || $this->isExporting();
+//    }
+//
+//    public function isExporting(): bool
+//    {
+//        return request()->hasHeader('X-Laravel-Export');
+//    }
+//
+//    public function isPreview(): bool
+//    {
+//        return $this->isPreview && !$this->isExporting();
+//    }
 
     public function apiKey(): ?string
     {
         return $this->apiKey;
     }
-
-    protected function url(string $endpoint = ''): string
-    {
-        return sprintf(
-            '%s/api/%s/%s/%s',
-            rtrim($this->apiHost, '/'),
-            $this->apiVersion,
-            $this->websiteKey,
-            ltrim($endpoint, '/'),
-        );
-    }
+//
+//    protected function url(string $endpoint = ''): string
+//    {
+//        return sprintf(
+//            '%s/api/%s/%s/%s',
+//            rtrim($this->apiHost, '/'),
+//            $this->apiVersion,
+//            $this->websiteKey,
+//            ltrim($endpoint, '/'),
+//        );
+//    }
 
     protected function http(): PendingRequest
     {
         return Http::withToken($this->apiKey)
+            ->baseUrl(
+                sprintf(
+                    '%s/api/%s/%s',
+                    rtrim($this->apiHost, '/'),
+                    $this->apiVersion,
+                    $this->websiteKey,
+                )
+            )
             ->acceptJson()
             ->throw();
     }
