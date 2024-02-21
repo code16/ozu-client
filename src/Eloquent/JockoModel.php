@@ -3,6 +3,7 @@
 namespace Code16\JockoClient\Eloquent;
 
 use Code16\JockoClient\Eloquent\Concerns\CastsCollection;
+use Code16\JockoClient\Eloquent\Concerns\HasCollectionGlobalScopes;
 use Code16\JockoClient\Eloquent\Concerns\ManagesSushiCache;
 use Code16\JockoClient\Eloquent\Concerns\ManagesSushiConnections;
 use Code16\JockoClient\Facades\Jocko;
@@ -24,6 +25,7 @@ abstract class JockoModel extends Model
         ManagesSushiConnections::setSqliteConnection insteadof Sushi;
     }
     use CastsCollection;
+    use HasCollectionGlobalScopes;
 
 
     public function getRows(): array

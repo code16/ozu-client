@@ -23,8 +23,17 @@ class Client
         return $this->withCache($collectionKey, fn () =>
             $this->http()
                 ->get($this->url("/collections/$collectionKey"))
-                ->json('data')
-        );
+                ->json()
+        )['data'];
+    }
+
+    public function getCollectionMeta(string $collectionKey): array
+    {
+        return $this->withCache($collectionKey, fn () =>
+            $this->http()
+                ->get($this->url("/collections/$collectionKey"))
+                ->json()
+        )['meta'];
     }
 
     public function getSettings(): array
