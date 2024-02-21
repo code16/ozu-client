@@ -61,6 +61,10 @@ class Client
      */
     public function shouldCache(): bool
     {
+        if($this->isPreview()) {
+            return false;
+        }
+
         return $this->shouldCache || $this->isExporting();
     }
 
