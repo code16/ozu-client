@@ -52,12 +52,8 @@ class Client
 
     public function withCache(string $key, Closure $callback)
     {
-        if(! $this->shouldCache()) {
-            Cache::forget("jocko:$key");
-            return $callback();
-        }
-
-        return Cache::rememberForever("jocko:$key", $callback);
+        return Cache::driver($this->shouldCache() ? 'file' : 'array')
+            ->rememberForever("jocko:$key", $callback);
     }
 
     /**
