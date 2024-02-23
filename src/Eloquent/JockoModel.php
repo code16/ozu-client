@@ -24,7 +24,7 @@ abstract class JockoModel extends Model
     public function getMorphClass()
     {
         if (app()->environment('production')) {
-            return 'jocko-post';
+            return 'post';
         }
 
         return parent::getMorphClass();
