@@ -12,17 +12,8 @@ class Client
         protected ?string $apiKey,
         protected string $apiVersion,
         protected string $websiteKey,
-        protected bool $shouldCache,
-        protected bool $isPreview,
     ) {
     }
-
-//    public function getSettings(): array
-//    {
-//        return $this->http()
-//            ->get($this->url('/settings'))
-//            ->json('data');
-//    }
 
     public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
     {

@@ -1,41 +1,24 @@
 <?php
 
-namespace Code16\JockoClient\Support;
+namespace Code16\JockoClient\Support\Thumbnails;
 
-use Code16\JockoClient\Eloquent\Media;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
 
-class Thumbnail
+class LocalThumbnail extends Thumbnail
 {
     protected ImageManager $imageManager;
     protected FilesystemManager $storage;
-    protected Media $mediaModel;
     protected int $quality = 90;
-    protected bool $appendTimestamp = false;
+    protected bool $appendTimestamp = true;
 
-    public function __construct(Media $model)
+    public function __construct()
     {
-        $this->mediaModel = $model;
         $this->imageManager = new ImageManager(new Driver());
         $this->storage = app(FilesystemManager::class);
-    }
-
-    public function setQuality(int $quality): self
-    {
-        $this->quality = $quality;
-
-        return $this;
-    }
-
-    public function setAppendTimestamp(bool $appendTimestamp = true): self
-    {
-        $this->appendTimestamp = $appendTimestamp;
-
-        return $this;
     }
 
     public function make(?int $width, ?int $height = null, array $filters = []): ?string
