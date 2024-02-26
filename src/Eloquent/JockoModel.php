@@ -4,6 +4,7 @@ namespace Code16\JockoClient\Eloquent;
 
 use Code16\JockoClient\Eloquent\Casts\JockoCustomAttribute;
 use Code16\JockoClient\Eloquent\Concerns\HasCollectionGlobalScopes;
+use Code16\JockoClient\Eloquent\Concerns\HasCollectionKey;
 use Code16\JockoClient\JockoCms\JockoCollectionFormConfig;
 use Code16\JockoClient\JockoCms\JockoCollectionListConfig;
 use Code16\JockoClient\JockoCms\JockoCollectionConfig;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 abstract class JockoModel extends Model
 {
+    use HasCollectionKey;
     use HasCollectionGlobalScopes;
 
     protected $guarded = [];
@@ -46,13 +48,6 @@ abstract class JockoModel extends Model
     public function hasCustomAttribute(string $key): bool
     {
         return in_array($key, $this->jockoCustomAttributes);
-    }
-
-    public function jockoCollectionKey(): string
-    {
-        return str(class_basename(get_class($this)))
-            ->snake()
-            ->plural();
     }
 
     public function cover(): MorphOne
