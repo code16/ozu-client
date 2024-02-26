@@ -6,17 +6,22 @@ class Image
 {
     public function __construct(
         public string $src,
+        public ?string $legend,
     ) {
     }
 
-    public static function make(string $url): static
+    public static function make(string|array $data): static
     {
-        return new static($url);
+        if(is_string($data)) {
+            return new static($data, null);
+        }
+
+        return new static($data['url'], $data['legend'] ?? null);
     }
 
     public static function collection(?array $visuals): ImageCollection
     {
-        return ImageCollection::make($visuals)->mapInto(static::class);
+        return ImageCollection::make($visuals)->map(fn ($visual) => static::make($visual));
     }
 
     public function thumbnail(?int $width = null, ?int $height = null, ?float $scale = 1, bool $crop = false): string

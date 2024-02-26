@@ -3,6 +3,7 @@
 namespace Code16\JockoClient\Eloquent;
 
 use Code16\JockoClient\Eloquent\Casts\JockoCustomAttribute;
+use Code16\JockoClient\Eloquent\Concerns\HasCollectionGlobalScopes;
 use Code16\JockoClient\JockoCms\JockoCollectionFormConfig;
 use Code16\JockoClient\JockoCms\JockoCollectionListConfig;
 use Code16\JockoClient\JockoCms\JockoCollectionConfig;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 abstract class JockoModel extends Model
 {
+    use HasCollectionGlobalScopes;
+
     protected $guarded = [];
 
     protected $table = 'posts';

@@ -20,13 +20,15 @@ abstract class WebsiteSettings
             return $this;
         }
 
-        if(!Jocko::shouldCache()) {
-            Cache::forget('jocko-settings');
-        }
+//        if(!Jocko::shouldCache()) {
+//            Cache::forget('jocko-settings');
+//        }
+//
+//        $values = Cache::rememberForever('jocko-settings', function () {
+//            return Jocko::getSettings();
+//        });
 
-        $values = Cache::rememberForever('jocko-settings', function () {
-            return Jocko::getSettings();
-        });
+        $values = Jocko::getSettings();
 
         $this->loaded = true;
 
