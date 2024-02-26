@@ -3,7 +3,8 @@
 namespace Code16\JockoClient\Eloquent;
 
 use Code16\JockoClient\Database\Factories\MediaFactory;
-use Code16\JockoClient\Support\Thumbnail;
+use Code16\JockoClient\Support\Thumbnails\LocalThumbnail;
+use Code16\JockoClient\Support\Thumbnails\Thumbnail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -27,8 +28,8 @@ class Media extends Model
 
     public function thumbnail(int $width = null, int $height = null): ?string
     {
-        return (new Thumbnail($this))
-            ->setAppendTimestamp()
+        return app(Thumbnail::class)
+            ->forMedia($this)
             ->make($width, $height);
     }
 }

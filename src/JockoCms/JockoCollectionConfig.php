@@ -7,6 +7,8 @@ class JockoCollectionConfig
     protected string $label;
     protected string $icon;
     protected bool $hasPublicationState = false;
+    private bool $isCreatable = true;
+    private bool $isDeletable = true;
 
     public function setLabel(string $label): self
     {
@@ -29,6 +31,20 @@ class JockoCollectionConfig
         return $this;
     }
 
+    public function setIsCreatable(bool $isCreatable = true): self
+    {
+        $this->isCreatable = $isCreatable;
+
+        return $this;
+    }
+
+    public function setIsDeletable(bool $isDeletable = true): self
+    {
+        $this->isDeletable = $isDeletable;
+
+        return $this;
+    }
+
     public function label(): string
     {
         return $this->label;
@@ -42,5 +58,15 @@ class JockoCollectionConfig
     public function hasPublicationState(): bool
     {
         return $this->hasPublicationState;
+    }
+
+    public function isCreatable(): bool
+    {
+        return $this->isCreatable;
+    }
+
+    public function isDeletable(): bool
+    {
+        return $this->isDeletable;
     }
 }

@@ -35,7 +35,7 @@ class MediaFactory extends Factory
         return $this->state(function (array $attributes) use ($fileName) {
             $fileName = $fileName ?: fake()->slug() . '.jpg';
             $path = base_path('vendor/code16/jocko-client/database/fixtures/images/1.jpg');
-
+            
             Storage::disk('local')
                 ->put("/data/medias/$fileName", file_get_contents($path));
 

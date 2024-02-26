@@ -21,6 +21,15 @@ abstract class JockoModel extends Model
 
     protected array $jockoCustomAttributes = [];
 
+    public function getMorphClass()
+    {
+        if (app()->environment('production')) {
+            return 'post';
+        }
+
+        return parent::getMorphClass();
+    }
+
     public function getCasts()
     {
         return array_merge(
