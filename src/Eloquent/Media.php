@@ -26,10 +26,10 @@ class Media extends Model
         return $this->morphTo('model');
     }
 
-    public function thumbnail(int $width = null, int $height = null): ?string
+    public function thumbnail(int $width = null, int $height = null, bool $fit = false): ?string
     {
         return app(Thumbnail::class)
             ->forMedia($this)
-            ->make($width, $height);
+            ->make($width, $height, $fit);
     }
 }
