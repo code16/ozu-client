@@ -15,5 +15,5 @@ abstract class Thumbnail
         return $this;
     }
 
-    abstract public function make(?int $width, ?int $height = null, array $filters = []): ?string;
+    abstract public function make(?int $width, ?int $height = null, bool $fit = false): ?string;
 }

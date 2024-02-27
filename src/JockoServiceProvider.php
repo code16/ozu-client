@@ -36,7 +36,7 @@ class JockoServiceProvider extends PackageServiceProvider
     {
         parent::register();
 
-        $this->app->singleton(Client::class, function () {
+        $this->app->singleton(ClientV3::class, function () {
             return new ClientV3(
                 apiHost: config('jocko-client.api_host'),
                 apiKey: config('jocko-client.api_key'),
