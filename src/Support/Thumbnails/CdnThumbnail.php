@@ -29,6 +29,8 @@ class CdnThumbnail extends Thumbnail
             return sprintf('tr:w-%s,h-%s,c-at_max', $width, $height);
         }
 
-        return sprintf('tr:w-%s,h-%s,c-maintain_ratio', $width, $height);
+        $side = ($width ?: $height) ?: 400;
+
+        return sprintf('tr:w-%s,h-%s,c-maintain_ratio', $side, $side);
     }
 }
