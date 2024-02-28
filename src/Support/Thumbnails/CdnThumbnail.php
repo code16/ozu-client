@@ -13,7 +13,7 @@ class CdnThumbnail extends Thumbnail
         );
     }
 
-    private function generateUrlParameters(?int $width, ?int $height, bool $fit)
+    private function generateUrlParameters(?int $width, ?int $height, bool $fit): string
     {
         if (!$fit) {
             if ($width && $height) {
@@ -22,7 +22,7 @@ class CdnThumbnail extends Thumbnail
             if ($width) {
                 return sprintf('tr:w-%s', $width);
             }
-            return sprintf('tr:h-%s', $height);
+            return sprintf('tr:h-%s', $height ?: 400);
         }
 
         if ($width && $height) {
