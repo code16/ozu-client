@@ -69,5 +69,9 @@ class JockoServiceProvider extends PackageServiceProvider
         Blade::component(Content::class, 'jocko-content');
         Blade::component(Image::class, 'jocko-image');
         Blade::component(File::class, 'jocko-file');
+
+        Paginator::currentPageResolver(function () {
+            return request()->route()->parameter('page');
+        });
     }
 }
