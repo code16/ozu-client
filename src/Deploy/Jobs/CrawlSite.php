@@ -1,9 +1,10 @@
 <?php
 
-namespace Code16\JockoClient\Jobs;
-use Code16\JockoClient\Support\Crawler\Observer;
+namespace Code16\JockoClient\Deploy\Jobs;
+use Code16\JockoClient\Deploy\Crawler\Observer;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Psr\Http\Message\UriInterface;
 use Spatie\Crawler\Crawler;
 use Spatie\Crawler\CrawlProfiles\CrawlInternalUrls;
 use Spatie\Export\Crawler\LocalClient;
@@ -15,7 +16,7 @@ class CrawlSite
 
     public function handle(UrlGenerator $urlGenerator, Destination $destination): void
     {
-        $entry = $urlGenerator->to('/');
+        $entry = config('app.url');
 
         (new Crawler(new LocalClient()))
             ->setCrawlObserver(new Observer($entry, $destination))
