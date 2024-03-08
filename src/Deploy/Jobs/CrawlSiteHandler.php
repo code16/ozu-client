@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\Jobs;
+namespace Code16\JockoClient\Deploy\Jobs;
 
 use Illuminate\Contracts\Bus\Dispatcher;
 

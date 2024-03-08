@@ -60,7 +60,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Code16\\JockoClient\\JockoServiceProvider"
+                "Code16\\JockoClient\\JockoServiceProvider",
+                "Code16\\JockoClient\\DeployServiceProvider"
             ],
             "aliases": {
                 "Jocko": "Code16\\JockoClient\\Facades\\Jocko"
