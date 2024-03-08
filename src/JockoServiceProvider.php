@@ -2,6 +2,7 @@
 
 namespace Code16\JockoClient;
 
+use Code16\JockoClient\Deploy\DeployServiceProvider;
 use Code16\JockoClient\Http\Middleware\PreviewAuthenticate;
 use Code16\JockoClient\Services\Auth\PreviewGuard;
 use Code16\JockoClient\Support\Pagination\StaticLengthAwarePaginator;
@@ -45,6 +46,8 @@ class JockoServiceProvider extends PackageServiceProvider
 
         $this->app->bind(Paginator::class, StaticPaginator::class);
         $this->app->bind(LengthAwarePaginator::class, StaticLengthAwarePaginator::class);
+
+        $this->app->register(DeployServiceProvider::class);
     }
 
     public function boot()
