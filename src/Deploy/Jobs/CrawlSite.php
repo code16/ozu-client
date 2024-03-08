@@ -20,13 +20,7 @@ class CrawlSite
 
         (new Crawler(new LocalClient()))
             ->setCrawlObserver(new Observer($entry, $destination))
-            ->setCrawlProfile(new class($entry) extends CrawlInternalUrls {
-                public function shouldCrawl(UriInterface $url): bool
-                {
-                    return parent::shouldCrawl($url)
-                        || config('jocko-client.deploy_url') && $url->getHost() === parse_url(config('jocko-client.deploy_url'), PHP_URL_HOST);
-                }
-            })
+            ->setCrawlProfile(new CrawlInternalUrls($entry))
             ->startCrawling($entry);
     }
 }
