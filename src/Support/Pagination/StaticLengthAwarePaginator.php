@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\Support\Pagination;
+namespace Code16\OzuClient\Support\Pagination;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 

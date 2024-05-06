@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\Support;
+namespace Code16\OzuClient\Support;
 
-use Code16\JockoClient\Facades\Jocko;
+use Code16\OzuClient\Facades\Ozu;
 use Illuminate\Support\Facades\Cache;
 
 abstract class WebsiteSettings
@@ -20,15 +20,15 @@ abstract class WebsiteSettings
             return $this;
         }
 
-//        if(!Jocko::shouldCache()) {
-//            Cache::forget('jocko-settings');
+//        if(!Ozu::shouldCache()) {
+//            Cache::forget('ozu-settings');
 //        }
 //
-//        $values = Cache::rememberForever('jocko-settings', function () {
-//            return Jocko::getSettings();
+//        $values = Cache::rememberForever('ozu-settings', function () {
+//            return Ozu::getSettings();
 //        });
 
-        $values = Jocko::getSettings();
+        $values = Ozu::getSettings();
 
         $this->loaded = true;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\Deploy\Routing;
+namespace Code16\OzuClient\Deploy\Routing;
 use Illuminate\Routing\UrlGenerator as BaseUrlGenerator;
 
 

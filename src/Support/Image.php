@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\Support;
+namespace Code16\OzuClient\Support;
 
 class Image
 {

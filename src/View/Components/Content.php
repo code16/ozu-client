@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\View\Components;
+namespace Code16\OzuClient\View\Components;
 
 use Code16\ContentRenderer\View\Components\Content as ContentComponent;
 
@@ -11,7 +11,7 @@ class Content extends ContentComponent
         public ?int $imageThumbnailHeight = null,
     ) {
         parent::__construct();
-        $this->contentComponentAttributes->put('jocko-image', [
+        $this->contentComponentAttributes->put('ozu-image', [
             'thumbnail-width' => $this->imageThumbnailWidth,
             'thumbnail-height' => $this->imageThumbnailHeight,
         ]);

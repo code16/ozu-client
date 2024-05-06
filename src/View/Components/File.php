@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\View\Components;
+namespace Code16\OzuClient\View\Components;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -15,6 +15,6 @@ class File extends Component
 
     public function render(): View
     {
-        return view('jocko::components.file');
+        return view('ozu::components.file');
     }
 }

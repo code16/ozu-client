@@ -1,6 +1,6 @@
 @php
 /**
- * @see \Code16\JockoClient\View\Components\Image
+ * @see \Code16\OzuClient\View\Components\Image
  */
 @endphp
 

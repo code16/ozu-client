@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\Deploy\Crawler;
+namespace Code16\OzuClient\Deploy\Crawler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;

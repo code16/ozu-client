@@ -1,3 +1,3 @@
 # Changelog
 
-All notable changes to `Jocko Client` will be documented in this file.
+All notable changes to `Ozu Client` will be documented in this file.

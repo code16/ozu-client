@@ -15,7 +15,7 @@
     <body>
         <div style="display: flex; justify-content: center; align-items: center; height: 100vh">
             <div style="padding: 2rem; background-color: #ffb; max-width: 400px">
-                Le lien de prévisualisation a expiré, veuillez l’ouvrir de nouveau depuis le menu de votre <a href="{{ rtrim(config('jocko-client.api_host'), '/') }}/sharp">tableau de bord</a>.
+                Le lien de prévisualisation a expiré, veuillez l’ouvrir de nouveau depuis le menu de votre <a href="{{ rtrim(config('ozu-client.api_host'), '/') }}/sharp">tableau de bord</a>.
             </div>
         </div>
     </body>

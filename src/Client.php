@@ -1,10 +1,8 @@
 <?php
 
-namespace Code16\JockoClient;
+namespace Code16\OzuClient;
 
-use Closure;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class Client
@@ -12,70 +10,17 @@ class Client
     public function __construct(
         protected string $apiHost,
         protected ?string $apiKey,
+        protected string $apiVersion,
         protected string $websiteKey,
-        protected bool $shouldCache,
-        protected bool $isPreview,
     ) {
     }
 
-    public function getCollection(string $collectionKey): array
+    public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
     {
-        return $this->withCache($collectionKey, fn () =>
-            $this->http()
-                ->get($this->url("/collections/$collectionKey"))
-                ->json()
-        )['data'];
-    }
-
-    public function getCollectionMeta(string $collectionKey): array
-    {
-        return $this->withCache($collectionKey, fn () =>
-            $this->http()
-                ->get($this->url("/collections/$collectionKey"))
-                ->json()
-        )['meta'];
-    }
-
-    public function getSettings(): array
-    {
-        return $this->withCache('settings', fn () =>
-            $this->http()
-                ->get($this->url('/settings'))
-                ->json('data')
+        $this->http()->post(
+            sprintf('/collections/%s/configure', $collectionKey),
+            $collectionData
         );
-    }
-
-    public function searchUrl(string $collectionKey): string
-    {
-        return $this->url("/collections/$collectionKey/search");
-    }
-
-    public function withCache(string $key, Closure $callback)
-    {
-        return Cache::driver($this->shouldCache() ? 'file' : 'array')
-            ->rememberForever("jocko:$key", $callback);
-    }
-
-    /**
-     * env: JOCKO_SHOULD_CACHE
-     */
-    public function shouldCache(): bool
-    {
-        if($this->isPreview()) {
-            return false;
-        }
-
-        return $this->shouldCache || $this->isExporting();
-    }
-
-    public function isExporting(): bool
-    {
-        return request()->hasHeader('X-Laravel-Export');
-    }
-
-    public function isPreview(): bool
-    {
-        return $this->isPreview && !$this->isExporting();
     }
 
     public function apiKey(): ?string
@@ -83,18 +28,17 @@ class Client
         return $this->apiKey;
     }
 
-    protected function url(string $endpoint = ''): string
-    {
-        $host = rtrim($this->apiHost, '/');
-        $websiteKey = $this->websiteKey;
-        $endpoint = ltrim($endpoint, '/');
-
-        return "$host/api/v2/$websiteKey/$endpoint";
-    }
-
     protected function http(): PendingRequest
     {
         return Http::withToken($this->apiKey)
+            ->baseUrl(
+                sprintf(
+                    '%s/api/%s/%s',
+                    rtrim($this->apiHost, '/'),
+                    $this->apiVersion,
+                    $this->websiteKey,
+                )
+            )
             ->acceptJson()
             ->throw();
     }
