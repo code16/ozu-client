@@ -1,15 +1,15 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms;
+namespace Code16\OzuClient\OzuCms;
 
-use Code16\JockoClient\JockoCms\Form\JockoField;
+use Code16\OzuClient\OzuCms\Form\OzuField;
 use Illuminate\Support\Collection;
 
-class JockoCollectionFormConfig
+class OzuCollectionFormConfig
 {
     protected array $fields = [];
 
-    public function addCustomField(JockoField $field): self
+    public function addCustomField(OzuField $field): self
     {
         $this->fields[] = $field;
 

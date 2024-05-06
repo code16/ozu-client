@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\Form;
+namespace Code16\OzuClient\OzuCms\Form;
 
-class JockoFileListField extends JockoField
+class OzuFileListField extends OzuField
 {
     protected int $maxItems = 10;
     protected bool $hasLegend = false;

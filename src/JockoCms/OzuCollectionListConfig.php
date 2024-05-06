@@ -1,11 +1,11 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms;
+namespace Code16\OzuClient\OzuCms;
 
-use Code16\JockoClient\JockoCms\List\JockoColumn;
+use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Illuminate\Support\Collection;
 
-class JockoCollectionListConfig
+class OzuCollectionListConfig
 {
     protected bool $isReorderable = false;
     protected bool $isSearchable = false;
@@ -33,7 +33,7 @@ class JockoCollectionListConfig
         return $this;
     }
 
-    public function addColumn(JockoColumn $column): self
+    public function addColumn(OzuColumn $column): self
     {
         $this->columns[] = $column;
 

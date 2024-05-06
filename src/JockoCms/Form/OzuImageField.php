@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\Form;
+namespace Code16\OzuClient\OzuCms\Form;
 
-class JockoImageField extends JockoField
+class OzuImageField extends OzuField
 {
     private string|array|null $fileFilter = null;
     private int $maxFileSizeInMB = 5;

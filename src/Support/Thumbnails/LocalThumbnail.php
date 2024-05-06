@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\Support\Thumbnails;
+namespace Code16\OzuClient\Support\Thumbnails;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;

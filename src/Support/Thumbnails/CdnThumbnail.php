@@ -1,6 +1,6 @@
 <?php
 
-namespace Code16\JockoClient\Support\Thumbnails;
+namespace Code16\OzuClient\Support\Thumbnails;
 
 class CdnThumbnail extends Thumbnail
 {

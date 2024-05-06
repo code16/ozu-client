@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\Form;
+namespace Code16\OzuClient\OzuCms\Form;
 
-class JockoCheckField extends JockoField
+class OzuCheckField extends OzuField
 {
     public function __construct(
         protected string $key,

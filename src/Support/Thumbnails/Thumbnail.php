@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\Support\Thumbnails;
+namespace Code16\OzuClient\Support\Thumbnails;
 
-use Code16\JockoClient\Eloquent\Media;
+use Code16\OzuClient\Eloquent\Media;
 
 abstract class Thumbnail
 {

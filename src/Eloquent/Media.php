@@ -1,10 +1,10 @@
 <?php
 
-namespace Code16\JockoClient\Eloquent;
+namespace Code16\OzuClient\Eloquent;
 
-use Code16\JockoClient\Database\Factories\MediaFactory;
-use Code16\JockoClient\Support\Thumbnails\LocalThumbnail;
-use Code16\JockoClient\Support\Thumbnails\Thumbnail;
+use Code16\OzuClient\Database\Factories\MediaFactory;
+use Code16\OzuClient\Support\Thumbnails\LocalThumbnail;
+use Code16\OzuClient\Support\Thumbnails\Thumbnail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;

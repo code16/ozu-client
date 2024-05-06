@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms;
+namespace Code16\OzuClient\OzuCms;
 
-class JockoCollectionConfig
+class OzuCollectionConfig
 {
     protected string $label;
     protected string $icon;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Code16\JockoClient\Support\Database;
+namespace Code16\OzuClient\Support\Database;
 
 use Illuminate\Database\Seeder;
 
-class JockoSeeder extends Seeder
+class OzuSeeder extends Seeder
 {
     protected function clearMediaDirectory(): void
     {

@@ -1,24 +1,24 @@
 <?php
 
-namespace Code16\JockoClient\Eloquent\Concerns;
+namespace Code16\OzuClient\Eloquent\Concerns;
 
-use Code16\JockoClient\Eloquent\JockoModel;
+use Code16\OzuClient\Eloquent\OzuModel;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasCollectionKey
 {
     public static function bootHasCollectionKey(): void
     {
-        static::creating(function (JockoModel $model) {
-            $model->collection_key = $model->jockoCollectionKey();
+        static::creating(function (OzuModel $model) {
+            $model->collection_key = $model->ozuCollectionKey();
         });
 
         static::addGlobalScope('collectionKey', function (Builder $query) {
-            $query->where('collection_key', (new static)->jockoCollectionKey());
+            $query->where('collection_key', (new static)->ozuCollectionKey());
         });
     }
 
-    public function jockoCollectionKey(): string
+    public function ozuCollectionKey(): string
     {
         return str(class_basename(get_class($this)))
             ->snake()

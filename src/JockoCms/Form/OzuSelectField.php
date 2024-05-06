@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\Form;
+namespace Code16\OzuClient\OzuCms\Form;
 
-class JockoSelectField extends JockoField
+class OzuSelectField extends OzuField
 {
     protected bool $multiple = false;
     protected string $display = 'list';

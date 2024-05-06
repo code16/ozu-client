@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\Form;
+namespace Code16\OzuClient\OzuCms\Form;
 
-abstract class JockoField
+abstract class OzuField
 {
     protected ?string $label = null;
     protected ?string $helpMessage = null;
@@ -13,44 +13,44 @@ abstract class JockoField
     {
     }
 
-    public static function makeText(string $key): JockoTextField
+    public static function makeText(string $key): OzuTextField
     {
-        return new JockoTextField($key);
+        return new OzuTextField($key);
     }
 
-    public static function makeDate(string $key): JockoDateField
+    public static function makeDate(string $key): OzuDateField
     {
-        return new JockoDateField($key);
+        return new OzuDateField($key);
     }
 
-    public static function makeFileList(string $key): JockoFileListField
+    public static function makeFileList(string $key): OzuFileListField
     {
-        return new JockoFileListField($key);
+        return new OzuFileListField($key);
     }
 
-    public static function makeImageList(string $key): JockoImageListField
+    public static function makeImageList(string $key): OzuImageListField
     {
-        return new JockoImageListField($key);
+        return new OzuImageListField($key);
     }
 
-    public static function makeImage(string $key): JockoImageField
+    public static function makeImage(string $key): OzuImageField
     {
-        return new JockoImageField($key);
+        return new OzuImageField($key);
     }
 
-    public static function makeSelect(string $key): JockoSelectField
+    public static function makeSelect(string $key): OzuSelectField
     {
-        return new JockoSelectField($key);
+        return new OzuSelectField($key);
     }
 
-    public static function makeCheck(string $key, string $text): JockoCheckField
+    public static function makeCheck(string $key, string $text): OzuCheckField
     {
-        return new JockoCheckField($key, $text);
+        return new OzuCheckField($key, $text);
     }
 
-    public static function makeEditor(string $key): JockoEditorField
+    public static function makeEditor(string $key): OzuEditorField
     {
-        return new JockoEditorField($key);
+        return new OzuEditorField($key);
     }
 
     public function setLabel(string $label): self

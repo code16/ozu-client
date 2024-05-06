@@ -1,11 +1,11 @@
 <?php
 
-namespace Code16\JockoClient\Eloquent\Casts;
+namespace Code16\OzuClient\Eloquent\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
-class JockoCustomAttribute implements CastsAttributes
+class OzuCustomAttribute implements CastsAttributes
 {
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {

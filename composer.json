@@ -1,12 +1,12 @@
 {
-    "name": "code16/jocko-client",
-    "description": "Client to access to Jocko API (https://github.com/code16/jocko)",
+    "name": "code16/ozu-client",
+    "description": "Client to access to Ozu API (https://github.com/code16/jocko)",
     "keywords": [
         "code16",
         "laravel",
-        "jocko-client"
+        "ozu-client"
     ],
-    "homepage": "https://github.com/code16/jocko-client",
+    "homepage": "https://github.com/code16/ozu-client",
     "license": "MIT",
     "authors": [
         {
@@ -16,16 +16,16 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "code16/laravel-content-renderer": "^1.1.0",
-        "illuminate/contracts": "^10.0",
+        "illuminate/contracts": "^11.0",
         "intervention/image-laravel": "^1.0",
         "spatie/laravel-package-tools": "^1.14.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
-        "nunomaduro/collision": "^7.9",
-        "orchestra/testbench": "^8.0",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-arch": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.0",
@@ -33,13 +33,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Code16\\JockoClient\\": "src",
-            "Code16\\JockoClient\\Database\\Factories\\": "database/factories"
+            "Code16\\OzuClient\\": "src",
+            "Code16\\OzuClient\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Code16\\JockoClient\\Tests\\": "tests"
+            "Code16\\OzuClient\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -59,10 +59,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Code16\\JockoClient\\JockoServiceProvider"
+                "Code16\\OzuClient\\OzuServiceProvider"
             ],
             "aliases": {
-                "Jocko": "Code16\\JockoClient\\Facades\\Jocko"
+                "Ozu": "Code16\\OzuClient\\Facades\\Ozu"
             }
         }
     },

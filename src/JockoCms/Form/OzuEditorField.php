@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\Form;
+namespace Code16\OzuClient\OzuCms\Form;
 
-class JockoEditorField extends JockoField
+class OzuEditorField extends OzuField
 {
     private bool $withoutParagraphs = false;
     private bool $hideToolbar = false;

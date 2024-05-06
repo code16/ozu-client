@@ -1,10 +1,10 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\List;
+namespace Code16\OzuClient\OzuCms\List;
 
 use Carbon\Carbon;
 
-class JockoDateColumn extends JockoColumn
+class OzuDateColumn extends OzuColumn
 {
     protected string $format = 'LL';
 

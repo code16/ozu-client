@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\Form;
+namespace Code16\OzuClient\OzuCms\Form;
 
-class JockoDateField extends JockoField
+class OzuDateField extends OzuField
 {
     protected bool $hasTime = false;
 

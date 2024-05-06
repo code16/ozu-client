@@ -1,7 +1,7 @@
 <?php
 
-namespace Code16\JockoClient\Deploy\Jobs;
-use Code16\JockoClient\Deploy\Crawler\Observer;
+namespace Code16\OzuClient\Deploy\Jobs;
+use Code16\OzuClient\Deploy\Crawler\Observer;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Psr\Http\Message\UriInterface;

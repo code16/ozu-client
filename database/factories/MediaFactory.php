@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\Database\Factories;
+namespace Code16\OzuClient\Database\Factories;
 
-use Code16\JockoClient\Eloquent\Media;
+use Code16\OzuClient\Eloquent\Media;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,7 +49,7 @@ class MediaFactory extends Factory
     {
         return base_path(
             sprintf(
-                'vendor/code16/jocko-client/database/fixtures/images/%s.jpeg',
+                'vendor/code16/ozu-client/database/fixtures/images/%s.jpeg',
                 rand(1, 26)
             )
         );

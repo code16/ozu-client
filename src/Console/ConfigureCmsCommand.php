@@ -1,31 +1,31 @@
 <?php
 
-namespace Code16\JockoClient\Console;
+namespace Code16\OzuClient\Console;
 
-use Code16\JockoClient\Facades\Jocko;
-use Code16\JockoClient\JockoCms\Form\JockoField;
-use Code16\JockoClient\JockoCms\JockoCollectionFormConfig;
-use Code16\JockoClient\JockoCms\JockoCollectionListConfig;
-use Code16\JockoClient\JockoCms\JockoCollectionConfig;
-use Code16\JockoClient\JockoCms\List\JockoColumn;
+use Code16\OzuClient\Facades\Ozu;
+use Code16\OzuClient\OzuCms\Form\OzuField;
+use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
+use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
+use Code16\OzuClient\OzuCms\OzuCollectionConfig;
+use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Illuminate\Console\Command;
 
 class ConfigureCmsCommand extends Command
 {
-    protected $signature = 'jocko:configure-cms';
-    protected $description = 'Send CMS configuration to Jocko.';
+    protected $signature = 'ozu:configure-cms';
+    protected $description = 'Send CMS configuration to Ozu.';
 
     public function handle(): void
     {
-        collect(config('jocko-client.collections'))
+        collect(config('ozu-client.collections'))
             ->map(function ($collectionClassName, $k) {
                 $model = new $collectionClassName;
-                $collection = $collectionClassName::configureJockoCollection(new JockoCollectionConfig());
-                $list = $collectionClassName::configureJockoCollectionList(new JockoCollectionListConfig());
-                $form = $collectionClassName::configureJockoCollectionForm(new JockoCollectionFormConfig());
+                $collection = $collectionClassName::configureOzuCollection(new OzuCollectionConfig());
+                $list = $collectionClassName::configureOzuCollectionList(new OzuCollectionListConfig());
+                $form = $collectionClassName::configureOzuCollectionForm(new OzuCollectionFormConfig());
 
                 return [
-                    'key' => $model->jockoCollectionKey(),
+                    'key' => $model->ozuCollectionKey(),
                     'label' => $collection->label(),
                     'icon' => $collection->icon(),
                     'hasPublicationState' => $collection->hasPublicationState(),
@@ -38,7 +38,7 @@ class ConfigureCmsCommand extends Command
                         'isPaginated' => $list->isPaginated(),
                         'columns' => $list
                             ->columns()
-                            ->map(fn (JockoColumn $column) => [
+                            ->map(fn (OzuColumn $column) => [
                                 'type' => $column->type(),
                                 'key' => $column->key(),
                                 'label' => $column->label(),
@@ -48,18 +48,18 @@ class ConfigureCmsCommand extends Command
                     'form' => [
                         'fields' => $form
                             ->customFields()
-                            ->map(fn (JockoField $field) => $field->toArray())
+                            ->map(fn (OzuField $field) => $field->toArray())
                     ],
                 ];
             })
             ->each(function (array $collection) {
                 $this->info('Update CMS configuration for [' . $collection['key'] . '].');
-                Jocko::updateCollectionSharpConfiguration(
+                Ozu::updateCollectionSharpConfiguration(
                     $collection['key'],
                     $collection
                 );
             });
 
-        $this->info('CMS configuration sent to Jocko.');
+        $this->info('CMS configuration sent to Ozu.');
     }
 }

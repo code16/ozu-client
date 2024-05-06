@@ -1,8 +1,8 @@
 <?php
 
-namespace Code16\JockoClient\JockoCms\List;
+namespace Code16\OzuClient\OzuCms\List;
 
-abstract class JockoColumn
+abstract class OzuColumn
 {
     protected ?string $label = null;
     protected bool $isDefaultSort = false;
@@ -12,24 +12,24 @@ abstract class JockoColumn
     {
     }
 
-    public static function makeText(string $key, int $size): JockoTextColumn
+    public static function makeText(string $key, int $size): OzuTextColumn
     {
-        return new JockoTextColumn($key, $size);
+        return new OzuTextColumn($key, $size);
     }
 
-    public static function makeDate(string $key, int $size): JockoDateColumn
+    public static function makeDate(string $key, int $size): OzuDateColumn
     {
-        return new JockoDateColumn($key, $size);
+        return new OzuDateColumn($key, $size);
     }
 
-    public static function makeImage(string $key, int $size): JockoThumbnailColumn
+    public static function makeImage(string $key, int $size): OzuThumbnailColumn
     {
-        return new JockoThumbnailColumn($key, $size);
+        return new OzuThumbnailColumn($key, $size);
     }
 
-    public static function makeCheck(string $key, int $size): JockoCheckColumn
+    public static function makeCheck(string $key, int $size): OzuCheckColumn
     {
-        return new JockoCheckColumn($key, $size);
+        return new OzuCheckColumn($key, $size);
     }
 
     public function key(): string
