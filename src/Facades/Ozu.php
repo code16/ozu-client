@@ -3,7 +3,6 @@
 namespace Code16\OzuClient\Facades;
 
 use Code16\OzuClient\Client;
-use Code16\OzuClient\Client;
 use Illuminate\Support\Facades\Facade;
 
 /**
