@@ -14,6 +14,7 @@ return new class extends Migration
             $table->text('title')->nullable();
             $table->unsignedInteger('order')->default(1000);
             $table->text('content')->nullable();
+            $table->string('slug')->nullable();
             $table->string('collection_key');
             $table->json('custom_properties')->nullable();
 

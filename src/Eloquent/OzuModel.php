@@ -10,19 +10,18 @@ use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 abstract class OzuModel extends Model
 {
     use HasCollectionKey;
     use HasCollectionGlobalScopes;
+    use HasSlug;
 
     protected $guarded = [];
 
     protected $table = 'posts';
-
-    protected $casts = [
-        'custom_properties' => 'array',
-    ];
 
     protected array $ozuCustomAttributes = [];
 
@@ -37,12 +36,20 @@ abstract class OzuModel extends Model
 
     public function getCasts()
     {
-        return array_merge(
-            parent::getCasts(),
-            collect($this->ozuCustomAttributes)
+        return [
+            ...parent::getCasts(),
+            'custom_properties' => 'array',
+            ...collect($this->ozuCustomAttributes)
                 ->mapWithKeys(fn($attribute) => [$attribute => OzuCustomAttribute::class])
-                ->toArray()
-        );
+                ->toArray(),
+        ];
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
     }
 
     public function hasCustomAttribute(string $key): bool

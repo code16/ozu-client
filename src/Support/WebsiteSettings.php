@@ -11,7 +11,7 @@ abstract class WebsiteSettings
 
     public function __construct()
     {
-        $this->loadValues();
+//        $this->loadValues();
     }
 
     private function loadValues(): self
