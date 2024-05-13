@@ -31,8 +31,6 @@ trait IsOzuModel
         return $this->getTable();
     }
 
-    abstract public static function getOzuCustomAttributes(): array;
-
     abstract public static function configureOzuCollection(OzuCollectionConfig $config): OzuCollectionConfig;
 
     abstract public static function configureOzuCollectionList(OzuCollectionListConfig $config): OzuCollectionListConfig;
