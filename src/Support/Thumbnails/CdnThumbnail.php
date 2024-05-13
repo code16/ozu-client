@@ -7,7 +7,8 @@ class CdnThumbnail extends Thumbnail
     public function make(?int $width, ?int $height = null, bool $fit = false): ?string
     {
         return sprintf(
-            'https://ik.imagekit.io/rb2r7d3xo/jocko3-staging/%s/storage/%s',
+            '%s%s/storage/%s',
+            config('app.cdn_url'),
             $this->generateUrlParameters($width, $height, $fit),
             $this->mediaModel->file_name
         );
