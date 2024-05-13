@@ -8,7 +8,7 @@ class CdnThumbnail extends Thumbnail
     {
         return sprintf(
             '%s%s/storage/%s',
-            config('app.cdn_url'),
+            config('ozu-client.cdn_url'),
             $this->generateUrlParameters($width, $height, $fit),
             $this->mediaModel->file_name
         );
