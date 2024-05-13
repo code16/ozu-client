@@ -20,9 +20,6 @@ class OzuServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
             ->name('ozu-client')
             ->hasMigrations(['create_ozu_tables'])->runsMigrations()

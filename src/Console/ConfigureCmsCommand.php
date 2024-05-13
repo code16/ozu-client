@@ -17,7 +17,7 @@ class ConfigureCmsCommand extends Command
 
     public function handle(): void
     {
-        if(empty(config('ozu-client.collections'))) {
+        if (empty(config('ozu-client.collections'))) {
             $this->info('No collections to configure.');
             return;
         }
