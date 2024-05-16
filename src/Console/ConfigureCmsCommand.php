@@ -9,6 +9,7 @@ use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Schema;
 
 class ConfigureCmsCommand extends Command
 {
@@ -55,6 +56,17 @@ class ConfigureCmsCommand extends Command
                             ->customFields()
                             ->map(fn (OzuField $field) => $field->toArray())
                     ],
+                    'customFields' => collect(Schema::getColumnListing($model->getTable()))
+                        ->filter(fn (string $column) => !in_array($column, $model::$ozuColumns))
+                        ->mapWithKeys(fn (string $column) => [
+                            $column => match(Schema::getColumnType($model->getTable(), $column)) {
+                                'datetime', 'timestamps' => 'dateTime',
+                                'date' => 'date',
+                                'int', 'bigint', 'smallint', 'mediumint', 'tinyint' => 'integer',
+                                'float', 'double' => 'float',
+                                default => 'string',
+                            }
+                        ])
                 ];
             })
             ->each(function (array $collection) {

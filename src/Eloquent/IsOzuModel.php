@@ -13,6 +13,16 @@ trait IsOzuModel
 {
     use HasSlug;
 
+    public static array $ozuColumns = [
+        'id',
+        'title',
+        'content',
+        'slug',
+        'order',
+        'created_at',
+        'updated_at',
+    ];
+
     public function cover(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')
