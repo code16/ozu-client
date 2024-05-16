@@ -5,10 +5,12 @@ namespace Code16\OzuClient\Eloquent;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+/** @mixin Model */
 trait IsOzuModel
 {
     use HasSlug;
