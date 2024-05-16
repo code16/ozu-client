@@ -2,6 +2,7 @@
 
 namespace Code16\OzuClient;
 
+use Code16\OzuClient\Deploy\DeployServiceProvider;
 use Code16\OzuClient\Support\Pagination\StaticLengthAwarePaginator;
 use Code16\OzuClient\Support\Pagination\StaticPaginator;
 use Code16\OzuClient\Support\Thumbnails\CdnThumbnail;
@@ -50,6 +51,8 @@ class OzuServiceProvider extends PackageServiceProvider
                 ? $app->make(CdnThumbnail::class)
                 : $app->make(LocalThumbnail::class);
         });
+
+        $this->app->register(DeployServiceProvider::class);
     }
 
     public function boot()

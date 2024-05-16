@@ -23,6 +23,8 @@ class DeployServiceProvider extends ServiceProvider
             }
         });
 
+        config()->set('app.asset_url', '/');
+
         $this->app[Dispatcher::class]->map([
             \Spatie\Export\Jobs\CrawlSite::class => CrawlSiteHandler::class,
         ]);
