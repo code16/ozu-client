@@ -1,6 +1,6 @@
 {
     "name": "code16/ozu-client",
-    "description": "Client to access to Ozu API (https://github.com/code16/jocko)",
+    "description": "Companion package for Ozu projects (https://ozu.code16.fr)",
     "keywords": [
         "code16",
         "laravel",
@@ -10,13 +10,18 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Code 16",
+            "name": "Antoine Guingand",
             "email": "antoine@code16.fr",
+            "role": "Developer"
+        },
+        {
+            "name": "Philippe Lonchampt",
+            "email": "philippe@code16.fr",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "8.2|8.3",
         "code16/laravel-content-renderer": "^1.1.0",
         "illuminate/contracts": "^11.0",
         "intervention/image-laravel": "^1.0",
@@ -61,10 +66,7 @@
         "laravel": {
             "providers": [
                 "Code16\\OzuClient\\OzuServiceProvider"
-            ],
-            "aliases": {
-                "Ozu": "Code16\\OzuClient\\Facades\\Ozu"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

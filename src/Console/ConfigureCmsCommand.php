@@ -2,7 +2,7 @@
 
 namespace Code16\OzuClient\Console;
 
-use Code16\OzuClient\Facades\Ozu;
+use Code16\OzuClient\Client;
 use Code16\OzuClient\OzuCms\Form\OzuField;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
@@ -16,7 +16,7 @@ class ConfigureCmsCommand extends Command
     protected $signature = 'ozu:configure-cms';
     protected $description = 'Send CMS configuration to Ozu.';
 
-    public function handle(): void
+    public function handle(Client $ozuClient): void
     {
         if (empty(config('ozu-client.collections'))) {
             $this->info('No collections to configure.');
@@ -69,9 +69,9 @@ class ConfigureCmsCommand extends Command
                         ])
                 ];
             })
-            ->each(function (array $collection) {
+            ->each(function (array $collection) use ($ozuClient) {
                 $this->info('Update CMS configuration for [' . $collection['key'] . '].');
-                Ozu::updateCollectionSharpConfiguration(
+                $ozuClient->updateCollectionSharpConfiguration(
                     $collection['key'],
                     $collection
                 );
