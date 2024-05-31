@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "php": "8.2|8.3",
+        "php": "8.2.*|8.3.*",
         "code16/laravel-content-renderer": "^1.1.0",
         "illuminate/contracts": "^11.0",
         "intervention/image-laravel": "^1.0",
