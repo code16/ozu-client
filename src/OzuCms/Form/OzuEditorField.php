@@ -7,7 +7,11 @@ class OzuEditorField extends OzuField
     private bool $withoutParagraphs = false;
     private bool $hideToolbar = false;
     private array $toolbar = [
-        'B', 'I', '|', 'UL', '|', 'A'
+        OzuEditorToolbarEnum::Bold,
+        OzuEditorToolbarEnum::Italic,
+        OzuEditorToolbarEnum::Separator,
+        OzuEditorToolbarEnum::BulletList,
+        OzuEditorToolbarEnum::Link,
     ];
     private int $height = 200;
     private ?int $maxHeight = null;
@@ -51,7 +55,7 @@ class OzuEditorField extends OzuField
         return array_merge(parent::toArray(), [
             'withoutParagraphs' => $this->withoutParagraphs,
             'hideToolbar' => $this->hideToolbar,
-            'toolbar' => $this->toolbar,
+            'toolbar' => collect($this->toolbar)->map(fn($item) => $item->value)->toArray(),
             'height' => $this->height,
             'maxHeight' => $this->maxHeight,
         ]);
