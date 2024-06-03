@@ -187,29 +187,39 @@ You can refer to the Ozu demo project [dvlpp/ozu-demo](https://github.com/dvlpp/
 
 ## Restrictions
 
-Generating static files means we can't use request-specific features like query parameters, session, POST forms, etc... but we provide solutions to keep the code closest to PHP server Laravel app.
+Generating static files means we can’t use request-specific features like query parameters, session, POST forms, etc. But Ozu provides solutions to keep the code as close to a classic Laravel app as possible.
 
 ### Query string
-Considering this route
+
+Consider this simple use case: we need to display a project list that we want to be sortable. In a classic Laravel app, we would have a route like this:
+
 ```php
 Route::get('/projects')
 ```
-When going to `/projects?sort=asc`, we can't check for `sort` in the controller because we are generating static HTML files. Instead you'll need to either :
-  - put the query in a param instead (`/projects/list/{sort}`), this will create 2 HTML files `projects/list/desc.html` & `projects/list/asc.html`
-  - or handle query string in front-end code (with alpine for example)
+
+And in the controller, we would check for a query parameter to sort the projects, for instance `/projects?sort=asc`.
+
+In an Ozu project, like for any static website, we can't check for `sort` in the controller because we are generating static HTML files; you can instead:
+  - put the query in a param (eg: `/projects/list/{sort}`): this will create 2 HTML files `projects/list/desc.html` and `projects/list/asc.html`.
+  - Or handle the query string in front-end code (with Alpine for example).
 
 ### Pagination
-For the reason enounced above, `?page=1` can't work with generated static HTML. Instead you'll need to put the page as parameter :
+
+For the very same reason, `?page=1` can't work with generated static HTML; instead you'll need to put the page as a segment:
+
 ```php
 Route::get('/projects/index/{page}')
 ```
-You can still use `{{ $projects->links() }}` or `route('projects.index', ['page' => 2])`. We override laravel default Paginator to handle the `{page}` parameter instead of a query 
+
+You will still be able to use `{{ $projects->links() }}` or `route('projects.index', ['page' => 2])`: Ozu overrides Laravel default Paginator to handle the page as a segment. 
 
 ### Session
-By principle, sessions aren't available for static generated sites. If you really need to store session data, you can use cookies or localStorage in JS.
+
+By definition sessions aren’t available for static generated sites. If you really need to store session data you can use cookies or localStorage in JS.
 
 ### Forms
-For forms, in the current state of Ozu, you'll need an external provider to handle submission (like [FieldGoal](https://fieldgoal.io/))
+
+For forms, in the current state of Ozu, you'll need an external provider to handle submission (there are a lot of solutions, like [FieldGoal](https://fieldgoal.io/) for instance).
 
 ## Go for production
 
