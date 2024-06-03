@@ -22,8 +22,8 @@ php artisan vendor:publish --tag="ozu-client-config"
 
 ### Routes, controllers, views
 
-Create your routes, controllers, views, etc. as you would do for a regular Laravel project — with a few restrictions in mind:
-- TODO
+Create your routes, controllers, views, etc. as you would do for a regular Laravel project — with a few restrictions in mind, because of the static nature of the project:
+- Do not use any querystring
 - TODO
 - ...
 
@@ -188,6 +188,10 @@ class DatabaseSeeder extends OzuSeeder
 }
 ```
 
+### Check the demo project for an example
+
+You can refer to the Ozu demo project [dvlpp/ozu-demo](https://github.com/dvlpp/ozu-demo) for an example of a simple project that uses Ozu.
+
 ## Go for production
 
 Once your project is ready, you can deploy it to Ozu.
@@ -230,12 +234,18 @@ This command will create a new collection in Ozu for each of your declared Model
 At this stage, you should be able to see your custom CMS at the address https://ozu.code16.fr/sharp. Here you can manage the content of your collections.
 
 > [!NOTE]
-> For now there is no way to seed production data, but it's in the roadmap. 
+> Sharp is the underlying content management framework used by Ozu: although you really don’t have to know it to use Ozu, you can [check its website](https://sharp.code16.fr) if you are curious.
+
+> [!NOTE]
+> For now there is no way to seed production data, but it’s high in the roadmap. 
 
 ### Deploy your project
 
-To deploy your project in the actual production space, you'll need a few more steps:
+Once you have entered your content in the CMS, you can deploy the project as a static website following these steps:
 
-- attach you Github repository to your Ozu project
-- Netlify
-- ...
+1. install Ozu Github app + grant read only access to your repository
+2. configure github repo + branch in Ozu dashboard (configuration menu)
+3. Create a new personal access token in Netlify (https://app.netlify.com/user/applications/personal) with expiration set to "No expiration" and report it in Ozu dashboard 
+4. Create Netlify site in Ozu dashboard
+5. (push you latest code in your repo if needed and adapt your content in Ozu CMS)
+6. click on "Deploy"!
