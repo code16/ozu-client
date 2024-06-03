@@ -18,14 +18,7 @@ Publish the config file:
 php artisan vendor:publish --tag="ozu-client-config"
 ```
 
-## Getting started
-
-### Routes, controllers, views
-
-Create your routes, controllers, views, etc. as you would do for a regular Laravel project — with a few restrictions in mind, because of the static nature of the project:
-- Do not use any querystring
-- TODO
-- ...
+## Usage
 
 ### Models are Ozu collections
 
@@ -146,7 +139,7 @@ You must define the `model_key` in the relation to differentiate the different t
 
 You can then use this relation in your views to display the images, and leverage the `thumbnail()` method to get the URL of the image in the desired size:
 
-```php
+```blade
 @if(count($project->visuals))
     <div class="mt-12">
         <div class="grid sm:grid-cols-3 grid-cols-2 gap-4">
@@ -191,6 +184,32 @@ class DatabaseSeeder extends OzuSeeder
 ### Check the demo project for an example
 
 You can refer to the Ozu demo project [dvlpp/ozu-demo](https://github.com/dvlpp/ozu-demo) for an example of a simple project that uses Ozu.
+
+## Restrictions
+
+Generating static files means we can't use request-specific features like query parameters, session, POST forms, etc... but we provide solutions to keep the code closest to PHP server Laravel app.
+
+### Query string
+Considering this route
+```php
+Route::get('/projects')
+```
+When going to `/projects?sort=asc`, we can't check for `sort` in the controller because we are generating static HTML files. Instead you'll need to either :
+  - put the query in a param instead (`/projects/list/{sort}`), this will create 2 HTML files `projects/list/desc.html` & `projects/list/asc.html`
+  - or handle query string in front-end code (with alpine for example)
+
+### Pagination
+For the reason enounced above, `?page=1` can't work with generated static HTML. Instead you'll need to put the page as parameter :
+```php
+Route::get('/projects/index/{page}')
+```
+You can still use `{{ $projects->links() }}` or `route('projects.index', ['page' => 2])`. We override laravel default Paginator to handle the `{page}` parameter instead of a query 
+
+### Session
+By principle, sessions aren't available for static generated sites. If you really need to store session data, you can use cookies or localStorage in JS.
+
+### Forms
+For forms, in the current state of Ozu, you'll need an external provider to handle submission (like [FieldGoal](https://fieldgoal.io/))
 
 ## Go for production
 
