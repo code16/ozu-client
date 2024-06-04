@@ -11,7 +11,6 @@ use Code16\OzuClient\Support\Thumbnails\Thumbnail;
 use Code16\OzuClient\View\Components\Content;
 use Code16\OzuClient\View\Components\File;
 use Code16\OzuClient\View\Components\Image;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
@@ -75,12 +74,12 @@ class OzuServiceProvider extends PackageServiceProvider
             return request()->route()->parameter('page');
         });
 
-        Relation::enforceMorphMap(
-            collect(config('ozu-client.collections'))
-                ->mapWithKeys(fn ($className) => [
-                    (new $className)->ozuCollectionKey() => $className
-                ])
-                ->toArray()
-        );
+//        Relation::enforceMorphMap(
+//            collect(config('ozu-client.collections'))
+//                ->mapWithKeys(fn ($className) => [
+//                    (new $className)->ozuCollectionKey() => $className
+//                ])
+//                ->toArray()
+//        );
     }
 }

@@ -47,12 +47,12 @@ class OzuCollectionConfig
 
     public function label(): string
     {
-        return $this->label;
+        return $this->label ?? 'no label';
     }
 
-    public function icon(): string
+    public function icon(): ?string
     {
-        return $this->icon;
+        return $this->icon ?? null;
     }
 
     public function hasPublicationState(): bool

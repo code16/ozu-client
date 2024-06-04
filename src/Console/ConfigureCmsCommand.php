@@ -2,6 +2,7 @@
 
 namespace Code16\OzuClient\Console;
 
+use Closure;
 use Code16\OzuClient\Client;
 use Code16\OzuClient\OzuCms\Form\OzuField;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
@@ -16,19 +17,24 @@ class ConfigureCmsCommand extends Command
     protected $signature = 'ozu:configure-cms';
     protected $description = 'Send CMS configuration to Ozu.';
 
-    public function handle(Client $ozuClient): void
+    public function handle(Client $ozuClient): int
     {
         if (empty(config('ozu-client.collections'))) {
             $this->info('No collections to configure.');
-            return;
+            return self::SUCCESS;
         }
 
         collect(config('ozu-client.collections'))
-            ->map(function ($collectionClassName, $k) {
-                $model = new $collectionClassName;
-                $collection = $collectionClassName::configureOzuCollection(new OzuCollectionConfig());
-                $list = $collectionClassName::configureOzuCollectionList(new OzuCollectionListConfig());
-                $form = $collectionClassName::configureOzuCollectionForm(new OzuCollectionFormConfig());
+            ->map(function ($collection, $k) {
+                $model = match (true) {
+                    is_string($collection) => app($collection),
+                    $collection instanceof Closure => $collection(),
+                    default => $collection,
+                };
+
+                $collection = $model::configureOzuCollection(new OzuCollectionConfig());
+                $list = $model::configureOzuCollectionList(new OzuCollectionListConfig());
+                $form = $model::configureOzuCollectionForm(new OzuCollectionFormConfig());
 
                 return [
                     'key' => $model->ozuCollectionKey(),
@@ -78,5 +84,7 @@ class ConfigureCmsCommand extends Command
             });
 
         $this->info('CMS configuration sent to Ozu.');
+
+        return self::SUCCESS;
     }
 }
