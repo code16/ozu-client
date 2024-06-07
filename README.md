@@ -149,7 +149,7 @@ class Project extends Model
     {
         return $config
             ->declareBelongsToField(ozuModelClass: Category::class, label: 'Project Category')
-            ->addCustomField( /* ... */);
+            ->addCustomField(/* ... */);
             // ...
     }
     
