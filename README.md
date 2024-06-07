@@ -106,7 +106,63 @@ class Project extends Model
 > [!NOTE]  
 > This configuration will be used by Ozu to properly display the collection in the content management tool. It has no effect in your local codebase.
 
-### Attachments and visuals are `Media`s
+### Handle `BelongsTo` relationships
+
+A common use case is to have a `BelongsTo` relationship between two Ozu Models. There are two possibilities:
+- the relationship is not exposed to Ozu, meaning you don't want to handle it in the CMS: in this case you can define the relationship as usual in Laravel, with a dedicated DB column for the foreign key.
+- If you more likely need to allow the content manager to update this relation, then there is a major contraint: you can only have one belongsTo relation per Model, with a column named `parent_id`.
+
+Here is an example with a `Project` Model that belongs to a `Category` Model. First the migration:
+
+```php
+return new class extends Migration
+{
+    use MigratesOzuTable;
+
+    public function up(): void
+    {
+        $this->createOzuTable('projects');
+
+        Schema::table('projects', function (Blueprint $table) {
+            $table->foreignId('parent_id')->constrained('categories')->cascadeOnDelete();
+            // ...
+        });
+    }
+};
+```
+
+Then the `Project` Model:
+
+```php
+class Project extends Model
+{
+    use IsOzuModel;
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+    
+    // ...
+
+    public static function configureOzuCollectionForm(OzuCollectionFormConfig $config): OzuCollectionFormConfig
+    {
+        return $config
+            ->declareBelongsToField(ozuModelClass: Category::class, label: 'Project Category')
+            ->addCustomField(/* ... */);
+            // ...
+    }
+    
+    // ...
+}
+```
+
+With that, you can use the regular `$project->category` relationship in your codebase, and Ozu will be able to present a category selector in the Project form on the CMS.
+
+> [!NOTE]  
+> You can of course define the `HasMany` opposite of this relation in the Category Model if needed.
+
+### Attached visuals are `Media`
 
 If you want to attach images to your Models, leverage the `Code16\OzuClient\Eloquent\Media` model via a `MorphOne` or a `MorphMany` relation:
 
