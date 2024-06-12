@@ -75,6 +75,7 @@ class ConfigureCmsCommand extends Command
                                 'date' => 'date',
                                 'int', 'bigint', 'smallint', 'mediumint', 'tinyint' => 'integer',
                                 'float', 'double' => 'float',
+                                'text', 'json' => 'text',
                                 default => 'string',
                             }
                         ])
