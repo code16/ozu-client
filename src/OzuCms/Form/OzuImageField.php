@@ -7,6 +7,7 @@ class OzuImageField extends OzuField
     private array $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     private int $maxFileSizeInMB = 5;
     private bool $hasLegend = false;
+    private ?string $cropRatio = null;
 
     public function setHasLegend(bool $hasLegend = true): self
     {
@@ -29,6 +30,13 @@ class OzuImageField extends OzuField
         return $this;
     }
 
+    public function setCropRatio(string $cropRatio): self
+    {
+        $this->cropRatio = $cropRatio;
+
+        return $this;
+    }
+
     public function type(): string
     {
         return 'image';
@@ -40,6 +48,7 @@ class OzuImageField extends OzuField
             'hasLegend' => $this->hasLegend,
             'allowedExtensions' => $this->allowedExtensions,
             'maxFileSize' => $this->maxFileSizeInMB,
+            'cropRatio' => $this->cropRatio,
         ]);
     }
 }
