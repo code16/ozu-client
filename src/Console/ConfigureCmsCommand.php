@@ -58,6 +58,9 @@ class ConfigureCmsCommand extends Command
                             ])
                     ],
                     'form' => [
+                        'title' => $form->titleField()?->toArray(),
+                        'cover' => $form->coverField()?->toArray(),
+                        'content' => $form->contentField()?->toArray(),
                         'fields' => $form
                             ->customFields()
                             ->map(fn (OzuField $field) => $field->toArray())

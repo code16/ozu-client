@@ -4,7 +4,7 @@ namespace Code16\OzuClient\OzuCms\Form;
 
 class OzuImageField extends OzuField
 {
-    private string|array|null $fileFilter = null;
+    private array $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     private int $maxFileSizeInMB = 5;
     private bool $hasLegend = false;
 
@@ -15,9 +15,9 @@ class OzuImageField extends OzuField
         return $this;
     }
 
-    public function setFileFiler(string|array|null $fileFilter): self
+    public function setAllowedExtensions(array $extensions): self
     {
-        $this->fileFilter = $fileFilter;
+        $this->allowedExtensions = $extensions;
 
         return $this;
     }
@@ -38,7 +38,7 @@ class OzuImageField extends OzuField
     {
         return array_merge(parent::toArray(), [
             'hasLegend' => $this->hasLegend,
-            'fileFilter' => $this->fileFilter,
+            'allowedExtensions' => $this->allowedExtensions,
             'maxFileSize' => $this->maxFileSizeInMB,
         ]);
     }
