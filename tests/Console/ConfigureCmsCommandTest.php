@@ -129,7 +129,7 @@ it('sends list cms configuration to Ozu', function () {
         return $request['list']['isReorderable'] == true
             && $request['list']['isSearchable'] == true
             && $request['list']['isPaginated'] == true
-            && $request['list']['defaultSort'] == ['dummy-date', 'asc']
+            && $request['list']['defaultSort'] == ['column' => 'dummy-date', 'direction' => 'asc']
             && $request['list']['columns'] == collect([
                 [
                     'type' => 'text',
