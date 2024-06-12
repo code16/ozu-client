@@ -48,6 +48,7 @@ class ConfigureCmsCommand extends Command
                         'isReorderable' => $list->isReorderable(),
                         'isSearchable' => $list->isSearchable(),
                         'isPaginated' => $list->isPaginated(),
+                        'defaultSort' => $list->defaultSort(),
                         'columns' => $list
                             ->columns()
                             ->map(fn (OzuColumn $column) => [

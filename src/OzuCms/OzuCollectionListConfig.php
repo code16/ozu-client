@@ -59,4 +59,15 @@ class OzuCollectionListConfig
     {
         return collect($this->columns);
     }
+
+    public function defaultSort(): ?array
+    {
+        $column = collect($this->columns)
+            ->filter(fn (OzuColumn $column) => $column->isDefaultSort())
+            ->last();
+
+        return $column
+            ? ['column' => $column->key(), 'direction' => $column->getDefaultSortDirection()]
+            : null;
+    }
 }

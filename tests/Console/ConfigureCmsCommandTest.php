@@ -116,7 +116,7 @@ it('sends list cms configuration to Ozu', function () {
                     ->addColumn(OzuColumn::makeText('dummy-text', 1)->setLabel('Dummy text'))
                     ->addColumn(OzuColumn::makeCheck('dummy-check', 2)->setLabel('Dummy check'))
                     ->addColumn(OzuColumn::makeImage('dummy-image', 3)->setLabel('Dummy image'))
-                    ->addColumn(OzuColumn::makeDate('dummy-date', 3)->setLabel('Dummy date'));
+                    ->addColumn(OzuColumn::makeDate('dummy-date', 3)->setLabel('Dummy date')->setDefaultSort());
             }
         }
     ]]);
@@ -129,6 +129,7 @@ it('sends list cms configuration to Ozu', function () {
         return $request['list']['isReorderable'] == true
             && $request['list']['isSearchable'] == true
             && $request['list']['isPaginated'] == true
+            && $request['list']['defaultSort'] == ['dummy-date', 'asc']
             && $request['list']['columns'] == collect([
                 [
                     'type' => 'text',
