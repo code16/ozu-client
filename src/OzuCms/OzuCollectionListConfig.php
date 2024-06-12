@@ -2,6 +2,8 @@
 
 namespace Code16\OzuClient\OzuCms;
 
+use Code16\OzuClient\OzuCms\Form\OzuBelongsToField;
+use Code16\OzuClient\OzuCms\List\OzuBelongsToFilter;
 use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Illuminate\Support\Collection;
 
@@ -10,6 +12,8 @@ class OzuCollectionListConfig
     protected bool $isReorderable = false;
     protected bool $isSearchable = false;
     protected bool $isPaginated = false;
+
+    protected ?OzuBelongsToFilter $belongsToFilter = null;
     protected array $columns = [];
 
     public function setIsReorderable(bool $isReorderable = true): self
@@ -29,6 +33,17 @@ class OzuCollectionListConfig
     public function setIsPaginated(bool $isPaginated = true): self
     {
         $this->isPaginated = $isPaginated;
+
+        return $this;
+    }
+
+    public function declareBelongsToFilter(string $ozuModelClass, string $label, bool $required = true): self
+    {
+        $ozuCollectionKey = app($ozuModelClass)->ozuCollectionKey();
+
+        $this->belongsToFilter = (new OzuBelongsToFilter($ozuCollectionKey))
+            ->setLabel($label)
+            ->setRequired($required);
 
         return $this;
     }
@@ -58,6 +73,11 @@ class OzuCollectionListConfig
     public function columns(): Collection
     {
         return collect($this->columns);
+    }
+
+    public function belongsToFilter(): ?OzuBelongsToFilter
+    {
+        return $this->belongsToFilter;
     }
 
     public function defaultSort(): ?array
