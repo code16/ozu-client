@@ -144,10 +144,22 @@ class Project extends Model
     }
     
     // ...
+    
+    public static function configureOzuCollectionList(OzuCollectionListConfig $config): OzuCollectionListConfig
+    {
+        return $config
+            // Optionally add a filter for the Project list in the CMS
+            ->declareBelongsToFilter(ozuModelClass: Category::class, label: 'Saison', required: true)
+            ->addColumn(/* ... */);
+            // ...
+    }
+    
+    // ...
 
     public static function configureOzuCollectionForm(OzuCollectionFormConfig $config): OzuCollectionFormConfig
     {
         return $config
+            // Add a BelongsTo select field in the Project form in the CMS
             ->declareBelongsToField(ozuModelClass: Category::class, label: 'Project Category')
             ->addCustomField(/* ... */);
             // ...
