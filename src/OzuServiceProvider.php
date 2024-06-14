@@ -5,7 +5,8 @@ namespace Code16\OzuClient;
 use Code16\OzuClient\Deploy\DeployServiceProvider;
 use Code16\OzuClient\Support\Pagination\StaticLengthAwarePaginator;
 use Code16\OzuClient\Support\Pagination\StaticPaginator;
-use Code16\OzuClient\Support\Thumbnails\CdnThumbnail;
+use Code16\OzuClient\Support\Thumbnails\ImageKitThumbnail;
+use Code16\OzuClient\Support\Thumbnails\KeyCdnThumbnail;
 use Code16\OzuClient\Support\Thumbnails\LocalThumbnail;
 use Code16\OzuClient\Support\Thumbnails\Thumbnail;
 use Code16\OzuClient\View\Components\Content;
@@ -47,9 +48,15 @@ class OzuServiceProvider extends PackageServiceProvider
         $this->app->bind(Paginator::class, StaticPaginator::class);
         $this->app->bind(LengthAwarePaginator::class, StaticLengthAwarePaginator::class);
         $this->app->bind(Thumbnail::class, function ($app) {
-            return $app->environment('production')
-                ? $app->make(CdnThumbnail::class)
-                : $app->make(LocalThumbnail::class);
+            if (!$app->environment('production') || !config('ozu-client.cdn.url')) {
+                return $app->make(LocalThumbnail::class);
+            }
+
+            return match(config('ozu-client.cdn.provider')) {
+                'imagekit' => $app->make(ImageKitThumbnail::class),
+                'keycdn' => $app->make(KeyCdnThumbnail::class),
+                default => $app->make(LocalThumbnail::class)
+            };
         });
 
         $this->app->register(DeployServiceProvider::class);

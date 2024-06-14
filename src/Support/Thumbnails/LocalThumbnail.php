@@ -6,6 +6,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Exceptions\DecoderException;
 use Intervention\Image\ImageManager;
 
 class LocalThumbnail extends Thumbnail
@@ -76,7 +77,7 @@ class LocalThumbnail extends Thumbnail
                 }
 
                 $thumbnailDisk->put($thumbnailPath, $sourceImg->toJpeg(quality: $this->quality));
-            } catch (FileNotFoundException $ex) {
+            } catch (FileNotFoundException|DecoderException) {
                 return null;
             }
         }
