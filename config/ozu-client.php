@@ -18,8 +18,5 @@ return [
     'api_host' => env('OZU_API_HOST', 'https://ozu.code16.fr/'),
     'api_version' => env('OZU_API_VERSION', 'v1'),
 
-    'cdn' => [
-        'provider' => env('OZU_CDN_PROVIDER'),
-        'url' => env('OZU_CDN_URL'),
-    ],
+    'cdn_url' => env('OZU_CDN_URL'),
 ];

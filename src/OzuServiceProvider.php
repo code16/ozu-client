@@ -48,15 +48,17 @@ class OzuServiceProvider extends PackageServiceProvider
         $this->app->bind(Paginator::class, StaticPaginator::class);
         $this->app->bind(LengthAwarePaginator::class, StaticLengthAwarePaginator::class);
         $this->app->bind(Thumbnail::class, function ($app) {
-            if (!$app->environment('production') || !config('ozu-client.cdn.url')) {
+            if (!$app->environment('production') || !config('ozu-client.cdn_url')) {
                 return $app->make(LocalThumbnail::class);
             }
 
-            return match(config('ozu-client.cdn.provider')) {
-                'imagekit' => $app->make(ImageKitThumbnail::class),
-                'keycdn' => $app->make(KeyCdnThumbnail::class),
-                default => $app->make(LocalThumbnail::class)
-            };
+            // Have to rely on the URL to determine the CDN provider for now,
+            // because we are limited to 10 params for the deployment script :/
+            if (str(config('ozu-client.cdn_url'))->contains('kxcdn.com')) {
+                return $app->make(KeyCdnThumbnail::class);
+            }
+
+            return $app->make(ImageKitThumbnail::class);
         });
 
         $this->app->register(DeployServiceProvider::class);
