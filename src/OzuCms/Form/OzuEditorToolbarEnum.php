@@ -6,6 +6,7 @@ enum OzuEditorToolbarEnum: string
 {
     case Bold = 'bold';
     case Italic = 'italic';
+    const Highlight = 'highlight';
     case Link = 'link';
     case Separator = '|';
     case BulletList = 'bullet-list';
