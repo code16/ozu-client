@@ -16,4 +16,6 @@ abstract class Thumbnail
     }
 
     abstract public function make(?int $width, ?int $height = null, bool $fit = false): ?string;
+
+    abstract public function download(): ?string;
 }

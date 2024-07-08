@@ -85,4 +85,9 @@ class LocalThumbnail extends Thumbnail
         return $thumbnailDisk->url($thumbnailPath)
             .($this->appendTimestamp ? '?'.$thumbnailDisk->lastModified($thumbnailPath) : '');
     }
+
+    public function download(): ?string
+    {
+        return $this->mediaModel->download();
+    }
 }

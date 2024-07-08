@@ -32,4 +32,9 @@ class Media extends Model
             ->forMedia($this)
             ->make($width, $height, $fit);
     }
+
+    public function download(): ?string
+    {
+        return \Storage::disk($this->disk)->url($this->file_name);
+    }
 }

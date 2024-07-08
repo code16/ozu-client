@@ -19,4 +19,17 @@ abstract class CdnThumbnail extends Thumbnail
     }
 
     abstract protected function generateUrlParameters(?int $width, ?int $height, bool $fit): string;
+
+    public function download(): ?string
+    {
+        if($cdnUrl = str(config('ozu-client.cdn_url'))->rtrim('/')) {
+            return sprintf(
+                '%s/storage/%s',
+                $cdnUrl,
+                $this->mediaModel->file_name,
+            );
+        }
+
+        return null;
+    }
 }
