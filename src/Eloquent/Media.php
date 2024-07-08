@@ -35,6 +35,8 @@ class Media extends Model
 
     public function download(): ?string
     {
-        return \Storage::disk($this->disk)->url($this->file_name);
+        return app(Thumbnail::class)
+            ->forMedia($this)
+            ->download();
     }
 }

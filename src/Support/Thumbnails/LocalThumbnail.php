@@ -88,6 +88,6 @@ class LocalThumbnail extends Thumbnail
 
     public function download(): ?string
     {
-        return $this->mediaModel->download();
+        return $this->storage->disk($this->mediaModel->disk)->url($this->mediaModel->file_name);
     }
 }
