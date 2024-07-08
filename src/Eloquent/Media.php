@@ -39,4 +39,17 @@ class Media extends Model
             ->forMedia($this)
             ->download();
     }
+
+    public function size($precision = 2): ?string
+    {
+        if ($this->size > 0) {
+            $size = (int) $this->size;
+            $base = log($size) / log(1024);
+            $suffixes = array(' bytes', ' KB', ' MB', ' GB', ' TB');
+
+            return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+        } else {
+            return $this->size;
+        }
+    }
 }
