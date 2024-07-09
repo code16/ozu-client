@@ -40,9 +40,13 @@ class Media extends Model
             ->download();
     }
 
-    public function size($precision = 2): ?string
+    public function humanReadableSize($precision = 2): ?string
     {
-        if ($this->size > 0) {
+        if ($this->size < 0) {
+            return null;
+        }
+
+        if ($this->size >= 0) {
             $size = (int) $this->size;
             $base = log($size) / log(1024);
             $suffixes = array(' bytes', ' KB', ' MB', ' GB', ' TB');
