@@ -51,7 +51,7 @@ class Media extends Model
             $base = log($size) / log(1024);
             $suffixes = array(' bytes', ' KB', ' MB', ' GB', ' TB');
 
-            return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+            return $this->size === 0 ? '0 bytes' : (round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)]);
         } else {
             return $this->size;
         }

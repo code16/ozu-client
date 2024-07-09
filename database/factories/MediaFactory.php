@@ -30,17 +30,31 @@ class MediaFactory extends Factory
             });
     }
 
-    public function withFile(?string $fileName = null)
+    public function file(string $key): Factory
     {
-        return $this->state(function (array $attributes) use ($fileName) {
-            $fileName = $fileName ?: fake()->slug() . '.jpg';
-            $path = $this->getRandomFixtureImagePath();
+        return $this
+            ->state(function (array $attributes) use ($key) {
+                return [
+                    'model_key' => $key,
+                    'file_name' => sprintf('data/files/%s.jpg', $this->faker->unique()->slug()),
+                    'mime_type' => 'image/jpeg',
+                    'disk' => 'local',
+                    'size' => $this->faker->numberBetween(100, 100000),
+                ];
+            });
+    }
+
+    public function withFile(?string $fileName = null, string $type="image")
+    {
+        return $this->state(function (array $attributes) use ($fileName,$type) {
+            $fileName = $fileName ?: fake()->slug() . ($type==='image'?'.jpg':'.pdf');
+            $path = ($type==="image" ? $this->getRandomFixtureImagePath() : $this->getRandomFixtureDocumentPath());
 
             Storage::disk('local')
-                ->put("/data/medias/$fileName", file_get_contents($path));
+                ->put("/data/".($type==='image'?'medias':'files')."/$fileName", file_get_contents($path));
 
             return [
-                'file_name' => "data/medias/$fileName",
+                'file_name' => "data/".($type==='image'?'medias':'files')."/$fileName",
             ];
         });
     }
@@ -50,6 +64,16 @@ class MediaFactory extends Factory
         return base_path(
             sprintf(
                 'vendor/code16/ozu-client/database/fixtures/images/%s.jpeg',
+                rand(1, 26)
+            )
+        );
+    }
+
+    private function getRandomFixtureDocumentPath(): string
+    {
+        return base_path(
+            sprintf(
+                'vendor/code16/ozu-client/database/fixtures/documents/%s.pdf',
                 rand(1, 26)
             )
         );
