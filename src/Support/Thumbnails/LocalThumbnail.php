@@ -88,6 +88,21 @@ class LocalThumbnail extends Thumbnail
 
     public function download(): ?string
     {
-        return $this->storage->disk($this->mediaModel->disk)->url($this->mediaModel->file_name);
+        $filesDisk = $this->storage->disk('public');
+
+        if (!$filesDisk->exists($this->mediaModel->file_name)) {
+            // Create files directories if needed
+            if (!$filesDisk->exists(dirname($this->mediaModel->file_name))) {
+                $filesDisk->makeDirectory(dirname($this->mediaModel->file_name));
+            }
+
+            try{
+                $filesDisk->put($this->mediaModel->file_name, $this->storage->disk($this->mediaModel->disk)->get($this->mediaModel->file_name));
+            }catch (FileNotFoundException|DecoderException) {
+                return null;
+            }
+        }
+
+        return $this->storage->disk("public")->url($this->mediaModel->file_name);
     }
 }
