@@ -71,11 +71,6 @@ class MediaFactory extends Factory
 
     private function getRandomFixtureDocumentPath(): string
     {
-        return base_path(
-            sprintf(
-                'vendor/code16/ozu-client/database/fixtures/documents/%s.pdf',
-                rand(1, 26)
-            )
-        );
+        return base_path('vendor/code16/ozu-client/database/fixtures/documents/doc.pdf');
     }
 }
