@@ -8,6 +8,7 @@ use Code16\OzuClient\Support\Thumbnails\Thumbnail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Schema;
 
 class Media extends Model
 {
@@ -15,6 +16,10 @@ class Media extends Model
 
     protected $guarded = [];
     protected $table = 'medias';
+    protected $casts = [
+        'custom_properties' => 'array',
+        'size' => 'integer',
+    ];
 
     protected static function newFactory()
     {
@@ -55,5 +60,46 @@ class Media extends Model
         } else {
             return $this->size;
         }
+    }
+
+    /**
+     * @param  string  $key
+     * @return mixed|null
+     */
+    public function getAttribute($key)
+    {
+        if (! $this->isRealAttribute($key)) {
+            return $this->getAttribute('custom_properties')[$key] ?? null;
+        }
+
+        return parent::getAttribute($key);
+    }
+
+    /**
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return Model
+     */
+    public function setAttribute($key, $value)
+    {
+        if (! $this->isRealAttribute($key)) {
+            return $this->updateCustomProperty($key, $value);
+        }
+
+        return parent::setAttribute($key, $value);
+    }
+
+    protected function updateCustomProperty(string $key, $value): self
+    {
+        $properties = $this->getAttribute('custom_properties');
+        $properties[$key] = $value;
+        $this->setAttribute('custom_properties', $properties);
+
+        return $this;
+    }
+
+    protected function isRealAttribute(string $name): bool
+    {
+        return Schema::hasColumn($this->getTable(), $name) ?? false;
     }
 }
