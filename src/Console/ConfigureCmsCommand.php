@@ -10,6 +10,7 @@ use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Schema;
 
 class ConfigureCmsCommand extends Command
@@ -41,6 +42,7 @@ class ConfigureCmsCommand extends Command
                     'label' => $collection->label(),
                     'icon' => $collection->icon(),
                     'hasPublicationState' => $collection->hasPublicationState(),
+                    'hasAutoDeployDateField' => $collection->hasAutoDeployDateField(),
                     'isCreatable' => $collection->isCreatable(),
                     'isDeletable' => $collection->isDeletable(),
                     'order' => $k+1,
@@ -83,10 +85,21 @@ class ConfigureCmsCommand extends Command
             })
             ->each(function (array $collection) use ($ozuClient) {
                 $this->info('Update CMS configuration for [' . $collection['key'] . '].');
-                $ozuClient->updateCollectionSharpConfiguration(
-                    $collection['key'],
-                    $collection
-                );
+                try{
+                    $ozuClient->updateCollectionSharpConfiguration(
+                        $collection['key'],
+                        $collection
+                    );
+                } catch(RequestException $e) {
+                    if ($message = $e->response->json()) {
+                        if(!isset($message['message'])) {
+                            throw $e;
+                        }
+                        $this->error('[' . $collection['key'] . '] '.$message['message']);
+                    } else {
+                        throw $e;
+                    }
+                }
             });
 
         $this->info('CMS configuration sent to Ozu.');
