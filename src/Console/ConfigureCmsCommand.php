@@ -42,7 +42,7 @@ class ConfigureCmsCommand extends Command
                     'label' => $collection->label(),
                     'icon' => $collection->icon(),
                     'hasPublicationState' => $collection->hasPublicationState(),
-                    'hasAutoDeployDateField' => $collection->hasAutoDeployDateField(),
+                    'autoDeployDateField' => $collection->autoDeployDateField(),
                     'isCreatable' => $collection->isCreatable(),
                     'isDeletable' => $collection->isDeletable(),
                     'order' => $k+1,

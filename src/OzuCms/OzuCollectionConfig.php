@@ -38,7 +38,7 @@ class OzuCollectionConfig
      * @param string|null $field
      * @return $this
      */
-    public function setHasAutoDeployDateField(?string $fieldKey = null): self
+    public function setAutoDeployDateField(string $fieldKey): self
     {
         $this->autoDeployDateField = $fieldKey;
 
@@ -74,7 +74,12 @@ class OzuCollectionConfig
         return $this->hasPublicationState;
     }
 
-    public function hasAutoDeployDateField(): ?string
+    public function hasAutoDeployDateField(): bool
+    {
+        return !is_null($this->autoDeployDateField);
+    }
+
+    public function autoDeployDateField(): ?string
     {
         return $this->autoDeployDateField;
     }
