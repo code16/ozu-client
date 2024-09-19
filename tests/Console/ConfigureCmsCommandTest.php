@@ -71,6 +71,7 @@ it('sends general cms configuration to Ozu', function () {
                     ->setLabel('Dummy label')
                     ->setIcon('dummy-icon')
                     ->setHasPublicationState()
+                    ->setAutoDeployDateField('dummy_date')
                     ->setIsCreatable()
                     ->setIsDeletable();
             }
@@ -93,6 +94,7 @@ it('sends general cms configuration to Ozu', function () {
             && $request['icon'] == 'dummy-icon'
             && $request['hasPublicationState'] == true
             && $request['isCreatable'] == true
+            && $request['autoDeployDateField'] == 'dummy_date'
             && $request['isDeletable'] == true;
     });
 });
