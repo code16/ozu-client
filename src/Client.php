@@ -23,6 +23,14 @@ class Client
         );
     }
 
+    public function updateCustomStorageConfiguration(array $configuration): void
+    {
+        $this->http()->post(
+            '/storage/configure',
+            $configuration
+        );
+    }
+
     public function apiKey(): ?string
     {
         return $this->apiKey;

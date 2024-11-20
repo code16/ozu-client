@@ -9,6 +9,7 @@ use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\OzuCms\List\OzuColumn;
+use Code16\OzuClient\OzuCms\Storage\OzuAbstractCustomStorage;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Schema;
@@ -80,7 +81,7 @@ class ConfigureCmsCommand extends Command
                                 'text', 'json' => 'text',
                                 default => 'string',
                             }
-                        ])
+                        ]),
                 ];
             })
             ->each(function (array $collection) use ($ozuClient) {
@@ -101,6 +102,28 @@ class ConfigureCmsCommand extends Command
                     }
                 }
             });
+
+        if(config('ozu-client.custom_storage')) {
+            $customStorage = config('ozu-client.custom_storage');
+
+            if($customStorage instanceof OzuAbstractCustomStorage) {
+                if($customStorage->meetRequirements()) {
+                    $ozuClient->updateCustomStorageConfiguration(config('ozu-client.custom_storage')->toArray());
+                } else {
+                    $this->error(
+                        sprintf('Custom storage does not meet requirements. Missing : %s',
+                            $customStorage->whatsMissing()->join(', ')
+                        )
+                    );
+                    return self::FAILURE;
+                }
+            } else {
+                $this->error('Custom storage must be an instance of OzuAbstractCustomStorage');
+                return self::FAILURE;
+            }
+        } else {
+            $ozuClient->updateCustomStorageConfiguration([]);
+        }
 
         $this->info('CMS configuration sent to Ozu.');
 

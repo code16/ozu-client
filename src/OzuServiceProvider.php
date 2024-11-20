@@ -5,6 +5,7 @@ namespace Code16\OzuClient;
 use Code16\OzuClient\Deploy\DeployServiceProvider;
 use Code16\OzuClient\Support\Pagination\StaticLengthAwarePaginator;
 use Code16\OzuClient\Support\Pagination\StaticPaginator;
+use Code16\OzuClient\Support\Thumbnails\CustomStorageThumbnail;
 use Code16\OzuClient\Support\Thumbnails\ImageKitThumbnail;
 use Code16\OzuClient\Support\Thumbnails\KeyCdnThumbnail;
 use Code16\OzuClient\Support\Thumbnails\LocalThumbnail;
@@ -48,6 +49,10 @@ class OzuServiceProvider extends PackageServiceProvider
         $this->app->bind(Paginator::class, StaticPaginator::class);
         $this->app->bind(LengthAwarePaginator::class, StaticLengthAwarePaginator::class);
         $this->app->bind(Thumbnail::class, function ($app) {
+            if (!$app->environment(['local', 'testing']) && config('ozu-client.custom_storage')) {
+                return $app->make(CustomStorageThumbnail::class);
+            }
+
             if (!$app->environment('production') || !config('ozu-client.cdn_url')) {
                 return $app->make(LocalThumbnail::class);
             }

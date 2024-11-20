@@ -1,0 +1,120 @@
+<?php
+
+namespace Code16\OzuClient\Support\Thumbnails;
+
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Container\CircularDependencyException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Exceptions\DecoderException;
+use Intervention\Image\ImageManager;
+
+class CustomStorageThumbnail extends Thumbnail
+{
+    protected ImageManager $imageManager;
+    protected FilesystemManager $storage;
+    protected int $quality = 90;
+    protected ?int $width;
+    protected ?int $height;
+    protected bool $fit;
+    protected bool $appendTimestamp = true;
+
+    public function __construct()
+    {
+        $this->imageManager = new ImageManager(new Driver());
+        $this->storage = app(FilesystemManager::class);
+    }
+
+    public function make(?int $width, ?int $height = null, bool $fit = false): ?string
+    {
+        if (! $this->mediaModel->disk || ! $this->mediaModel->file_name) {
+            return null;
+        }
+
+        $this->width = $width ?: null;
+        $this->height = $height ?: null;
+        $this->fit = $fit;
+
+        $thumbnailPath = sprintf(
+            'thumbnails/%s/%s-%s_f%s_q-%s/%s',
+            dirname($this->mediaModel->file_name),
+            $width,
+            $height,
+            $fit ? '1' : '0',
+            $this->quality,
+            basename($this->mediaModel->file_name),
+        );
+
+        // Strip double /
+        $thumbnailPath = Str::replace('//', '/', $thumbnailPath);
+
+        return $this->generateThumbnail(
+            $this->mediaModel->disk,
+            $this->mediaModel->file_name,
+            $thumbnailPath,
+        );
+    }
+
+    private function generateThumbnail(string $sourceDisk, string $sourceRelPath, string $thumbnailPath): ?string
+    {
+        $thumbnailDisk = $this->storage->disk('public');
+
+        $sourceDisk = config('ozu-client.custom_storage') ? 'custom' : $sourceDisk;
+
+        if (!$thumbnailDisk->exists($thumbnailPath)) {
+            // Create thumbnail directories if needed
+            if (! $thumbnailDisk->exists(dirname($thumbnailPath))) {
+                $thumbnailDisk->makeDirectory(dirname($thumbnailPath));
+            }
+
+            try {
+                $sourceImg = $this->imageManager->read(
+                    config('ozu-client.custom_storage')
+                        ? $this->storage->build(config('ozu-client.custom_storage')->toArray())->get($sourceRelPath)
+                        : $this->storage->disk($sourceDisk)->get($sourceRelPath),
+                );
+
+                if ($this->fit) {
+                    $sourceImg->cover($this->width, $this->height ?: $this->width);
+                } else {
+                    $sourceImg->scaleDown($this->width, $this->height);
+                }
+
+                $thumbnailDisk->put($thumbnailPath, $sourceImg->toJpeg(quality: $this->quality));
+            } catch (CircularDependencyException|BindingResolutionException|FileNotFoundException|DecoderException) {
+                return null;
+            }
+        }
+
+        return $thumbnailDisk->url($thumbnailPath)
+            .($this->appendTimestamp ? '?'.$thumbnailDisk->lastModified($thumbnailPath) : '');
+    }
+
+    public function download(): ?string
+    {
+        $filesDisk = $this->storage->disk('public');
+
+        if (!$filesDisk->exists($this->mediaModel->file_name)) {
+            // Create files directories if needed
+            if (!$filesDisk->exists(dirname($this->mediaModel->file_name))) {
+                $filesDisk->makeDirectory(dirname($this->mediaModel->file_name));
+            }
+
+            try{
+                if(config('ozu-client.custom_storage'))
+                {
+                    $filesDisk->put($this->mediaModel->file_name, $this->storage->build(config('ozu-client.custom_storage')->toArray())->get($this->mediaModel->file_name));
+                } else {
+                    $filesDisk->put($this->mediaModel->file_name, $this->storage->disk($this->mediaModel->disk)->get($this->mediaModel->file_name));
+                }
+
+            }catch (BindingResolutionException|CircularDependencyException|FileNotFoundException|DecoderException) {
+                return null;
+            }
+        }
+
+        return $this->storage->disk("public")->url($this->mediaModel->file_name);
+    }
+}
