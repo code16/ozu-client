@@ -12,14 +12,21 @@ class Client
         protected ?string $apiKey,
         protected string $apiVersion,
         protected string $websiteKey,
-    ) {
-    }
+    ) {}
 
     public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
     {
         $this->http()->post(
             sprintf('/collections/%s/configure', $collectionKey),
             $collectionData
+        );
+    }
+
+    public function updateCustomStorageConfiguration(array $configuration): void
+    {
+        $this->http()->post(
+            '/storage/configure',
+            $configuration
         );
     }
 

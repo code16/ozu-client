@@ -7,6 +7,4 @@ use Illuminate\Support\Collection;
 /**
  * @implements Collection<int, Image>
  */
-class ImageCollection extends Collection
-{
-}
+class ImageCollection extends Collection {}

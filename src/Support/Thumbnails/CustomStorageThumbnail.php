@@ -2,6 +2,8 @@
 
 namespace Code16\OzuClient\Support\Thumbnails;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Container\CircularDependencyException;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Str;
@@ -9,7 +11,7 @@ use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\Exceptions\DecoderException;
 use Intervention\Image\ImageManager;
 
-class LocalThumbnail extends Thumbnail
+class CustomStorageThumbnail extends Thumbnail
 {
     protected ImageManager $imageManager;
 
@@ -65,6 +67,8 @@ class LocalThumbnail extends Thumbnail
     {
         $thumbnailDisk = $this->storage->disk('public');
 
+        $sourceDisk = config('ozu-client.custom_storage') ? 'custom' : $sourceDisk;
+
         if (! $thumbnailDisk->exists($thumbnailPath)) {
             // Create thumbnail directories if needed
             if (! $thumbnailDisk->exists(dirname($thumbnailPath))) {
@@ -73,7 +77,9 @@ class LocalThumbnail extends Thumbnail
 
             try {
                 $sourceImg = $this->imageManager->read(
-                    $this->storage->disk($sourceDisk)->get($sourceRelPath),
+                    config('ozu-client.custom_storage')
+                        ? $this->storage->build(config('ozu-client.custom_storage')->toArray())->get($sourceRelPath)
+                        : $this->storage->disk($sourceDisk)->get($sourceRelPath),
                 );
 
                 if ($this->fit) {
@@ -83,7 +89,7 @@ class LocalThumbnail extends Thumbnail
                 }
 
                 $thumbnailDisk->put($thumbnailPath, $sourceImg->toJpeg(quality: $this->quality));
-            } catch (FileNotFoundException|DecoderException) {
+            } catch (CircularDependencyException|BindingResolutionException|FileNotFoundException|DecoderException) {
                 return null;
             }
         }
@@ -103,8 +109,13 @@ class LocalThumbnail extends Thumbnail
             }
 
             try {
-                $filesDisk->put($this->mediaModel->file_name, $this->storage->disk($this->mediaModel->disk)->get($this->mediaModel->file_name));
-            } catch (FileNotFoundException|DecoderException) {
+                if (config('ozu-client.custom_storage')) {
+                    $filesDisk->put($this->mediaModel->file_name, $this->storage->build(config('ozu-client.custom_storage')->toArray())->get($this->mediaModel->file_name));
+                } else {
+                    $filesDisk->put($this->mediaModel->file_name, $this->storage->disk($this->mediaModel->disk)->get($this->mediaModel->file_name));
+                }
+
+            } catch (BindingResolutionException|CircularDependencyException|FileNotFoundException|DecoderException) {
                 return null;
             }
         }
