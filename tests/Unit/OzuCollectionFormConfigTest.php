@@ -7,9 +7,8 @@ use Code16\OzuClient\OzuCms\Form\OzuImageField;
 use Code16\OzuClient\OzuCms\Form\OzuTextField;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 
-it("set default form values", function() {
-    $ozuCollectionFormConfig = new OzuCollectionFormConfig();
-
+it('set default form values', function () {
+    $ozuCollectionFormConfig = new OzuCollectionFormConfig;
 
     expect($ozuCollectionFormConfig->customFields())->toBeEmpty()
         ->and($ozuCollectionFormConfig->titleField())->toBeInstanceOf(OzuTextField::class)
@@ -26,7 +25,7 @@ it("set default form values", function() {
             'contentField',
             'hideContentField',
             'fields',
-            'belongsToField'
+            'belongsToField',
         ])
         ->and($ozuCollectionFormConfig)->toHaveMethods([
             'addCustomField',
@@ -40,12 +39,12 @@ it("set default form values", function() {
             'customFields',
             'titleField',
             'coverField',
-            'contentField'
+            'contentField',
         ]);
 });
 
-it("allows to add custom fields", function() {
-    $ozuCollectionFormConfig = new OzuCollectionFormConfig();
+it('allows to add custom fields', function () {
+    $ozuCollectionFormConfig = new OzuCollectionFormConfig;
 
     $ozuCollectionFormConfig
         ->addCustomField(OzuField::makeText('text'))
@@ -58,22 +57,22 @@ it("allows to add custom fields", function() {
         ->and($ozuCollectionFormConfig->customFields()[1]?->toArray()['key'])->toBe('image');
 });
 
-it("allows to configure title field", function() {
-    $ozuCollectionFormConfig = new OzuCollectionFormConfig();
+it('allows to configure title field', function () {
+    $ozuCollectionFormConfig = new OzuCollectionFormConfig;
 
     $ozuCollectionFormConfig
-        ->configureTitleField(function($field) {
+        ->configureTitleField(function ($field) {
             $field->setLabel('new label');
         });
 
     expect($ozuCollectionFormConfig->titleField()->toArray()['label'])->toBe('new label');
 });
 
-it("allows to configure cover field", function() {
-    $ozuCollectionFormConfig = new OzuCollectionFormConfig();
+it('allows to configure cover field', function () {
+    $ozuCollectionFormConfig = new OzuCollectionFormConfig;
 
     $ozuCollectionFormConfig
-        ->configureCoverField(function($field) {
+        ->configureCoverField(function ($field) {
             $field->setMaxFileSizeInMB(50)
                 ->setHasLegend();
         });
@@ -82,11 +81,11 @@ it("allows to configure cover field", function() {
         ->and($ozuCollectionFormConfig->coverField()->toArray()['hasLegend'])->toBeTrue();
 });
 
-it("allows to configure content field", function() {
-    $ozuCollectionFormConfig = new OzuCollectionFormConfig();
+it('allows to configure content field', function () {
+    $ozuCollectionFormConfig = new OzuCollectionFormConfig;
 
     $ozuCollectionFormConfig
-        ->configureContentField(function($field) {
+        ->configureContentField(function ($field) {
             $field->setHeight(100, 200)
                 ->setToolbar([
                     OzuEditorToolbarEnum::Bold,
@@ -105,8 +104,8 @@ it("allows to configure content field", function() {
 
 });
 
-it("allows to hide title, cover and content fields", function() {
-    $ozuCollectionFormConfig = new OzuCollectionFormConfig();
+it('allows to hide title, cover and content fields', function () {
+    $ozuCollectionFormConfig = new OzuCollectionFormConfig;
 
     $ozuCollectionFormConfig
         ->hideTitleField()
@@ -117,4 +116,3 @@ it("allows to hide title, cover and content fields", function() {
         ->and($ozuCollectionFormConfig->coverField())->toBeNull()
         ->and($ozuCollectionFormConfig->contentField())->toBeNull();
 });
-

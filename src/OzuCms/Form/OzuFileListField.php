@@ -5,7 +5,9 @@ namespace Code16\OzuClient\OzuCms\Form;
 class OzuFileListField extends OzuField
 {
     protected int $maxItems = 10;
+
     protected bool $hasLegend = false;
+
     private int $maxFileSizeInMB = 5;
 
     public function setMaxItems(int $maxItems): self

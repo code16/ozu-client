@@ -5,8 +5,11 @@ namespace Code16\OzuClient\OzuCms\Form;
 class OzuImageField extends OzuField
 {
     private array $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
     private int $maxFileSizeInMB = 5;
+
     private bool $hasLegend = false;
+
     private ?string $cropRatio = null;
 
     public function setHasLegend(bool $hasLegend = true): self

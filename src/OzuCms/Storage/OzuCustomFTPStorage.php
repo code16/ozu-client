@@ -8,12 +8,19 @@ use Illuminate\Support\Collection;
 class OzuCustomFTPStorage extends OzuAbstractCustomStorage
 {
     protected $host = null;
+
     protected $username = null;
+
     protected $password = null;
+
     protected $port = 21;
+
     protected $root = '/';
+
     protected $passive = true;
+
     protected $ssl = true;
+
     protected $timeout = 5;
 
     public function setHost(string $host): self
@@ -67,8 +74,7 @@ class OzuCustomFTPStorage extends OzuAbstractCustomStorage
 
     public function setTimeout(int $timeout): self
     {
-        if($timeout > 30)
-        {
+        if ($timeout > 30) {
             throw new Exception('Timeout must be less than 30 seconds');
         }
 
@@ -94,8 +100,7 @@ class OzuCustomFTPStorage extends OzuAbstractCustomStorage
 
     public function meetRequirements(): bool
     {
-        if(!$this->host || !$this->username || !$this->password)
-        {
+        if (! $this->host || ! $this->username || ! $this->password) {
             return false;
         }
 
@@ -105,9 +110,9 @@ class OzuCustomFTPStorage extends OzuAbstractCustomStorage
     public function whatsMissing(): Collection
     {
         return collect([
-            !$this->host ? 'Host' : null,
-            !$this->username ? 'Username' : null,
-            !$this->password ? 'Password' : null,
+            ! $this->host ? 'Host' : null,
+            ! $this->username ? 'Username' : null,
+            ! $this->password ? 'Password' : null,
         ])->filter();
     }
 }

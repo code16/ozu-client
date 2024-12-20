@@ -8,12 +8,12 @@ abstract class OzuAbstractCustomStorage
 {
     public static function make(): self
     {
-        return new static();
+        return new static;
     }
 
-    public abstract function meetRequirements(): bool;
+    abstract public function meetRequirements(): bool;
 
-    public abstract function whatsMissing(): Collection;
+    abstract public function whatsMissing(): Collection;
 
-    public abstract function toArray(): array;
+    abstract public function toArray(): array;
 }

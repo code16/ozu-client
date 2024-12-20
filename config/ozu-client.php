@@ -13,13 +13,12 @@ return [
     // The Ozu unique key of the website to use
     'website_key' => env('OZU_WEBSITE_KEY'),
 
-
     // If you want to use custom storage for your files, you can configure it here.
     // If you change your configuration after having uploaded files, you will have to manually move them to the new storage
     // Or reset them in ozu.
     // This is an example of how to configure a custom S3 storage:
 
-   /* 'custom_storage' => OzuCustomS3Storage::make()
+    /* 'custom_storage' => OzuCustomS3Storage::make()
         ->setBucketName(env('OZU_S3_BUCKET'))
         ->setRegion(env('OZU_S3_REGION'))
         ->setKey(env('OZU_S3_KEY'))

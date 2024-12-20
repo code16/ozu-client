@@ -7,10 +7,15 @@ use Illuminate\Support\Collection;
 class OzuCustomS3Storage extends OzuAbstractCustomStorage
 {
     protected $bucket = null;
+
     protected $region = null;
+
     protected $key = null;
+
     protected $secret = null;
+
     protected $endpoint = null;
+
     protected $use_path_style_endpoint = false;
 
     public function setBucketName(string $bucket): self
@@ -70,8 +75,7 @@ class OzuCustomS3Storage extends OzuAbstractCustomStorage
 
     public function meetRequirements(): bool
     {
-        if(!$this->bucket || !$this->region || !$this->key || !$this->secret || !$this->endpoint)
-        {
+        if (! $this->bucket || ! $this->region || ! $this->key || ! $this->secret || ! $this->endpoint) {
             return false;
         }
 
@@ -81,11 +85,11 @@ class OzuCustomS3Storage extends OzuAbstractCustomStorage
     public function whatsMissing(): Collection
     {
         return collect([
-            !$this->bucket ? 'Host' : null,
-            !$this->region ? 'Region' : null,
-            !$this->key ? 'Key' : null,
-            !$this->secret ? 'Secret' : null,
-            !$this->endpoint ? 'Endpoint' : null,
+            ! $this->bucket ? 'Host' : null,
+            ! $this->region ? 'Region' : null,
+            ! $this->key ? 'Key' : null,
+            ! $this->secret ? 'Secret' : null,
+            ! $this->endpoint ? 'Endpoint' : null,
         ])->filter();
     }
 }

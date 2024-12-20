@@ -5,12 +5,12 @@ namespace Code16\OzuClient\OzuCms\List;
 abstract class OzuColumn
 {
     protected ?string $label = null;
+
     protected bool $isDefaultSort = false;
+
     protected string $sortDirection = 'asc';
 
-    protected function __construct(protected string $key, protected int $size)
-    {
-    }
+    protected function __construct(protected string $key, protected int $size) {}
 
     public static function makeText(string $key, int $size): OzuTextColumn
     {
