@@ -19,11 +19,11 @@ class OzuProductionSeeder extends Seeder
 
     protected function createItemsFor(string $collection, Collection|Model $items)
     {
-        if (!class_exists($collection)) {
+        if (! class_exists($collection)) {
             throw new \InvalidArgumentException("Class $collection does not exist");
         }
 
-        if (!in_array(IsOzuModel::class, class_uses_recursive($collection))) {
+        if (! in_array(IsOzuModel::class, class_uses_recursive($collection))) {
             throw new \InvalidArgumentException("Class $collection doesn't have the IsOzuModel trait");
         }
 

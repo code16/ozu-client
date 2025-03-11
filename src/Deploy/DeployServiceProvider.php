@@ -18,7 +18,7 @@ class DeployServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(function (CommandStarting $event) {
-            if($event->command === 'export') {
+            if ($event->command === 'export') {
                 Artisan::call('cache:clear', [], $event->output);
             }
         });

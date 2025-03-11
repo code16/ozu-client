@@ -14,8 +14,8 @@ use Spatie\Sluggable\SlugOptions;
 /** @mixin Model */
 trait IsOzuModel
 {
-    use HasSlug;
     use HasProductionFactory;
+    use HasSlug;
 
     public static array $ozuColumns = [
         'id',
