@@ -5,6 +5,7 @@ namespace Code16\OzuClient\Eloquent;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
+use Code16\OzuClient\Support\Database\HasProductionFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Spatie\Sluggable\HasSlug;
@@ -14,6 +15,7 @@ use Spatie\Sluggable\SlugOptions;
 trait IsOzuModel
 {
     use HasSlug;
+    use HasProductionFactory;
 
     public static array $ozuColumns = [
         'id',

@@ -23,6 +23,14 @@ class Client
         );
     }
 
+    public function seed(string $collection, array $payload): void
+    {
+        $this->http()->post(
+            sprintf('/collections/%s/seed', $collection),
+            $payload
+        );
+    }
+
     public function apiKey(): ?string
     {
         return $this->apiKey;
