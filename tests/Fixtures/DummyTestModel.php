@@ -12,6 +12,8 @@ class DummyTestModel extends Model
 {
     use IsOzuModel;
 
+    protected $guarded = [];
+
     public static function configureOzuCollection(OzuCollectionConfig $config): OzuCollectionConfig
     {
         return $config;

@@ -15,7 +15,6 @@ use Spatie\Sluggable\SlugOptions;
 trait IsOzuModel
 {
     use HasSlug;
-    use HasProductionFactory;
 
     public static array $ozuColumns = [
         'id',
