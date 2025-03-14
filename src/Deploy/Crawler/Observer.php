@@ -13,8 +13,8 @@ class Observer extends BaseObserver
     {
         try {
             parent::crawled($url, $response, $foundOnUrl, $linkText);
-        } catch(\RuntimeException $e) {
-            if(preg_match('/returned status code \[4\d\d]/', $e->getMessage())) {
+        } catch (\RuntimeException $e) {
+            if (preg_match('/returned status code \[4\d\d]/', $e->getMessage())) {
                 Log::warning("Crawled URL {$url} found on {$foundOnUrl} returned status code 4xx", [
                     'url' => (string) $url,
                     'status_code' => $response->getStatusCode(),
