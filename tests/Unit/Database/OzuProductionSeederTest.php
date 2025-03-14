@@ -1,11 +1,8 @@
 <?php
 
-use Code16\OzuClient\Client;
 use Code16\OzuClient\Support\Database\OzuProductionSeeder;
 use Code16\OzuClient\Tests\Fixtures\DummyTestModel;
 use Illuminate\Http\UploadedFile;
-
-use function Pest\testDirectory;
 
 it('allows users to seed models in production', function () {
     Http::fake();
@@ -14,7 +11,8 @@ it('allows users to seed models in production', function () {
     config()->set('ozu-client.api_version', 'v1');
     config()->set('ozu-client.website_key', 'key');
 
-    $seeder = new class extends OzuProductionSeeder {
+    $seeder = new class extends OzuProductionSeeder
+    {
         public function run()
         {
             $this->createInOzu(DummyTestModel::make([
@@ -41,7 +39,8 @@ it('allows users to seed images on models in production', function () {
     config()->set('ozu-client.api_version', 'v1');
     config()->set('ozu-client.website_key', 'key');
 
-    $seeder = new class extends OzuProductionSeeder {
+    $seeder = new class extends OzuProductionSeeder
+    {
         public function run()
         {
             $path = Storage::disk('local')->path('/images/image.jpg');
@@ -49,7 +48,7 @@ it('allows users to seed images on models in production', function () {
 
             $this->createInOzu(DummyTestModel::make([
                 'title' => 'Project 1',
-            ]))->withFile("cover", $path, forceId: 5);
+            ]))->withFile('cover', $path, forceId: 5);
         }
     };
 
