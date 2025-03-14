@@ -13,6 +13,7 @@ class OzuProductionSeeder extends Seeder
     protected Client $client;
 
     private ?int $createdId = null;
+
     private ?string $currentCollectionKey = null;
 
     public function __construct()
@@ -20,19 +21,16 @@ class OzuProductionSeeder extends Seeder
         $this->client = app(Client::class);
     }
 
-    /**
-     * @param Model $item
-     */
     protected function createInOzu(Model $item): static
     {
-        if (!in_array(IsOzuModel::class, class_uses_recursive($item))) {
-            throw new \InvalidArgumentException($item::class . " doesn't have the IsOzuModel trait");
+        if (! in_array(IsOzuModel::class, class_uses_recursive($item))) {
+            throw new \InvalidArgumentException($item::class." doesn't have the IsOzuModel trait");
         }
 
         $this->currentCollectionKey = $collectionKey = $item?->ozuCollectionKey();
 
-        if (!$collectionKey) {
-            throw new \InvalidArgumentException("Unable to retrieve collection key.");
+        if (! $collectionKey) {
+            throw new \InvalidArgumentException('Unable to retrieve collection key.');
         }
 
         $this->createdId = $this->client->seed($collectionKey, $item->toArray())['id'] ?? null;
@@ -40,12 +38,13 @@ class OzuProductionSeeder extends Seeder
         return $this;
     }
 
-    protected function withFile(string $field, string $path, ?int $forceId = null): static {
-        if(!$forceId && !$this->createdId) {
-            throw new \InvalidArgumentException("No item created yet. Try calling createInOzu() first.");
+    protected function withFile(string $field, string $path, ?int $forceId = null): static
+    {
+        if (! $forceId && ! $this->createdId) {
+            throw new \InvalidArgumentException('No item created yet. Try calling createInOzu() first.');
         }
 
-        if (!File::exists($path)) {
+        if (! File::exists($path)) {
             throw new \InvalidArgumentException("File not found at path: {$path}");
         }
 
@@ -55,10 +54,11 @@ class OzuProductionSeeder extends Seeder
     }
 
     /**
-     * @param array<string> $paths
+     * @param  array<string>  $paths
      */
-    protected function withFileList(string $field, array $paths, ?int $forceId = null): static {
-        foreach($paths as $path) {
+    protected function withFileList(string $field, array $paths, ?int $forceId = null): static
+    {
+        foreach ($paths as $path) {
             $this->withFile($field, $path, $forceId);
         }
 
@@ -69,5 +69,4 @@ class OzuProductionSeeder extends Seeder
     {
         return $this->createdId;
     }
-
 }
