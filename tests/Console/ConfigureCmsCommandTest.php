@@ -7,7 +7,7 @@ use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\Tests\Fixtures\DummyTestModel;
 use Illuminate\Console\Command;
-use \Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\Request;
 
 beforeEach(function () {
     config(['ozu-client.website_key' => 'test']);
@@ -16,18 +16,20 @@ beforeEach(function () {
 
 it('sends cms configuration to Ozu for each configured collection', function () {
     config(['ozu-client.collections' => [
-        new class extends DummyTestModel {
+        new class extends DummyTestModel
+        {
             public function ozuCollectionKey(): string
             {
                 return 'dummy1';
             }
         },
-        new class extends DummyTestModel {
+        new class extends DummyTestModel
+        {
             public function ozuCollectionKey(): string
             {
                 return 'dummy2';
             }
-        }
+        },
     ]]);
 
     $this->artisan('ozu:configure-cms')
@@ -36,22 +38,22 @@ it('sends cms configuration to Ozu for each configured collection', function () 
 
     Http::assertSent(function (Request $request) {
         return $request->url() == sprintf(
-                '%s/api/%s/%s/collections/%s/configure',
-                rtrim(config('ozu-client.api_host'), '/'),
-                config('ozu-client.api_version'),
-                'test',
-                'dummy1'
-            );
+            '%s/api/%s/%s/collections/%s/configure',
+            rtrim(config('ozu-client.api_host'), '/'),
+            config('ozu-client.api_version'),
+            'test',
+            'dummy1'
+        );
     });
 
     Http::assertSent(function (Request $request) {
         return $request->url() == sprintf(
-                '%s/api/%s/%s/collections/%s/configure',
-                rtrim(config('ozu-client.api_host'), '/'),
-                config('ozu-client.api_version'),
-                'test',
-                'dummy2'
-            );
+            '%s/api/%s/%s/collections/%s/configure',
+            rtrim(config('ozu-client.api_host'), '/'),
+            config('ozu-client.api_version'),
+            'test',
+            'dummy2'
+        );
     });
 });
 
@@ -59,7 +61,8 @@ it('sends general cms configuration to Ozu', function () {
     Http::fake();
 
     config(['ozu-client.collections' => [
-        new class extends DummyTestModel {
+        new class extends DummyTestModel
+        {
             public function ozuCollectionKey(): string
             {
                 return 'dummy';
@@ -75,7 +78,7 @@ it('sends general cms configuration to Ozu', function () {
                     ->setIsCreatable()
                     ->setIsDeletable();
             }
-        }
+        },
     ]]);
 
     $this->artisan('ozu:configure-cms')
@@ -84,12 +87,12 @@ it('sends general cms configuration to Ozu', function () {
 
     Http::assertSent(function (Request $request) {
         return $request->url() == sprintf(
-                '%s/api/%s/%s/collections/%s/configure',
-                rtrim(config('ozu-client.api_host'), '/'),
-                config('ozu-client.api_version'),
-                'test',
-                'dummy'
-            )
+            '%s/api/%s/%s/collections/%s/configure',
+            rtrim(config('ozu-client.api_host'), '/'),
+            config('ozu-client.api_version'),
+            'test',
+            'dummy'
+        )
             && $request['label'] == 'Dummy label'
             && $request['icon'] == 'dummy-icon'
             && $request['hasPublicationState'] == true
@@ -103,7 +106,8 @@ it('sends list cms configuration to Ozu', function () {
     Http::fake();
 
     config(['ozu-client.collections' => [
-        new class extends DummyTestModel {
+        new class extends DummyTestModel
+        {
             public function ozuCollectionKey(): string
             {
                 return 'dummy';
@@ -120,7 +124,7 @@ it('sends list cms configuration to Ozu', function () {
                     ->addColumn(OzuColumn::makeImage('dummy-image', 3)->setLabel('Dummy image'))
                     ->addColumn(OzuColumn::makeDate('dummy-date', 3)->setLabel('Dummy date')->setDefaultSort());
             }
-        }
+        },
     ]]);
 
     $this->artisan('ozu:configure-cms')
@@ -137,26 +141,26 @@ it('sends list cms configuration to Ozu', function () {
                     'type' => 'text',
                     'key' => 'dummy-text',
                     'label' => 'Dummy text',
-                    'size' => 1
+                    'size' => 1,
                 ],
                 [
                     'type' => 'check',
                     'key' => 'dummy-check',
                     'label' => 'Dummy check',
-                    'size' => 2
+                    'size' => 2,
                 ],
                 [
                     'type' => 'image',
                     'key' => 'dummy-image',
                     'label' => 'Dummy image',
-                    'size' => 3
+                    'size' => 3,
                 ],
                 [
                     'type' => 'date',
                     'key' => 'dummy-date',
                     'label' => 'Dummy date',
-                    'size' => 3
-                ]
+                    'size' => 3,
+                ],
             ]);
     });
 });
@@ -165,7 +169,8 @@ it('sends form cms configuration to Ozu', function () {
     Http::fake();
 
     config(['ozu-client.collections' => [
-        new class extends DummyTestModel {
+        new class extends DummyTestModel
+        {
             public function ozuCollectionKey(): string
             {
                 return 'dummy';
@@ -182,12 +187,12 @@ it('sends form cms configuration to Ozu', function () {
                     ->addCustomField(
                         OzuField::makeSelect('dummy-select')
                             ->setDisplayAsDropdown()
-                            ->setOptions([1 =>'option1', 2 => 'option2'])
+                            ->setOptions([1 => 'option1', 2 => 'option2'])
                             ->setLabel('Dummy select')
                             ->setHelpMessage('Select an option')
                     );
             }
-        }
+        },
     ]]);
 
     $this->artisan('ozu:configure-cms')
@@ -196,27 +201,27 @@ it('sends form cms configuration to Ozu', function () {
 
     Http::assertSent(function (Request $request) {
         return $request['form']['fields'] == collect([
-                [
-                    'type' => 'text',
-                    'key' => 'dummy-text',
-                    'label' => 'Dummy text',
-                    'validationRules' => ['required'],
-                    'helpMessage' => null,
-                    'isUpdatable' => true,
-                ],
-                [
-                    'type' => 'select',
-                    'key' => 'dummy-select',
-                    'label' => 'Dummy select',
-                    'options' => [1 =>'option1', 2 => 'option2'],
-                    'multiple' => false,
-                    'display' => 'dropdown',
-                    'clearable' => false,
-                    'validationRules' => [],
-                    'helpMessage' => 'Select an option',
-                    'isUpdatable' => true,
-                ],
-            ]);
+            [
+                'type' => 'text',
+                'key' => 'dummy-text',
+                'label' => 'Dummy text',
+                'validationRules' => ['required'],
+                'helpMessage' => null,
+                'isUpdatable' => true,
+            ],
+            [
+                'type' => 'select',
+                'key' => 'dummy-select',
+                'label' => 'Dummy select',
+                'options' => [1 => 'option1', 2 => 'option2'],
+                'multiple' => false,
+                'display' => 'dropdown',
+                'clearable' => false,
+                'validationRules' => [],
+                'helpMessage' => 'Select an option',
+                'isUpdatable' => true,
+            ],
+        ]);
     });
 });
 
@@ -237,12 +242,13 @@ it('sends custom fields configuration to Ozu', function () {
         );
 
     config(['ozu-client.collections' => [
-        new class extends DummyTestModel {
+        new class extends DummyTestModel
+        {
             public function ozuCollectionKey(): string
             {
                 return 'dummy';
             }
-        }
+        },
     ]]);
 
     $this->artisan('ozu:configure-cms')
@@ -255,4 +261,3 @@ it('sends custom fields configuration to Ozu', function () {
         ]);
     });
 });
-

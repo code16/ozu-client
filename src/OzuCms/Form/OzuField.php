@@ -5,13 +5,14 @@ namespace Code16\OzuClient\OzuCms\Form;
 abstract class OzuField
 {
     protected ?string $label = null;
+
     protected ?string $helpMessage = null;
+
     protected array $validationRules = [];
+
     protected bool $isUpdatable = true;
 
-    public function __construct(protected string $key)
-    {
-    }
+    public function __construct(protected string $key) {}
 
     public static function makeText(string $key): OzuTextField
     {

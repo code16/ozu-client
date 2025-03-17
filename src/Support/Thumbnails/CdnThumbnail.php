@@ -6,7 +6,7 @@ abstract class CdnThumbnail extends Thumbnail
 {
     public function make(?int $width, ?int $height = null, bool $fit = false): ?string
     {
-        if($cdnUrl = str(config('ozu-client.cdn_url'))->rtrim('/')) {
+        if ($cdnUrl = str(config('ozu-client.cdn_url'))->rtrim('/')) {
             return sprintf(
                 '%s/storage/%s?%s',
                 $cdnUrl,
@@ -22,7 +22,7 @@ abstract class CdnThumbnail extends Thumbnail
 
     public function download(): ?string
     {
-        if($cdnUrl = str(config('ozu-client.cdn_url'))->rtrim('/')) {
+        if ($cdnUrl = str(config('ozu-client.cdn_url'))->rtrim('/')) {
             return sprintf(
                 '%s/storage/%s',
                 $cdnUrl,

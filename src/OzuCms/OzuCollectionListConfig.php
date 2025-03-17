@@ -2,7 +2,6 @@
 
 namespace Code16\OzuClient\OzuCms;
 
-use Code16\OzuClient\OzuCms\Form\OzuBelongsToField;
 use Code16\OzuClient\OzuCms\List\OzuBelongsToFilter;
 use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Illuminate\Support\Collection;
@@ -10,10 +9,13 @@ use Illuminate\Support\Collection;
 class OzuCollectionListConfig
 {
     protected bool $isReorderable = false;
+
     protected bool $isSearchable = false;
+
     protected bool $isPaginated = false;
 
     protected ?OzuBelongsToFilter $belongsToFilter = null;
+
     protected array $columns = [];
 
     public function setIsReorderable(bool $isReorderable = true): self

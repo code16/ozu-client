@@ -73,7 +73,7 @@ it('allows to create a check field', function () {
         'helpMessage' => 'help',
         'isUpdatable' => false,
         'text' => 'text',
-        'label' => null
+        'label' => null,
     ]);
 });
 
@@ -187,7 +187,7 @@ it('allows to create an image field', function () {
         'hasLegend' => false,
         'allowedExtensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp'],
         'maxFileSize' => 5,
-        'cropRatio' => null
+        'cropRatio' => null,
     ]);
 });
 
@@ -212,7 +212,7 @@ it('allows to set hasLegend, allowedExtensions, maxFileSize and cropRatio on an 
         'hasLegend' => true,
         'allowedExtensions' => ['pdf'],
         'maxFileSize' => 10,
-        'cropRatio' => '16:9'
+        'cropRatio' => '16:9',
     ]);
 });
 
@@ -233,7 +233,7 @@ it('allows to create an image list field', function () {
         'hasLegend' => false,
         'maxFileSize' => 5,
         'cropRatio' => null,
-        'maxItems' => 10
+        'maxItems' => 10,
     ]);
 });
 
@@ -258,7 +258,7 @@ it('allows to set hasLegend, maxFileSize, cropRatio and maxItems on an image lis
         'hasLegend' => true,
         'maxFileSize' => 10,
         'cropRatio' => '16:9',
-        'maxItems' => 5
+        'maxItems' => 5,
     ]);
 });
 
@@ -278,7 +278,7 @@ it('allows to create a file list field', function () {
         'isUpdatable' => false,
         'hasLegend' => false,
         'maxFileSize' => 5,
-        'maxItems' => 10
+        'maxItems' => 10,
     ]);
 });
 
@@ -301,7 +301,7 @@ it('allows to set hasLegend, maxFileSize and maxItems on a file list field', fun
         'isUpdatable' => false,
         'hasLegend' => true,
         'maxFileSize' => 10,
-        'maxItems' => 4
+        'maxItems' => 4,
     ]);
 });
 
@@ -319,7 +319,7 @@ it('allows to create a date field', function () {
         'validationRules' => ['required'],
         'helpMessage' => 'help',
         'isUpdatable' => false,
-        'hasTime' => false
+        'hasTime' => false,
     ]);
 });
 
@@ -338,7 +338,6 @@ it('allows to set hasTime on a date field', function () {
         'validationRules' => ['required'],
         'helpMessage' => 'help',
         'isUpdatable' => false,
-        'hasTime' => true
+        'hasTime' => true,
     ]);
 });
-

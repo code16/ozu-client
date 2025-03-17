@@ -1,8 +1,8 @@
 <?php
 
 namespace Code16\OzuClient\Deploy\Routing;
-use Illuminate\Routing\UrlGenerator as BaseUrlGenerator;
 
+use Illuminate\Routing\UrlGenerator as BaseUrlGenerator;
 
 class UrlGenerator extends BaseUrlGenerator
 {

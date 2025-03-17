@@ -16,9 +16,7 @@ class RoutingServiceProvider extends BaseRoutingServiceProvider
         $this->registerUrlGenerator();
     }
 
-    public function boot()
-    {
-    }
+    public function boot() {}
 
     /**
      * @see parent::registerUrlGenerator();

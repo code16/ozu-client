@@ -5,7 +5,9 @@ namespace Code16\OzuClient\OzuCms\Form;
 class OzuEditorField extends OzuField
 {
     private bool $withoutParagraphs = false;
+
     private bool $hideToolbar = false;
+
     private array $toolbar = [
         OzuEditorToolbarEnum::Bold,
         OzuEditorToolbarEnum::Italic,
@@ -13,7 +15,9 @@ class OzuEditorField extends OzuField
         OzuEditorToolbarEnum::BulletList,
         OzuEditorToolbarEnum::Link,
     ];
+
     private int $height = 200;
+
     private ?int $maxHeight = null;
 
     public function setWithoutParagraphs(): self
@@ -37,7 +41,7 @@ class OzuEditorField extends OzuField
         return $this;
     }
 
-    public function setHeight(int $height, int|null $maxHeight = null): self
+    public function setHeight(int $height, ?int $maxHeight = null): self
     {
         $this->height = $height;
         $this->maxHeight = $maxHeight;
@@ -55,7 +59,7 @@ class OzuEditorField extends OzuField
         return array_merge(parent::toArray(), [
             'withoutParagraphs' => $this->withoutParagraphs,
             'hideToolbar' => $this->hideToolbar,
-            'toolbar' => collect($this->toolbar)->map(fn($item) => $item->value)->toArray(),
+            'toolbar' => collect($this->toolbar)->map(fn ($item) => $item->value)->toArray(),
             'height' => $this->height,
             'maxHeight' => $this->maxHeight,
         ]);

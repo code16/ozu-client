@@ -5,11 +5,15 @@ namespace Code16\OzuClient\OzuCms;
 class OzuCollectionConfig
 {
     protected string $label;
+
     protected string $icon;
+
     protected bool $hasPublicationState = false;
 
     protected ?string $autoDeployDateField = null;
+
     private bool $isCreatable = true;
+
     private bool $isDeletable = true;
 
     public function setLabel(string $label): self
@@ -35,7 +39,8 @@ class OzuCollectionConfig
 
     /**
      * Declare which date field will trigger auto-deploy when reached
-     * @param string|null $field
+     *
+     * @param  string|null  $field
      * @return $this
      */
     public function setAutoDeployDateField(string $fieldKey): self
@@ -76,7 +81,7 @@ class OzuCollectionConfig
 
     public function hasAutoDeployDateField(): bool
     {
-        return !is_null($this->autoDeployDateField);
+        return ! is_null($this->autoDeployDateField);
     }
 
     public function autoDeployDateField(): ?string

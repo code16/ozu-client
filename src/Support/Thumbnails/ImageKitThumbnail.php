@@ -6,7 +6,7 @@ class ImageKitThumbnail extends CdnThumbnail
 {
     protected function generateUrlParameters(?int $width, ?int $height, bool $fit): string
     {
-        if (!$fit) {
+        if (! $fit) {
             if ($width && $height) {
                 return sprintf('tr=w-%s,h-%s,c-at_max', $width, $height);
             }

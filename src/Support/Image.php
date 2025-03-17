@@ -7,12 +7,11 @@ class Image
     public function __construct(
         public string $src,
         public ?string $legend,
-    ) {
-    }
+    ) {}
 
     public static function make(string|array $data): static
     {
-        if(is_string($data)) {
+        if (is_string($data)) {
             return new static($data, null);
         }
 
@@ -30,10 +29,10 @@ class Image
         $height = $height ? $height * $scale : null;
 
         // https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations
-        return $this->src . '?tr=' . implode(',', array_keys(array_filter([
+        return $this->src.'?tr='.implode(',', array_keys(array_filter([
             "w-$width" => $width,
             "h-$height" => $height,
-            "c-at_max" => !$crop,
+            'c-at_max' => ! $crop,
         ])));
     }
 

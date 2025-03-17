@@ -8,6 +8,6 @@ class CrawlSiteHandler
 {
     public function __invoke(): void
     {
-        app(Dispatcher::class)->dispatchNow(new CrawlSite());
+        app(Dispatcher::class)->dispatchNow(new CrawlSite);
     }
 }

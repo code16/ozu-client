@@ -14,15 +14,19 @@ use Illuminate\Support\Collection;
 class OzuCollectionFormConfig
 {
     protected ?OzuTextField $titleField;
+
     protected bool $hideTitleField = false;
 
     protected ?OzuImageField $coverField;
+
     protected bool $hideCoverField = false;
 
     protected ?OzuEditorField $contentField;
+
     protected bool $hideContentField = false;
 
     protected array $fields = [];
+
     protected ?OzuBelongsToField $belongsToField = null;
 
     public function addCustomField(OzuField $field): self
@@ -89,7 +93,7 @@ class OzuCollectionFormConfig
 
         $this->belongsToField = (new OzuBelongsToField($ozuCollectionKey))
             ->setLabel($label)
-            ->setClearable(!$required)
+            ->setClearable(! $required)
             ->setValidationRules($required ? ['required'] : []);
 
         return $this;
@@ -100,7 +104,7 @@ class OzuCollectionFormConfig
         return collect(
             [
                 $this->belongsToField,
-                ...$this->fields
+                ...$this->fields,
             ])
             ->whereNotNull()
             ->values();
@@ -112,7 +116,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (!isset($this->titleField)) {
+        if (! isset($this->titleField)) {
             $this->titleField = OzuField::makeText('title');
         }
 
@@ -125,7 +129,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (!isset($this->coverField)) {
+        if (! isset($this->coverField)) {
             $this->coverField = OzuField::makeImage('cover')
                 ->setMaxFileSizeInMB(3);
         }
@@ -139,7 +143,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (!isset($this->contentField)) {
+        if (! isset($this->contentField)) {
             $this->contentField = OzuField::makeEditor('content')
                 ->setToolbar([
                     OzuEditorToolbarEnum::Bold,

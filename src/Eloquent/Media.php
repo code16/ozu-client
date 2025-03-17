@@ -3,7 +3,6 @@
 namespace Code16\OzuClient\Eloquent;
 
 use Code16\OzuClient\Database\Factories\MediaFactory;
-use Code16\OzuClient\Support\Thumbnails\LocalThumbnail;
 use Code16\OzuClient\Support\Thumbnails\Thumbnail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +14,9 @@ class Media extends Model
     use HasFactory;
 
     protected $guarded = [];
+
     protected $table = 'medias';
+
     protected $casts = [
         'custom_properties' => 'array',
         'size' => 'integer',
@@ -23,7 +24,7 @@ class Media extends Model
 
     protected static function newFactory()
     {
-        return new MediaFactory();
+        return new MediaFactory;
     }
 
     public function model(): MorphTo
@@ -31,7 +32,7 @@ class Media extends Model
         return $this->morphTo('model');
     }
 
-    public function thumbnail(int $width = null, int $height = null, bool $fit = false): ?string
+    public function thumbnail(?int $width = null, ?int $height = null, bool $fit = false): ?string
     {
         return app(Thumbnail::class)
             ->forMedia($this)
@@ -54,9 +55,9 @@ class Media extends Model
         if ($this->size >= 0) {
             $size = (int) $this->size;
             $base = log($size) / log(1024);
-            $suffixes = array(' bytes', ' KB', ' MB', ' GB', ' TB');
+            $suffixes = [' bytes', ' KB', ' MB', ' GB', ' TB'];
 
-            return $this->size === 0 ? '0 bytes' : (round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)]);
+            return $this->size === 0 ? '0 bytes' : (round(pow(1024, $base - floor($base)), $precision).$suffixes[floor($base)]);
         } else {
             return $this->size;
         }

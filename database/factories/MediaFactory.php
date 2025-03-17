@@ -44,17 +44,17 @@ class MediaFactory extends Factory
             });
     }
 
-    public function withFile(?string $fileName = null, string $type="image")
+    public function withFile(?string $fileName = null, string $type = 'image')
     {
-        return $this->state(function (array $attributes) use ($fileName,$type) {
-            $fileName = $fileName ?: fake()->slug() . ($type==='image'?'.jpg':'.pdf');
-            $path = ($type==="image" ? $this->getRandomFixtureImagePath() : $this->getRandomFixtureDocumentPath());
+        return $this->state(function (array $attributes) use ($fileName, $type) {
+            $fileName = $fileName ?: fake()->slug().($type === 'image' ? '.jpg' : '.pdf');
+            $path = ($type === 'image' ? $this->getRandomFixtureImagePath() : $this->getRandomFixtureDocumentPath());
 
             Storage::disk('local')
-                ->put("/data/".($type==='image'?'medias':'files')."/$fileName", file_get_contents($path));
+                ->put('/data/'.($type === 'image' ? 'medias' : 'files')."/$fileName", file_get_contents($path));
 
             return [
-                'file_name' => "data/".($type==='image'?'medias':'files')."/$fileName",
+                'file_name' => 'data/'.($type === 'image' ? 'medias' : 'files')."/$fileName",
             ];
         });
     }

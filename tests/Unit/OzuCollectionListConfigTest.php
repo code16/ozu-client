@@ -6,10 +6,9 @@ use Code16\OzuClient\OzuCms\List\OzuTextColumn;
 use Code16\OzuClient\OzuCms\List\OzuThumbnailColumn;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\Tests\Fixtures\DummyTestModel;
-use Illuminate\Database\Eloquent\Model;
 
-it('set defauls config values', function() {
-    $ozuCollectionListConfig = new OzuCollectionListConfig();
+it('set defauls config values', function () {
+    $ozuCollectionListConfig = new OzuCollectionListConfig;
 
     expect($ozuCollectionListConfig->isReorderable())->toBeFalse()
         ->and($ozuCollectionListConfig->isPaginated())->toBeFalse()
@@ -38,8 +37,8 @@ it('set defauls config values', function() {
         ]);
 });
 
-it('allows to set isReorderable, isSearchable and isPaginated', function() {
-    $ozuCollectionListConfig = new OzuCollectionListConfig();
+it('allows to set isReorderable, isSearchable and isPaginated', function () {
+    $ozuCollectionListConfig = new OzuCollectionListConfig;
 
     $ozuCollectionListConfig
         ->setIsReorderable()
@@ -51,8 +50,8 @@ it('allows to set isReorderable, isSearchable and isPaginated', function() {
         ->and($ozuCollectionListConfig->isPaginated())->toBeTrue();
 });
 
-it('allows to declare belongsToFilter', function() {
-    $ozuCollectionListConfig = new OzuCollectionListConfig();
+it('allows to declare belongsToFilter', function () {
+    $ozuCollectionListConfig = new OzuCollectionListConfig;
 
     $ozuCollectionListConfig->declareBelongsToFilter(DummyTestModel::class, 'label');
 
@@ -62,8 +61,8 @@ it('allows to declare belongsToFilter', function() {
         ->and($ozuCollectionListConfig->belongsToFilter()->toArray()['required'])->toBeTrue();
 });
 
-it('allows to add columns', function() {
-    $ozuCollectionListConfig = new OzuCollectionListConfig();
+it('allows to add columns', function () {
+    $ozuCollectionListConfig = new OzuCollectionListConfig;
 
     $ozuCollectionListConfig
         ->addColumn(OzuColumn::makeText('text', 1))
@@ -78,8 +77,8 @@ it('allows to add columns', function() {
         ->and($ozuCollectionListConfig->columns()[1]->size())->toBe(3);
 });
 
-it('allows to set defaultSort', function() {
-    $ozuCollectionListConfig = new OzuCollectionListConfig();
+it('allows to set defaultSort', function () {
+    $ozuCollectionListConfig = new OzuCollectionListConfig;
 
     $ozuCollectionListConfig
         ->addColumn(OzuColumn::makeText('text', 1)->setDefaultSort('desc'));
@@ -89,5 +88,3 @@ it('allows to set defaultSort', function() {
         'direction' => 'desc',
     ]);
 });
-
-

@@ -5,8 +5,11 @@ namespace Code16\OzuClient\OzuCms\Form;
 class OzuSelectField extends OzuField
 {
     protected bool $multiple = false;
+
     protected string $display = 'list';
+
     protected bool $clearable = false;
+
     protected array $options = [];
 
     public function setOptions(array $options): self
