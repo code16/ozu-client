@@ -2,7 +2,6 @@
 
 namespace Code16\OzuClient;
 
-use Code16\OzuClient\Deploy\DeployServiceProvider;
 use Code16\OzuClient\Support\Pagination\StaticLengthAwarePaginator;
 use Code16\OzuClient\Support\Pagination\StaticPaginator;
 use Code16\OzuClient\Support\Thumbnails\ImageKitThumbnail;
@@ -48,7 +47,7 @@ class OzuServiceProvider extends PackageServiceProvider
         $this->app->bind(Paginator::class, StaticPaginator::class);
         $this->app->bind(LengthAwarePaginator::class, StaticLengthAwarePaginator::class);
         $this->app->bind(Thumbnail::class, function ($app) {
-            if (!$app->environment('production') || !config('ozu-client.cdn_url')) {
+            if (! $app->environment('production') || ! config('ozu-client.cdn_url')) {
                 return $app->make(LocalThumbnail::class);
             }
 
@@ -60,8 +59,6 @@ class OzuServiceProvider extends PackageServiceProvider
 
             return $app->make(ImageKitThumbnail::class);
         });
-
-        $this->app->register(DeployServiceProvider::class);
     }
 
     public function boot()
@@ -88,7 +85,7 @@ class OzuServiceProvider extends PackageServiceProvider
         Relation::enforceMorphMap(
             collect(config('ozu-client.collections'))
                 ->mapWithKeys(fn (string $className) => [
-                    (new $className)->ozuCollectionKey() => $className
+                    (new $className)->ozuCollectionKey() => $className,
                 ])
                 ->toArray()
         );
