@@ -60,8 +60,6 @@ class OzuServiceProvider extends PackageServiceProvider
 
             return $app->make(ImageKitThumbnail::class);
         });
-
-        $this->app->register(DeployServiceProvider::class);
     }
 
     public function boot()
