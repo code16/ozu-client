@@ -7,22 +7,23 @@ use Code16\OzuClient\OzuCms\List\OzuThumbnailColumn;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\Tests\Fixtures\DummyTestModel;
 
-it('set defauls config values', function () {
-    $ozuCollectionListConfig = new OzuCollectionListConfig;
-
-    expect($ozuCollectionListConfig->isReorderable())->toBeFalse()
-        ->and($ozuCollectionListConfig->isPaginated())->toBeFalse()
-        ->and($ozuCollectionListConfig->isSearchable())->toBeFalse()
-        ->and($ozuCollectionListConfig->columns())->toBeEmpty()
-        ->and($ozuCollectionListConfig->defaultSort())->toBeNull()
-        ->and($ozuCollectionListConfig)->toHaveProperties([
+it('set default config values', function () {
+    expect(new OzuCollectionListConfig())
+        ->isReorderable()->toBeFalse()
+        ->isPaginated()->toBeFalse()
+        ->isSearchable()->toBeFalse()
+        ->columns()->toBeEmpty()
+        ->defaultSort()->toBeNull()
+        ->and(new OzuCollectionListConfig())
+        ->toHaveProperties([
             'isReorderable',
             'isSearchable',
             'isPaginated',
             'belongsToFilter',
             'columns',
         ])
-        ->and($ozuCollectionListConfig::class)->toHaveMethods([
+        ->and(OzuCollectionListConfig::class)
+        ->toHaveMethods([
             'columns',
             'defaultSort',
             'belongsToFilter',
@@ -45,9 +46,9 @@ it('allows to set isReorderable, isSearchable and isPaginated', function () {
         ->setIsSearchable()
         ->setIsPaginated();
 
-    expect($ozuCollectionListConfig->isReorderable())->toBeTrue()
-        ->and($ozuCollectionListConfig->isSearchable())->toBeTrue()
-        ->and($ozuCollectionListConfig->isPaginated())->toBeTrue();
+    expect($ozuCollectionListConfig)->isReorderable()->toBeTrue()
+        ->isSearchable()->toBeTrue()
+        ->isPaginated()->toBeTrue();
 });
 
 it('allows to declare belongsToFilter', function () {
