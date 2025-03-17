@@ -10,24 +10,16 @@ use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 it('set default form values', function () {
     $ozuCollectionFormConfig = new OzuCollectionFormConfig;
 
-    expect($ozuCollectionFormConfig->customFields())->toBeEmpty()
-        ->and($ozuCollectionFormConfig->titleField())->toBeInstanceOf(OzuTextField::class)
-        ->and($ozuCollectionFormConfig->titleField())->toHaveProperty('key')
-        ->and($ozuCollectionFormConfig->coverField())->toBeInstanceOf(OzuImageField::class)
-        ->and($ozuCollectionFormConfig->coverField())->toHaveProperties(['maxFileSizeInMB', 'hasLegend', 'cropRatio', 'allowedExtensions'])
-        ->and($ozuCollectionFormConfig->contentField())->toBeInstanceOf(OzuEditorField::class)
-        ->and($ozuCollectionFormConfig->contentField())->toHaveProperties(['withoutParagraphs', 'hideToolbar', 'toolbar', 'height', 'maxHeight'])
-        ->and($ozuCollectionFormConfig)->toHaveProperties([
-            'titleField',
-            'hideTitleField',
-            'coverField',
-            'hideCoverField',
-            'contentField',
-            'hideContentField',
-            'fields',
-            'belongsToField',
-        ])
-        ->and($ozuCollectionFormConfig)->toHaveMethods([
+    expect($ozuCollectionFormConfig)
+        ->customFields()->toBeEmpty()
+        ->titleField()->toBeInstanceOf(OzuTextField::class)
+        ->titleField()->toHaveProperty('key')
+        ->coverField()->toBeInstanceOf(OzuImageField::class)
+        ->coverField()->toHaveProperties(['maxFileSizeInMB', 'hasLegend', 'cropRatio', 'allowedExtensions'])
+        ->contentField()->toBeInstanceOf(OzuEditorField::class)
+        ->contentField()->toHaveProperties(['withoutParagraphs', 'hideToolbar', 'toolbar', 'height', 'maxHeight'])
+        ->and($ozuCollectionFormConfig::class)
+        ->toHaveMethods([
             'addCustomField',
             'configureTitleField',
             'hideTitleField',

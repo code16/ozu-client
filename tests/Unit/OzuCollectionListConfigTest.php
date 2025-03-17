@@ -22,7 +22,7 @@ it('set defauls config values', function () {
             'belongsToFilter',
             'columns',
         ])
-        ->and($ozuCollectionListConfig)->toHaveMethods([
+        ->and($ozuCollectionListConfig::class)->toHaveMethods([
             'columns',
             'defaultSort',
             'belongsToFilter',
