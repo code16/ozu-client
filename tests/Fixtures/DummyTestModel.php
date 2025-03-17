@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class DummyTestModel extends Model
 {
+    protected $table = 'dummy_test_models';
+
     use IsOzuModel;
 
     public static function configureOzuCollection(OzuCollectionConfig $config): OzuCollectionConfig
