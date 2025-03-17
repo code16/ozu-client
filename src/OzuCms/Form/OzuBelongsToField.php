@@ -32,4 +32,3 @@ class OzuBelongsToField extends OzuField
         ]);
     }
 }
-
