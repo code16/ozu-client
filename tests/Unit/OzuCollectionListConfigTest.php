@@ -8,13 +8,13 @@ use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\Tests\Fixtures\DummyTestModel;
 
 it('set default config values', function () {
-    expect(new OzuCollectionListConfig())
+    expect(new OzuCollectionListConfig)
         ->isReorderable()->toBeFalse()
         ->isPaginated()->toBeFalse()
         ->isSearchable()->toBeFalse()
         ->columns()->toBeEmpty()
         ->defaultSort()->toBeNull()
-        ->and(new OzuCollectionListConfig())
+        ->and(new OzuCollectionListConfig)
         ->toHaveProperties([
             'isReorderable',
             'isSearchable',
