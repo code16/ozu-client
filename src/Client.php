@@ -39,7 +39,7 @@ class Client
                 [
                     'field' => $field,
                 ]
-            )->getBody()->getContents();
+            )->getBody()?->getContents();
     }
 
     public function apiKey(): ?string

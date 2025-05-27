@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Schema;
+use Number;
 
 class Media extends Model
 {
@@ -52,15 +53,8 @@ class Media extends Model
             return null;
         }
 
-        if ($this->size >= 0) {
-            $size = (int) $this->size;
-            $base = log($size) / log(1024);
-            $suffixes = [' bytes', ' KB', ' MB', ' GB', ' TB'];
-
-            return $this->size === 0 ? '0 bytes' : (round(pow(1024, $base - floor($base)), $precision).$suffixes[floor($base)]);
-        } else {
-            return $this->size;
-        }
+        $size = (int) $this->size;
+        return Number::fileSize($size, 1, 3);
     }
 
     /**
