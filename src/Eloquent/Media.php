@@ -54,6 +54,7 @@ class Media extends Model
         }
 
         $size = (int) $this->size;
+
         return Number::fileSize($size, 1, 3);
     }
 
