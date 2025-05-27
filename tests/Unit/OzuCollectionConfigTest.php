@@ -18,7 +18,7 @@ it('set defauls config values', function () {
             'isCreatable',
             'isDeletable',
         ])
-        ->and($ozuCollectionConfig)->toHaveMethods([
+        ->and($ozuCollectionConfig::class)->toHaveMethods([
             'setLabel',
             'setIcon',
             'setHasPublicationState',

@@ -18,6 +18,9 @@ Publish the config file:
 php artisan vendor:publish --tag="ozu-client-config"
 ```
 
+> [!IMPORTANT]  
+> As our beta builder only works with PHP 8.4 for now, your project must use PHP 8.4.
+
 ## Usage
 
 ### Models are Ozu collections

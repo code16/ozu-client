@@ -68,8 +68,8 @@ it('sends general cms configuration to Ozu', function () {
                 return 'dummy';
             }
 
-            public static function configureOzuCollection(OzuCollectionConfig $config
-            ): OzuCollectionConfig {
+            public static function configureOzuCollection(OzuCollectionConfig $config): OzuCollectionConfig
+            {
                 return $config
                     ->setLabel('Dummy label')
                     ->setIcon('dummy-icon')
