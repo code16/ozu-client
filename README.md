@@ -252,6 +252,40 @@ class DatabaseSeeder extends OzuSeeder
 }
 ```
 
+### Production seeder
+
+To ease the first deployment of your project, you can use the `OzuProductionSeeder` class to seed ozu with some production data:
+
+```php
+use Code16\OzuClient\Support\Database\OzuProductionSeeder;
+// ...
+
+class DatabaseSeeder extends OzuProductionSeeder
+{
+    public function run(): void
+    {
+        // At this point, you'll have to create your real data, you're not forced to save
+        // it in your local database, since Ozu will accept a model without an ID, and seed it in Production.
+        $myRealProjects = Project::factory()
+            ->count(12)
+            ->has(Media::factory()->image('cover')->withFile(), 'cover')
+            ->has(Media::factory()->image('visuals')->withFile()->count(3), 'visuals')
+            ->sequence(fn ($sequence) => [
+                'order' => $sequence->index + 1,
+                'country' => fake()->country(),
+            ])
+            ->make();
+            
+        $myRealProjects
+            ->each(fn($project) => $this->createInOzu($project)
+                ->withFile('cover', $project->cover->file_name)
+                ->withFileList('visuals', $project->visuals->pluck('file_name')->toArray())
+            );
+        // ...
+    }
+}
+```
+
 ### Check the demo project for an example
 
 You can refer to the Ozu demo project [dvlpp/ozu-demo](https://github.com/dvlpp/ozu-demo) for an example of a simple project that uses Ozu.

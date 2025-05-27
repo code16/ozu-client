@@ -22,6 +22,26 @@ class Client
         );
     }
 
+    public function seed(string $collection, array $payload): mixed
+    {
+        return $this->http()->post(
+            sprintf('/collections/%s/seed', $collection),
+            $payload
+        )->json();
+    }
+
+    public function seedFile(string $collection, int $id, string $field, string $path): mixed
+    {
+        return $this->http()
+            ->attach('file', file_get_contents($path), basename($path))
+            ->post(
+                sprintf('/collections/%s/seed/%s/file', $collection, $id),
+                [
+                    'field' => $field,
+                ]
+            )->getBody()?->getContents();
+    }
+
     public function apiKey(): ?string
     {
         return $this->apiKey;
