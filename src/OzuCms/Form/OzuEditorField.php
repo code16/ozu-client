@@ -23,6 +23,7 @@ class OzuEditorField extends OzuField
     private ?int $maxHeight = null;
 
     private int $maxFileSize = 5;
+
     private ?string $cropRatio = null;
 
     public function setWithoutParagraphs(): self
@@ -56,8 +57,8 @@ class OzuEditorField extends OzuField
 
     public function setMaxFileSize(int $maxFileSize): self
     {
-        if(!in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
-            throw new OzuClientException("You should allow Image Uploads by adding OzuEditorToolbarEnum::Image in toolbar configuration before setting max file size");
+        if (! in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
+            throw new OzuClientException('You should allow Image Uploads by adding OzuEditorToolbarEnum::Image in toolbar configuration before setting max file size');
         }
 
         $this->maxFileSize = $maxFileSize;
@@ -67,8 +68,8 @@ class OzuEditorField extends OzuField
 
     public function setCropRatio(string $cropRatio): self
     {
-        if(!in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
-            throw new OzuClientException("You should allow Image Uploads by adding OzuEditorToolbarEnum::Image in toolbar configuration before setting image crop ratio");
+        if (! in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
+            throw new OzuClientException('You should allow Image Uploads by adding OzuEditorToolbarEnum::Image in toolbar configuration before setting image crop ratio');
         }
 
         $this->cropRatio = $cropRatio;

@@ -3,8 +3,6 @@
 namespace Code16\OzuClient\View\Components;
 
 use Code16\Embed\ServiceContract;
-use Code16\Embed\ServiceFactory;
-use Code16\Embed\ValueObjects\Url;
 use Illuminate\View\Component;
 
 class Quote extends Component
