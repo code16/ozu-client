@@ -18,7 +18,8 @@ class OzuSeeder extends Seeder
         }
     }
 
-    public function seedVideoEmbed(Model &$model, string $editorColumnName, ?string $videoUrl = null, ?string $legend = null): void {
+    public function seedVideoEmbed(Model &$model, string $editorColumnName, ?string $videoUrl = null, ?string $legend = null): void
+    {
         $editorContent = $model->$editorColumnName;
         $randomVideoUrl = collect([
             'https://www.youtube.com/watch?v=lXKDu6cdXLI',
@@ -32,19 +33,20 @@ class OzuSeeder extends Seeder
             $legend ? sprintf('legend="%s"', $legend) : ''
         );
 
-        $model->$editorColumnName = $editorContent . ' ' . $videoTag;
-        if($model->id !== null) {
+        $model->$editorColumnName = $editorContent.' '.$videoTag;
+        if ($model->id !== null) {
             $model->save();
         }
     }
 
-    public function seedQuoteEmbed(Model &$model, string $editorColumnName, ?string $quote = null, ?string $author = null): void {
+    public function seedQuoteEmbed(Model &$model, string $editorColumnName, ?string $quote = null, ?string $author = null): void
+    {
         $editorContent = $model->$editorColumnName;
         $randomQuote = collect([
-            ["The only thing we have to fear is fear itself.", "Franklin D. Roosevelt"],
-            ["I think, therefore I am.", "René Descartes"],
-            ["Be the change that you wish to see in the world.", "Gandhi"],
-            ["In the middle of difficulty lies opportunity.", "Albert Einstein"],
+            ['The only thing we have to fear is fear itself.', 'Franklin D. Roosevelt'],
+            ['I think, therefore I am.', 'René Descartes'],
+            ['Be the change that you wish to see in the world.', 'Gandhi'],
+            ['In the middle of difficulty lies opportunity.', 'Albert Einstein'],
         ])->random();
 
         $quoteTag = sprintf(
@@ -53,8 +55,8 @@ class OzuSeeder extends Seeder
             $author ?? $randomQuote[1]
         );
 
-        $model->$editorColumnName = $editorContent . ' ' . $quoteTag;
-        if($model->id !== null) {
+        $model->$editorColumnName = $editorContent.' '.$quoteTag;
+        if ($model->id !== null) {
             $model->save();
         }
     }
