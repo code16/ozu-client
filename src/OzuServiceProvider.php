@@ -73,6 +73,7 @@ class OzuServiceProvider extends PackageServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views/components/file.blade.php' => resource_path('views/vendor/ozu/components/file.blade.php'),
             __DIR__.'/../resources/views/components/image.blade.php' => resource_path('views/vendor/ozu/components/image.blade.php'),
+            __DIR__.'/../resources/views/components/embedded-image.blade.php' => resource_path('views/vendor/ozu/components/embedded-image.blade.php'),
             __DIR__.'/../resources/views/components/video.blade.php' => resource_path('views/vendor/ozu/components/video.blade.php'),
             __DIR__.'/../resources/views/components/quote.blade.php' => resource_path('views/vendor/ozu/components/quote.blade.php'),
         ], 'ozu-views');

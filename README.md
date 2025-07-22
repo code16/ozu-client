@@ -18,9 +18,6 @@ Publish the config file:
 php artisan vendor:publish --tag="ozu-client-config"
 ```
 
-> [!IMPORTANT]  
-> As our beta builder only works with PHP 8.4 for now, your project must use PHP 8.4.
-
 ## Usage
 
 ### Models are Ozu collections
@@ -108,6 +105,49 @@ class Project extends Model
 
 > [!NOTE]  
 > This configuration will be used by Ozu to properly display the collection in the content management tool. It has no effect in your local codebase.
+
+### Configure your content editor
+```
+ public static function configureOzuCollectionForm(OzuCollectionFormConfig $config): OzuCollectionFormConfig
+    {
+        return $config
+            ->configureContentField(fn(OzuEditorField $field) => $field
+                ->setLabel('Contenu')
+                ->setToolbar([
+                    OzuEditorToolbarEnum::Heading1,
+                    OzuEditorToolbarEnum::Heading2,
+                    OzuEditorToolbarEnum::Separator,
+                    OzuEditorToolbarEnum::Bold,
+                    OzuEditorToolbarEnum::Italic,
+                    OzuEditorToolbarEnum::Link,
+                    OzuEditorToolbarEnum::Image,
+                    OzuEditorToolbarEnum::Separator,
+                    OzuEditorToolbarEnum::Iframe,
+                    OzuEditorToolbarEnum::Quote,
+                    OzuEditorToolbarEnum::Video,
+                    OzuEditorToolbarEnum::Separator,
+                    OzuEditorToolbarEnum::BulletList,
+                    OzuEditorToolbarEnum::OrderedList,
+                    OzuEditorToolbarEnum::Separator,
+                ])
+                ->setMaxFileSize(12)
+                ->setCropRatio('1:1')
+            );
+    }
+```
+
+Ozu uses a supercharged version of the sharp editor field. You can declare multiple toolbar element to enrich your content, including :
+
+- `OzuEditorToolbarEnum::Image` to embed images directly inside your content
+- `OzuEditorToolbarEnum::Quote` to embed nice quotes with an (optional) author
+- `OzuEditorToolbarEnum::Video` to embed videos from different providers (Youtube, Vimeo, Dailymotion)
+
+Ozu will render very basically theses content but you can override the views by publishing them with:
+```bash
+php artisan vendor:publish --tag="ozu-views"
+```
+> [!WARNING]  
+> To allow ozu to renders rich content in your front, please use the `<x-ozu-content>` component.
 
 ### Handle `BelongsTo` relationships
 
