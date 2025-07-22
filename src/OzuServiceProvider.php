@@ -9,8 +9,11 @@ use Code16\OzuClient\Support\Thumbnails\KeyCdnThumbnail;
 use Code16\OzuClient\Support\Thumbnails\LocalThumbnail;
 use Code16\OzuClient\Support\Thumbnails\Thumbnail;
 use Code16\OzuClient\View\Components\Content;
+use Code16\OzuClient\View\Components\EmbeddedImage;
 use Code16\OzuClient\View\Components\File;
 use Code16\OzuClient\View\Components\Image;
+use Code16\OzuClient\View\Components\Quote;
+use Code16\OzuClient\View\Components\Video;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -70,12 +73,17 @@ class OzuServiceProvider extends PackageServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views/components/file.blade.php' => resource_path('views/vendor/ozu/components/file.blade.php'),
             __DIR__.'/../resources/views/components/image.blade.php' => resource_path('views/vendor/ozu/components/image.blade.php'),
+            __DIR__.'/../resources/views/components/video.blade.php' => resource_path('views/vendor/ozu/components/video.blade.php'),
+            __DIR__.'/../resources/views/components/quote.blade.php' => resource_path('views/vendor/ozu/components/quote.blade.php'),
         ], 'ozu-views');
 
         Blade::componentNamespace('Code16\\OzuClient\\View\\Components\\Content', 'ozu-content');
         Blade::component(Content::class, 'ozu-content');
         Blade::component(Image::class, 'ozu-image');
+        Blade::component(EmbeddedImage::class, 'sharp-image');
         Blade::component(File::class, 'ozu-file');
+        Blade::component(Video::class, 'ozu-content-video');
+        Blade::component(Quote::class, 'ozu-content-quote');
 
         Paginator::currentPageResolver(function () {
             return request()->route()->parameter('page');
