@@ -107,7 +107,7 @@ class Project extends Model
 > This configuration will be used by Ozu to properly display the collection in the content management tool. It has no effect in your local codebase.
 
 ### Configure your content editor
-```
+```php
  public static function configureOzuCollectionForm(OzuCollectionFormConfig $config): OzuCollectionFormConfig
     {
         return $config
