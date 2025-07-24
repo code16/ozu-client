@@ -102,6 +102,8 @@ it('allows to create an editor field', function () {
         ],
         'height' => 200,
         'maxHeight' => null,
+        'maxFileSize' => 5,
+        'cropRatio' => null,
     ]);
 });
 
@@ -132,6 +134,8 @@ it('allows to use setToolbar, setWithoutParagraph and hideToolbar on an editor f
         ],
         'height' => 200,
         'maxHeight' => null,
+        'maxFileSize' => 5,
+        'cropRatio' => null,
     ]);
 
     $field->hideToolbar();
@@ -167,6 +171,8 @@ it('allows to set height and maxHeight on an editor field', function () {
         ],
         'height' => 300,
         'maxHeight' => 500,
+        'maxFileSize' => 5,
+        'cropRatio' => null,
     ]);
 });
 
