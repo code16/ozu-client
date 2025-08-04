@@ -35,9 +35,9 @@ class ConfigureCmsCommand extends Command
                     default => $collection,
                 };
 
-                $collection = $model::configureOzuCollection(new OzuCollectionConfig());
-                $list = $model::configureOzuCollectionList(new OzuCollectionListConfig());
-                $form = $model::configureOzuCollectionForm(new OzuCollectionFormConfig());
+                $collection = $model::configureOzuCollection(new OzuCollectionConfig);
+                $list = $model::configureOzuCollectionList(new OzuCollectionListConfig);
+                $form = $model::configureOzuCollectionForm(new OzuCollectionFormConfig);
 
                 return [
                     'key' => $model->ozuCollectionKey(),
@@ -72,7 +72,7 @@ class ConfigureCmsCommand extends Command
                             ->map(fn (OzuField $field) => $field->toArray()),
                     ],
                     'customFields' => collect(Schema::getColumnListing($model->getTable()))
-                        ->filter(fn (string $column) => !in_array($column, $model::$ozuColumns))
+                        ->filter(fn (string $column) => ! in_array($column, $model::$ozuColumns))
                         ->mapWithKeys(fn (string $column) => [
                             $column => match (Schema::getColumnType($model->getTable(), $column)) {
                                 'datetime', 'timestamps' => 'dateTime',
@@ -94,7 +94,7 @@ class ConfigureCmsCommand extends Command
                     );
                 } catch (RequestException $e) {
                     if ($message = $e->response->json()) {
-                        if (!isset($message['message'])) {
+                        if (! isset($message['message'])) {
                             throw $e;
                         }
                         $this->error('['.$collection['key'].'] '.$message['message']);

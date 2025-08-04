@@ -3,7 +3,7 @@
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 
 it('set defauls config values', function () {
-    $ozuCollectionConfig = new OzuCollectionConfig();
+    $ozuCollectionConfig = new OzuCollectionConfig;
 
     expect($ozuCollectionConfig->label())->toBe('no label')->and($ozuCollectionConfig->icon())->toBeNull()
         ->and($ozuCollectionConfig->hasPublicationState())->toBeFalse()
@@ -37,7 +37,7 @@ it('set defauls config values', function () {
 });
 
 it('allows to set label and icon', function () {
-    $ozuCollectionConfig = new OzuCollectionConfig();
+    $ozuCollectionConfig = new OzuCollectionConfig;
 
     $ozuCollectionConfig
         ->setLabel('label')
@@ -48,7 +48,7 @@ it('allows to set label and icon', function () {
 });
 
 it('allows to set hasPublicationState and setAutoDeployField', function () {
-    $ozuCollectionConfig = new OzuCollectionConfig();
+    $ozuCollectionConfig = new OzuCollectionConfig;
 
     $ozuCollectionConfig->setHasPublicationState();
     $ozuCollectionConfig->setAutoDeployDateField('date');
@@ -58,7 +58,7 @@ it('allows to set hasPublicationState and setAutoDeployField', function () {
 });
 
 it('allows to set isCreatable and isDeletable', function () {
-    $ozuCollectionConfig = new OzuCollectionConfig();
+    $ozuCollectionConfig = new OzuCollectionConfig;
 
     $ozuCollectionConfig->setIsCreatable(false);
     $ozuCollectionConfig->setIsDeletable(false);
@@ -68,7 +68,7 @@ it('allows to set isCreatable and isDeletable', function () {
 });
 
 it('allows to chain methods', function () {
-    $ozuCollectionConfig = new OzuCollectionConfig();
+    $ozuCollectionConfig = new OzuCollectionConfig;
 
     $ozuCollectionConfig
         ->setLabel('label')

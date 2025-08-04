@@ -12,9 +12,13 @@ use Illuminate\View\View;
 class Image extends Component
 {
     public array $file;
+
     public ?string $name = null;
+
     public ?Media $fileModel = null;
+
     public ?Filesystem $disk = null;
+
     public bool $exists = false;
 
     public function __construct(
@@ -34,14 +38,14 @@ class Image extends Component
             $this->name = $this->file['name'] ?? basename($this->fileModel->file_name);
         }
 
-        if (!$this->thumbnailWidth && !$this->thumbnailHeight) {
+        if (! $this->thumbnailWidth && ! $this->thumbnailHeight) {
             $this->thumbnailWidth = 500;
         }
     }
 
     public function render(): View
     {
-        if (!$this->fileModel) {
+        if (! $this->fileModel) {
             throw new OzuClientException('Unable to render embedded image: invalid file');
         }
 

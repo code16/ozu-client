@@ -12,9 +12,13 @@ use Illuminate\View\Component;
 class File extends Component
 {
     public array $file;
+
     public ?string $name = null;
+
     public ?Media $fileModel = null;
+
     public ?Filesystem $disk = null;
+
     public bool $exists = false;
 
     public function __construct(
@@ -34,7 +38,7 @@ class File extends Component
 
     public function render(): View
     {
-        if (!$this->fileModel) {
+        if (! $this->fileModel) {
             throw new OzuClientException('Unable to render embedded file: invalid file');
         }
 

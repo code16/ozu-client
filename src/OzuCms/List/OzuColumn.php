@@ -10,9 +10,7 @@ abstract class OzuColumn
 
     protected string $sortDirection = 'asc';
 
-    protected function __construct(protected string $key, protected int $size)
-    {
-    }
+    protected function __construct(protected string $key, protected int $size) {}
 
     public static function makeText(string $key, int $size): OzuTextColumn
     {
