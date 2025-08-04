@@ -31,6 +31,7 @@
         "spatie/laravel-sluggable": "^3.6"
     },
     "require-dev": {
+        "code16/pint-config": "^1.2",
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^8.0",
         "orchestra/testbench": "^9.0|^10.0",
@@ -51,7 +52,10 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi",
+            "@php ./vendor/bin/pint-config install"
+        ],
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
