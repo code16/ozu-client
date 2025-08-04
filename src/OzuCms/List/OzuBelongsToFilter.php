@@ -8,7 +8,9 @@ class OzuBelongsToFilter
 
     private ?string $label = null;
 
-    public function __construct(protected string $ozuCollectionKey) {}
+    public function __construct(protected string $ozuCollectionKey)
+    {
+    }
 
     public function setRequired(bool $required = true): self
     {

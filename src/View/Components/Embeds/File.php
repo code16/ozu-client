@@ -38,7 +38,7 @@ class File extends Component
 
     public function render(): View
     {
-        if (! $this->fileModel) {
+        if (!$this->fileModel) {
             throw new OzuClientException('Unable to render embedded file: invalid file');
         }
 
