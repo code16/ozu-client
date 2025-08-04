@@ -5,7 +5,7 @@ namespace Code16\OzuClient\OzuCms;
 use Closure;
 use Code16\OzuClient\OzuCms\Form\OzuBelongsToField;
 use Code16\OzuClient\OzuCms\Form\OzuEditorField;
-use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarEnum;
+use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarButton;
 use Code16\OzuClient\OzuCms\Form\OzuField;
 use Code16\OzuClient\OzuCms\Form\OzuImageField;
 use Code16\OzuClient\OzuCms\Form\OzuTextField;
@@ -146,11 +146,11 @@ class OzuCollectionFormConfig
         if (!isset($this->contentField)) {
             $this->contentField = OzuField::makeEditor('content')
                 ->setToolbar([
-                    OzuEditorToolbarEnum::Bold,
-                    OzuEditorToolbarEnum::Italic,
-                    OzuEditorToolbarEnum::Separator,
-                    OzuEditorToolbarEnum::BulletList,
-                    OzuEditorToolbarEnum::Link,
+                    OzuEditorToolbarButton::Bold,
+                    OzuEditorToolbarButton::Italic,
+                    OzuEditorToolbarButton::Separator,
+                    OzuEditorToolbarButton::BulletList,
+                    OzuEditorToolbarButton::Link,
                 ]);
         }
 

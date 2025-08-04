@@ -40,7 +40,7 @@ class Media extends Model
             ->make($width, $height, $fit);
     }
 
-    public function download(): ?string
+    public function downloadUrl(): ?string
     {
         return app(Thumbnail::class)
             ->forMedia($this)

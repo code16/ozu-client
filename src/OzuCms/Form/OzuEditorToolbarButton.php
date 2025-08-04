@@ -2,7 +2,7 @@
 
 namespace Code16\OzuClient\OzuCms\Form;
 
-enum OzuEditorToolbarEnum: string
+enum OzuEditorToolbarButton: string
 {
     case Bold = 'bold';
     case Italic = 'italic';

@@ -1,7 +1,7 @@
 <?php
 
 use Code16\OzuClient\OzuCms\Form\OzuEditorField;
-use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarEnum;
+use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarButton;
 use Code16\OzuClient\OzuCms\Form\OzuField;
 use Code16\OzuClient\OzuCms\Form\OzuImageField;
 use Code16\OzuClient\OzuCms\Form\OzuTextField;
@@ -80,18 +80,18 @@ it('allows to configure content field', function () {
         ->configureContentField(function ($field) {
             $field->setHeight(100, 200)
                 ->setToolbar([
-                    OzuEditorToolbarEnum::Bold,
-                    OzuEditorToolbarEnum::Italic,
-                    OzuEditorToolbarEnum::BulletList,
+                    OzuEditorToolbarButton::Bold,
+                    OzuEditorToolbarButton::Italic,
+                    OzuEditorToolbarButton::BulletList,
                 ]);
         });
 
     expect($ozuCollectionFormConfig->contentField()->toArray()['height'])->toBe(100)
         ->and($ozuCollectionFormConfig->contentField()->toArray()['maxHeight'])->toBe(200)
         ->and($ozuCollectionFormConfig->contentField()->toArray()['toolbar'])->toBe([
-            OzuEditorToolbarEnum::Bold->value,
-            OzuEditorToolbarEnum::Italic->value,
-            OzuEditorToolbarEnum::BulletList->value,
+            OzuEditorToolbarButton::Bold->value,
+            OzuEditorToolbarButton::Italic->value,
+            OzuEditorToolbarButton::BulletList->value,
         ]);
 
 });

@@ -12,17 +12,11 @@ use Intervention\Image\ImageManager;
 class LocalThumbnail extends Thumbnail
 {
     protected ImageManager $imageManager;
-
     protected FilesystemManager $storage;
-
     protected int $quality = 90;
-
     protected ?int $width;
-
     protected ?int $height;
-
     protected bool $fit;
-
     protected bool $appendTimestamp = true;
 
     public function __construct()

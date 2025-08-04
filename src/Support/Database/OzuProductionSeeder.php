@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\File;
 class OzuProductionSeeder extends Seeder
 {
     protected Client $client;
-
     private ?int $createdId = null;
-
     private ?string $currentCollectionKey = null;
 
     public function __construct()

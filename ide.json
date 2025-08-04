@@ -1,0 +1,21 @@
+{
+    "$schema": "https://laravel-ide.com/schema/laravel-ide-v2.json",
+    "view": {
+        "paths": [
+            {
+                "path": "./resources/views",
+                "namespace": "ozu"
+            }
+        ]
+    },
+    "blade": {
+        "components": {
+            "viewPaths": [
+                {
+                    "path": "src/View/Components/Content",
+                    "namespace": "ozu-content"
+                }
+            ]
+        }
+    }
+}

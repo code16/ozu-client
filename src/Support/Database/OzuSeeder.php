@@ -2,6 +2,7 @@
 
 namespace Code16\OzuClient\Support\Database;
 
+use Code16\OzuClient\Eloquent\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
@@ -15,6 +16,27 @@ class OzuSeeder extends Seeder
             collect(scandir($mediaDirectory))
                 ->filter(fn ($file) => !in_array($file, ['.', '..']))
                 ->each(fn ($file) => unlink($mediaDirectory.'/'.$file));
+        }
+    }
+
+    public function seedImageEmbed(Model &$model, string $editorColumnName, ?string $imagePath = null, ?string $legend = null): void
+    {
+        $editorContent = $model->$editorColumnName;
+
+        $media = Media::factory()->image('embed')->withFile($imagePath)->make();
+        $imageTag = sprintf(
+            '<x-ozu-content-image file="%s" legend="%s"></x-ozu-content-image>',
+            e(json_encode([
+                'file_name' => $media->file_name,
+                'disk' => $media->disk,
+                'filters' => $media->filters,
+            ])),
+            $legend ?: ''
+        );
+
+        $model->$editorColumnName = $editorContent.' '.$imageTag;
+        if ($model->id !== null) {
+            $model->save();
         }
     }
 
@@ -50,9 +72,9 @@ class OzuSeeder extends Seeder
         ])->random();
 
         $quoteTag = sprintf(
-            '<x-ozu-content-quote quote="%s" author="%s"></x-ozu-content-quote>',
+            '<x-ozu-content-quote author="%s">%s</x-ozu-content-quote>',
+            $author ?? $randomQuote[1],
             $quote ?? $randomQuote[0],
-            $author ?? $randomQuote[1]
         );
 
         $model->$editorColumnName = $editorContent.' '.$quoteTag;

@@ -1,6 +1,6 @@
 <?php
 
-use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarEnum;
+use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarButton;
 use Code16\OzuClient\OzuCms\Form\OzuField;
 
 it('allows to create a text field', function () {
@@ -94,11 +94,11 @@ it('allows to create an editor field', function () {
         'withoutParagraphs' => false,
         'hideToolbar' => false,
         'toolbar' => [
-            OzuEditorToolbarEnum::Bold->value,
-            OzuEditorToolbarEnum::Italic->value,
-            OzuEditorToolbarEnum::Separator->value,
-            OzuEditorToolbarEnum::BulletList->value,
-            OzuEditorToolbarEnum::Link->value,
+            OzuEditorToolbarButton::Bold->value,
+            OzuEditorToolbarButton::Italic->value,
+            OzuEditorToolbarButton::Separator->value,
+            OzuEditorToolbarButton::BulletList->value,
+            OzuEditorToolbarButton::Link->value,
         ],
         'height' => 200,
         'maxHeight' => null,
@@ -115,8 +115,8 @@ it('allows to use setToolbar, setWithoutParagraph and hideToolbar on an editor f
         ->setIsUpdatable(false)
         ->setWithoutParagraphs()
         ->setToolbar([
-            OzuEditorToolbarEnum::Bold,
-            OzuEditorToolbarEnum::Italic,
+            OzuEditorToolbarButton::Bold,
+            OzuEditorToolbarButton::Italic,
         ]);
 
     expect($field->toArray())->toEqual([
@@ -129,8 +129,8 @@ it('allows to use setToolbar, setWithoutParagraph and hideToolbar on an editor f
         'withoutParagraphs' => true,
         'hideToolbar' => false,
         'toolbar' => [
-            OzuEditorToolbarEnum::Bold->value,
-            OzuEditorToolbarEnum::Italic->value,
+            OzuEditorToolbarButton::Bold->value,
+            OzuEditorToolbarButton::Italic->value,
         ],
         'height' => 200,
         'maxHeight' => null,
@@ -163,11 +163,11 @@ it('allows to set height and maxHeight on an editor field', function () {
         'withoutParagraphs' => false,
         'hideToolbar' => false,
         'toolbar' => [
-            OzuEditorToolbarEnum::Bold->value,
-            OzuEditorToolbarEnum::Italic->value,
-            OzuEditorToolbarEnum::Separator->value,
-            OzuEditorToolbarEnum::BulletList->value,
-            OzuEditorToolbarEnum::Link->value,
+            OzuEditorToolbarButton::Bold->value,
+            OzuEditorToolbarButton::Italic->value,
+            OzuEditorToolbarButton::Separator->value,
+            OzuEditorToolbarButton::BulletList->value,
+            OzuEditorToolbarButton::Link->value,
         ],
         'height' => 300,
         'maxHeight' => 500,
