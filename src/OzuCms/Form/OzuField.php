@@ -12,7 +12,9 @@ abstract class OzuField
 
     protected bool $isUpdatable = true;
 
-    public function __construct(protected string $key) {}
+    public function __construct(protected string $key)
+    {
+    }
 
     public static function makeText(string $key): OzuTextField
     {

@@ -10,7 +10,8 @@ class File extends Component
     public function __construct(
         public string $name,
         public string $href,
-    ) {}
+    ) {
+    }
 
     public function render(): View
     {

@@ -57,7 +57,7 @@ class OzuEditorField extends OzuField
 
     public function setMaxFileSize(int $maxFileSize): self
     {
-        if (! in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
+        if (!in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
             throw new OzuClientException('You should allow Image Uploads by adding OzuEditorToolbarEnum::Image in toolbar configuration before setting max file size');
         }
 
@@ -68,7 +68,7 @@ class OzuEditorField extends OzuField
 
     public function setCropRatio(string $cropRatio): self
     {
-        if (! in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
+        if (!in_array(OzuEditorToolbarEnum::Image, $this->toolbar)) {
             throw new OzuClientException('You should allow Image Uploads by adding OzuEditorToolbarEnum::Image in toolbar configuration before setting image crop ratio');
         }
 

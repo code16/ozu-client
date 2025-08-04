@@ -37,14 +37,14 @@ class EmbeddedImage extends Component
             $this->name = $this->file['name'] ?? basename($this->fileModel->file_name);
         }
 
-        if (! $this->thumbnailWidth && ! $this->thumbnailHeight) {
+        if (!$this->thumbnailWidth && !$this->thumbnailHeight) {
             $this->thumbnailWidth = 500;
         }
     }
 
     public function render(): \Illuminate\View\View
     {
-        if (! $this->fileModel) {
+        if (!$this->fileModel) {
             throw new OzuClientException('Unable to render embedded image: invalid file');
         }
 

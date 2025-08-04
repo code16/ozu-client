@@ -93,7 +93,7 @@ class OzuCollectionFormConfig
 
         $this->belongsToField = (new OzuBelongsToField($ozuCollectionKey))
             ->setLabel($label)
-            ->setClearable(! $required)
+            ->setClearable(!$required)
             ->setValidationRules($required ? ['required'] : []);
 
         return $this;
@@ -116,7 +116,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (! isset($this->titleField)) {
+        if (!isset($this->titleField)) {
             $this->titleField = OzuField::makeText('title');
         }
 
@@ -129,7 +129,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (! isset($this->coverField)) {
+        if (!isset($this->coverField)) {
             $this->coverField = OzuField::makeImage('cover')
                 ->setMaxFileSizeInMB(3);
         }
@@ -143,7 +143,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (! isset($this->contentField)) {
+        if (!isset($this->contentField)) {
             $this->contentField = OzuField::makeEditor('content')
                 ->setToolbar([
                     OzuEditorToolbarEnum::Bold,

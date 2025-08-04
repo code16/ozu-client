@@ -13,7 +13,7 @@ class OzuSeeder extends Seeder
 
         if (file_exists($mediaDirectory)) {
             collect(scandir($mediaDirectory))
-                ->filter(fn ($file) => ! in_array($file, ['.', '..']))
+                ->filter(fn ($file) => !in_array($file, ['.', '..']))
                 ->each(fn ($file) => unlink($mediaDirectory.'/'.$file));
         }
     }

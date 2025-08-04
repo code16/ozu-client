@@ -12,7 +12,8 @@ class Client
         protected ?string $apiKey,
         protected string $apiVersion,
         protected string $websiteKey,
-    ) {}
+    ) {
+    }
 
     public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
     {

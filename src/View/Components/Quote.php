@@ -12,7 +12,8 @@ class Quote extends Component
     public function __construct(
         public string $quote,
         public ?string $author = null,
-    ) {}
+    ) {
+    }
 
     public function render()
     {

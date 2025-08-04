@@ -6,7 +6,7 @@ class KeyCdnThumbnail extends CdnThumbnail
 {
     protected function generateUrlParameters(?int $width, ?int $height, bool $fit): string
     {
-        if (! $fit) {
+        if (!$fit) {
             if ($width && $height) {
                 return sprintf('width=%s&height=%s&fit=inside', $width, $height);
             }

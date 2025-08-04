@@ -7,7 +7,8 @@ class Image
     public function __construct(
         public string $src,
         public ?string $legend,
-    ) {}
+    ) {
+    }
 
     public static function make(string|array $data): static
     {
@@ -32,7 +33,7 @@ class Image
         return $this->src.'?tr='.implode(',', array_keys(array_filter([
             "w-$width" => $width,
             "h-$height" => $height,
-            'c-at_max' => ! $crop,
+            'c-at_max' => !$crop,
         ])));
     }
 
