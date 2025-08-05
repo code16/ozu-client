@@ -4,6 +4,7 @@ namespace Code16\OzuClient;
 
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Storage;
 
 class Client
 {
@@ -40,6 +41,50 @@ class Client
                     'field' => $field,
                 ]
             )->getBody()?->getContents();
+    }
+
+    public function downloadOzuDatabase(): ?string
+    {
+        $data = Http::withToken($this->apiKey)
+            ->baseUrl(
+                sprintf(
+                    '%s/api/websites/%s',
+                    rtrim($this->apiHost, '/'),
+                    $this->apiKey,
+                )
+            )
+            ->acceptJson()
+            ->throw()
+            ->get('/database');
+
+        if($data->successful()) {
+            Storage::put('tmp/ozu.sql', $data->body());
+            return Storage::path('tmp/ozu.sql');
+        }
+
+        return null;
+    }
+
+    public function downloadOzuAssets(): ?string
+    {
+        $data = Http::withToken($this->apiKey)
+            ->baseUrl(
+                sprintf(
+                    '%s/api/websites/%s',
+                    rtrim($this->apiHost, '/'),
+                    $this->apiKey,
+                )
+            )
+            ->acceptJson()
+            ->throw()
+            ->get('/assets');
+
+        if($data->successful()) {
+            Storage::put('tmp/ozu-assets.zip', $data->body());
+            return Storage::path('tmp/ozu-assets.zip');
+        }
+
+        return null;
     }
 
     public function apiKey(): ?string
