@@ -68,24 +68,14 @@ class OzuServiceProvider extends PackageServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'ozu');
 
         $this->publishes([
-            __DIR__.'/../resources/views/components/embeds/ozu-content-file.blade.php' => resource_path(
-                'views/vendor/ozu/components/embeds/ozu-content-file.blade.php'
-            ),
-            __DIR__.'/../resources/views/components/embeds/ozu-content-image.blade.php' => resource_path(
-                'views/vendor/ozu/components/embeds/ozu-content-image.blade.php'
-            ),
-            __DIR__.'/../resources/views/components/embeds/ozu-content-video.blade.php' => resource_path(
-                'views/vendor/ozu/components/embeds/ozu-content-video.blade.php'
-            ),
-            __DIR__.'/../resources/views/components/embeds/ozu-content-quote.blade.php' => resource_path(
-                'views/vendor/ozu/components/embeds/ozu-content-quote.blade.php'
-            ),
+            __DIR__.'/../resources/views/components/embeds' => resource_path('views/vendor/ozu/components/embeds'),
         ], 'ozu-views');
 
         Blade::componentNamespace('Code16\\OzuClient\\View\\Components\\Content', 'ozu-content');
         Blade::component(Content::class, 'ozu-content');
         Blade::component(Image::class, 'ozu-content-image');
         Blade::component(File::class, 'ozu-content-file');
+        Blade::anonymousComponentPath(resource_path('views/vendor/ozu/components/embeds'));
         Blade::anonymousComponentPath(__DIR__.'/../resources/views/components/embeds');
 
         Paginator::currentPageResolver(function () {
