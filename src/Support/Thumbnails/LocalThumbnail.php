@@ -27,13 +27,13 @@ class LocalThumbnail extends Thumbnail
 
     public function __construct()
     {
-        $this->imageManager = new ImageManager(new Driver);
+        $this->imageManager = new ImageManager(new Driver());
         $this->storage = app(FilesystemManager::class);
     }
 
     public function make(?int $width, ?int $height = null, bool $fit = false): ?string
     {
-        if (! $this->mediaModel->disk || ! $this->mediaModel->file_name) {
+        if (!$this->mediaModel->disk || !$this->mediaModel->file_name) {
             return null;
         }
 
@@ -65,9 +65,9 @@ class LocalThumbnail extends Thumbnail
     {
         $thumbnailDisk = $this->storage->disk('public');
 
-        if (! $thumbnailDisk->exists($thumbnailPath)) {
+        if (!$thumbnailDisk->exists($thumbnailPath)) {
             // Create thumbnail directories if needed
-            if (! $thumbnailDisk->exists(dirname($thumbnailPath))) {
+            if (!$thumbnailDisk->exists(dirname($thumbnailPath))) {
                 $thumbnailDisk->makeDirectory(dirname($thumbnailPath));
             }
 
@@ -96,9 +96,9 @@ class LocalThumbnail extends Thumbnail
     {
         $filesDisk = $this->storage->disk('public');
 
-        if (! $filesDisk->exists($this->mediaModel->file_name)) {
+        if (!$filesDisk->exists($this->mediaModel->file_name)) {
             // Create files directories if needed
-            if (! $filesDisk->exists(dirname($this->mediaModel->file_name))) {
+            if (!$filesDisk->exists(dirname($this->mediaModel->file_name))) {
                 $filesDisk->makeDirectory(dirname($this->mediaModel->file_name));
             }
 

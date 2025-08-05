@@ -25,7 +25,7 @@ class Media extends Model
 
     protected static function newFactory()
     {
-        return new MediaFactory;
+        return new MediaFactory();
     }
 
     public function model(): MorphTo
@@ -40,7 +40,7 @@ class Media extends Model
             ->make($width, $height, $fit);
     }
 
-    public function download(): ?string
+    public function downloadUrl(): ?string
     {
         return app(Thumbnail::class)
             ->forMedia($this)
@@ -64,7 +64,7 @@ class Media extends Model
      */
     public function getAttribute($key)
     {
-        if (! $this->isRealAttribute($key)) {
+        if (!$this->isRealAttribute($key)) {
             return $this->getAttribute('custom_properties')[$key] ?? null;
         }
 
@@ -78,7 +78,7 @@ class Media extends Model
      */
     public function setAttribute($key, $value)
     {
-        if (! $this->isRealAttribute($key)) {
+        if (!$this->isRealAttribute($key)) {
             return $this->updateCustomProperty($key, $value);
         }
 

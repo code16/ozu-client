@@ -1,9 +1,9 @@
-@php use Code16\OzuClient\Eloquent\Media; @endphp
-@props([
-    /** @var Media $fileModel */
-    'fileModel',
-    'legend' => null,
-])
+@php
+/**
+ * @var \Code16\OzuClient\Eloquent\Media $fileModel
+ */
+@endphp
+
 <figure>
     <img src="{{ $fileModel->thumbnail($thumbnailWidth, $thumbnailHeight) }}" {{ $attributes }}>
     @if($legend)

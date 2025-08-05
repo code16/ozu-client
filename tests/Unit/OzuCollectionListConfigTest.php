@@ -8,13 +8,13 @@ use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\Tests\Fixtures\DummyTestModel;
 
 it('set default config values', function () {
-    expect(new OzuCollectionListConfig)
+    expect(new OzuCollectionListConfig())
         ->isReorderable()->toBeFalse()
         ->isPaginated()->toBeFalse()
         ->isSearchable()->toBeFalse()
         ->columns()->toBeEmpty()
         ->defaultSort()->toBeNull()
-        ->and(new OzuCollectionListConfig)
+        ->and(new OzuCollectionListConfig())
         ->toHaveProperties([
             'isReorderable',
             'isSearchable',
@@ -39,7 +39,7 @@ it('set default config values', function () {
 });
 
 it('allows to set isReorderable, isSearchable and isPaginated', function () {
-    $ozuCollectionListConfig = new OzuCollectionListConfig;
+    $ozuCollectionListConfig = new OzuCollectionListConfig();
 
     $ozuCollectionListConfig
         ->setIsReorderable()
@@ -52,7 +52,7 @@ it('allows to set isReorderable, isSearchable and isPaginated', function () {
 });
 
 it('allows to declare belongsToFilter', function () {
-    $ozuCollectionListConfig = new OzuCollectionListConfig;
+    $ozuCollectionListConfig = new OzuCollectionListConfig();
 
     $ozuCollectionListConfig->declareBelongsToFilter(DummyTestModel::class, 'label');
 
@@ -63,7 +63,7 @@ it('allows to declare belongsToFilter', function () {
 });
 
 it('allows to add columns', function () {
-    $ozuCollectionListConfig = new OzuCollectionListConfig;
+    $ozuCollectionListConfig = new OzuCollectionListConfig();
 
     $ozuCollectionListConfig
         ->addColumn(OzuColumn::makeText('text', 1))
@@ -79,7 +79,7 @@ it('allows to add columns', function () {
 });
 
 it('allows to set defaultSort', function () {
-    $ozuCollectionListConfig = new OzuCollectionListConfig;
+    $ozuCollectionListConfig = new OzuCollectionListConfig();
 
     $ozuCollectionListConfig
         ->addColumn(OzuColumn::makeText('text', 1)->setDefaultSort('desc'));

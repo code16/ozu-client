@@ -5,7 +5,7 @@ namespace Code16\OzuClient\OzuCms;
 use Closure;
 use Code16\OzuClient\OzuCms\Form\OzuBelongsToField;
 use Code16\OzuClient\OzuCms\Form\OzuEditorField;
-use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarEnum;
+use Code16\OzuClient\OzuCms\Form\OzuEditorToolbarButton;
 use Code16\OzuClient\OzuCms\Form\OzuField;
 use Code16\OzuClient\OzuCms\Form\OzuImageField;
 use Code16\OzuClient\OzuCms\Form\OzuTextField;
@@ -93,7 +93,7 @@ class OzuCollectionFormConfig
 
         $this->belongsToField = (new OzuBelongsToField($ozuCollectionKey))
             ->setLabel($label)
-            ->setClearable(! $required)
+            ->setClearable(!$required)
             ->setValidationRules($required ? ['required'] : []);
 
         return $this;
@@ -116,7 +116,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (! isset($this->titleField)) {
+        if (!isset($this->titleField)) {
             $this->titleField = OzuField::makeText('title');
         }
 
@@ -129,7 +129,7 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (! isset($this->coverField)) {
+        if (!isset($this->coverField)) {
             $this->coverField = OzuField::makeImage('cover')
                 ->setMaxFileSizeInMB(3);
         }
@@ -143,14 +143,14 @@ class OzuCollectionFormConfig
             return null;
         }
 
-        if (! isset($this->contentField)) {
+        if (!isset($this->contentField)) {
             $this->contentField = OzuField::makeEditor('content')
                 ->setToolbar([
-                    OzuEditorToolbarEnum::Bold,
-                    OzuEditorToolbarEnum::Italic,
-                    OzuEditorToolbarEnum::Separator,
-                    OzuEditorToolbarEnum::BulletList,
-                    OzuEditorToolbarEnum::Link,
+                    OzuEditorToolbarButton::Bold,
+                    OzuEditorToolbarButton::Italic,
+                    OzuEditorToolbarButton::Separator,
+                    OzuEditorToolbarButton::BulletList,
+                    OzuEditorToolbarButton::Link,
                 ]);
         }
 

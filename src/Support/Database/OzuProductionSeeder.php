@@ -23,13 +23,13 @@ class OzuProductionSeeder extends Seeder
 
     protected function createInOzu(Model $item): static
     {
-        if (! in_array(IsOzuModel::class, class_uses_recursive($item))) {
+        if (!in_array(IsOzuModel::class, class_uses_recursive($item))) {
             throw new \InvalidArgumentException($item::class." doesn't have the IsOzuModel trait");
         }
 
         $this->currentCollectionKey = $collectionKey = $item?->ozuCollectionKey();
 
-        if (! $collectionKey) {
+        if (!$collectionKey) {
             throw new \InvalidArgumentException('Unable to retrieve collection key.');
         }
 
@@ -40,11 +40,11 @@ class OzuProductionSeeder extends Seeder
 
     protected function withFile(string $field, string $path, ?int $forceId = null): static
     {
-        if (! $forceId && ! $this->createdId) {
+        if (!$forceId && !$this->createdId) {
             throw new \InvalidArgumentException('No item created yet. Try calling createInOzu() first.');
         }
 
-        if (! File::exists($path)) {
+        if (!File::exists($path)) {
             throw new \InvalidArgumentException("File not found at path: {$path}");
         }
 
