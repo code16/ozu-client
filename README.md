@@ -114,21 +114,21 @@ class Project extends Model
             ->configureContentField(fn(OzuEditorField $field) => $field
                 ->setLabel('Contenu')
                 ->setToolbar([
-                    OzuEditorToolbarEnum::Heading1,
-                    OzuEditorToolbarEnum::Heading2,
-                    OzuEditorToolbarEnum::Separator,
-                    OzuEditorToolbarEnum::Bold,
-                    OzuEditorToolbarEnum::Italic,
-                    OzuEditorToolbarEnum::Link,
-                    OzuEditorToolbarEnum::Image,
-                    OzuEditorToolbarEnum::Separator,
-                    OzuEditorToolbarEnum::Iframe,
-                    OzuEditorToolbarEnum::Quote,
-                    OzuEditorToolbarEnum::Video,
-                    OzuEditorToolbarEnum::Separator,
-                    OzuEditorToolbarEnum::BulletList,
-                    OzuEditorToolbarEnum::OrderedList,
-                    OzuEditorToolbarEnum::Separator,
+                    OzuEditorToolbarButton::Heading1,
+                    OzuEditorToolbarButton::Heading2,
+                    OzuEditorToolbarButton::Separator,
+                    OzuEditorToolbarButton::Bold,
+                    OzuEditorToolbarButton::Italic,
+                    OzuEditorToolbarButton::Link,
+                    OzuEditorToolbarButton::Image,
+                    OzuEditorToolbarButton::Separator,
+                    OzuEditorToolbarButton::Iframe,
+                    OzuEditorToolbarButton::Quote,
+                    OzuEditorToolbarButton::Video,
+                    OzuEditorToolbarButton::Separator,
+                    OzuEditorToolbarButton::BulletList,
+                    OzuEditorToolbarButton::OrderedList,
+                    OzuEditorToolbarButton::Separator,
                 ])
                 ->setMaxFileSize(12)
                 ->setCropRatio('1:1')
@@ -138,9 +138,9 @@ class Project extends Model
 
 Ozu uses a supercharged version of the sharp editor field. You can declare multiple toolbar element to enrich your content, including :
 
-- `OzuEditorToolbarEnum::Image` to embed images directly inside your content
-- `OzuEditorToolbarEnum::Quote` to embed nice quotes with an (optional) author
-- `OzuEditorToolbarEnum::Video` to embed videos from different providers (Youtube, Vimeo, Dailymotion)
+- `OzuEditorToolbarButton::Image` to embed images directly inside your content
+- `OzuEditorToolbarButton::Quote` to embed nice quotes with an (optional) author
+- `OzuEditorToolbarButton::Video` to embed videos from different providers (Youtube, Vimeo, Dailymotion)
 
 Ozu will render very basically theses content but you can override the views by publishing them with:
 ```bash
