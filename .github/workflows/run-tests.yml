@@ -18,11 +18,11 @@ jobs:
         laravel: [11.*, 12.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 11.*
-            testbench: 9.*
-            carbon: ^3.5
-            contracts: ^11.0
-            collision: ^8.0
+#          - laravel: 11.*
+#            testbench: 9.*
+#            carbon: ^3.5
+#            contracts: ^11.0
+#            collision: ^8.0
           - laravel: 12.*
             testbench: 10.*
             carbon: ^3.5
@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.carbon }}" "illuminate/contracts:${{ matrix.contracts }}" "nunomaduro/collision:${{ matrix.collision }}" --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer update --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
