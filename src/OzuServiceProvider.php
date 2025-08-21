@@ -27,6 +27,7 @@ class OzuServiceProvider extends PackageServiceProvider
             ->hasMigrations(['create_ozu_tables'])->runsMigrations()
             ->hasCommands([
                 Console\ConfigureCmsCommand::class,
+                Console\FetchDataFromOzu::class,
             ])
             ->hasConfigFile();
     }
