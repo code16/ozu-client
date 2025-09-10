@@ -36,7 +36,7 @@ class ConfigureCmsCommand extends Command
         return self::SUCCESS;
     }
 
-    private function updateCmsConfigurationFor($collectionClass, int $order = 1, bool $menu = true): void
+    private function updateCmsConfigurationFor($collectionClass, int $order = 1, bool $isSubCollection = false): void
     {
         $model = match (true) {
             is_string($collectionClass) => app($collectionClass),
@@ -52,12 +52,13 @@ class ConfigureCmsCommand extends Command
             'key' => $model->ozuCollectionKey(),
             'label' => $collection->label(),
             'icon' => $collection->icon(),
-            'isMenu' => $menu,
+            'isMenu' => !$isSubCollection,
             'hasPublicationState' => $collection->hasPublicationState(),
             'autoDeployDateField' => $collection->autoDeployDateField(),
             'isCreatable' => $collection->isCreatable(),
             'isDeletable' => $collection->isDeletable(),
-            'subCollections' => $collection->subCollections(),
+            'subCollections' => $collection->subCollections()
+                ->map(fn ($subCollectionClass) => app($subCollectionClass)->ozuCollectionKey()),
             'order' => $order,
             'list' => [
                 'isReorderable' => $list->isReorderable(),
@@ -102,9 +103,8 @@ class ConfigureCmsCommand extends Command
             $this->ozuClient->updateCollectionSharpConfiguration($payload['key'], $payload);
 
             $collection->subCollections()
-                ->keys()
                 ->each(fn ($subCollectionClass) => $this
-                    ->updateCmsConfigurationFor($subCollectionClass, menu: false)
+                    ->updateCmsConfigurationFor($subCollectionClass, isSubCollection: true)
                 );
 
         } catch (RequestException $e) {

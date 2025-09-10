@@ -59,9 +59,9 @@ class OzuCollectionConfig
         return $this;
     }
 
-    public function addSubCollection(string $collectionClass, string $label): self
+    public function addSubCollection(string $collectionClass): self
     {
-        $this->subCollections[$collectionClass] = $label;
+        $this->subCollections[] = $collectionClass;
 
         return $this;
     }
