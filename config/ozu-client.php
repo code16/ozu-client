@@ -16,7 +16,7 @@ return [
 
     // The following values should not be modified unless you know what you are doing
     'api_host' => env('OZU_API_HOST', 'https://ozu.code16.fr/'),
-    'api_version' => env('OZU_API_VERSION', 'v1'),
+    'api_version' => env('OZU_API_VERSION', 'v2'),
 
     'cdn_url' => env('OZU_CDN_URL'),
 ];

@@ -2,6 +2,7 @@
 
 namespace Code16\OzuClient;
 
+use Code16\OzuClient\Support\Api\OzuApiEndpoints;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Storage;
@@ -18,9 +19,34 @@ class Client
 
     public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
     {
+        // Set general collection settings
         $this->http()->post(
-            sprintf('/collections/%s/configure', $collectionKey),
-            $collectionData
+            url: OzuApiEndpoints::GeneralCollectionSettings->endpoint($collectionKey),
+            data: collect($collectionData)->only(['label', 'icon', 'hasPublicationState', 'isCreatable', 'isDeletable', 'order'])->toArray()
+        );
+
+        // Configure collection's list
+        $this->http()->post(
+            url: OzuApiEndpoints::CollectionListConfiguration->endpoint($collectionKey),
+            data: collect($collectionData)->only(['list'])->toArray()
+        );
+
+        // Configure collection's form
+        $this->http()->post(
+            url: OzuApiEndpoints::CollectionFormConfiguration->endpoint($collectionKey),
+            data: collect($collectionData)->only(['form'])->toArray()
+        );
+
+        // Configure collection's custom fields'
+        $this->http()->post(
+            url: OzuApiEndpoints::CollectionCustomFieldsConfiguration->endpoint($collectionKey),
+            data: collect($collectionData)->only(['customFields'])->toArray()
+        );
+
+        // Configure collection's auto deploy fields
+        $this->http()->post(
+            url: OzuApiEndpoints::CollectionAutoDeployFields->endpoint($collectionKey),
+            data: collect($collectionData)->only(['autoDeployDateField'])->toArray()
         );
     }
 
@@ -58,8 +84,9 @@ class Client
             ->throw()
             ->get('/database');
 
-        if($data->successful()) {
+        if ($data->successful()) {
             Storage::put('tmp/ozu.sql', $data->body());
+
             return Storage::path('tmp/ozu.sql');
         }
 
@@ -80,8 +107,9 @@ class Client
             ->throw()
             ->get('/assets');
 
-        if($data->successful()) {
+        if ($data->successful()) {
             Storage::put('tmp/ozu-assets.zip', $data->body());
+
             return Storage::path('tmp/ozu-assets.zip');
         }
 

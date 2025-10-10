@@ -97,7 +97,15 @@ class ConfigureCmsCommand extends Command
                         if (!isset($message['message'])) {
                             throw $e;
                         }
-                        $this->error('['.$collection['key'].'] '.$message['message']);
+
+                        $this->error(sprintf(
+                            '[%s] %s',
+                            $collection['key'],
+                            collect(is_array($message['errors']) ? $message['errors'] : [])
+                                ->map(fn ($error, $key) => sprintf('%s: %s', $key, $error[0]))
+                                ->implode(', ')
+                                 ?? ($message['message'] ?? 'Unknown error')
+                        ));
                     } else {
                         throw $e;
                     }
