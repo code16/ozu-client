@@ -101,10 +101,10 @@ class ConfigureCmsCommand extends Command
                         $this->error(sprintf(
                             '[%s] %s',
                             $collection['key'],
-                            collect(is_array($message['errors']) ? $message['errors'] : [])
+                            isset($message['errors']) ? collect(is_array($message['errors']) ? $message['errors'] : [])
                                 ->map(fn ($error, $key) => sprintf('%s: %s', $key, $error[0]))
                                 ->implode(', ')
-                                 ?? ($message['message'] ?? 'Unknown error')
+                                 ?? ($message['message'] ?? 'Unknown error') : (isset($message['message']) ? $message['message'] : json_encode($message))
                         ));
                     } else {
                         throw $e;
