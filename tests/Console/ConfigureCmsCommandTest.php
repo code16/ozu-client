@@ -5,6 +5,7 @@ use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
+use Code16\OzuClient\Tests\Fixtures\DummySubcollectionTestModel;
 use Code16\OzuClient\Tests\Fixtures\DummyTestModel;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\Request;
@@ -259,5 +260,54 @@ it('sends custom fields configuration to Ozu', function () {
         return $request['customFields'] == collect([
             'dummy_text' => 'string',
         ]);
+    });
+});
+
+it('sends subcollections configuration to Ozu', function () {
+    Http::fake();
+
+    // Create a parent collection with subcollections
+    $parentCollectionClass = new class extends DummyTestModel
+    {
+        public function ozuCollectionKey(): string
+        {
+            return 'dummy-parent';
+        }
+
+        public static function configureOzuCollection(OzuCollectionConfig $config): OzuCollectionConfig
+        {
+            return $config
+                ->setLabel('Parent collection')
+                ->addSubCollection(DummySubcollectionTestModel::class);
+        }
+    };
+
+    config(['ozu-client.collections' => [$parentCollectionClass]]);
+
+    $this->artisan('ozu:configure-cms')
+        ->expectsOutput('CMS configuration sent to Ozu.')
+        ->assertExitCode(Command::SUCCESS);
+
+    // Assert parent is sent with subcollections in payload
+    Http::assertSent(function (Request $request) {
+        return $request->url() == sprintf(
+            '%s/api/%s/%s/collections/%s/configure',
+            rtrim(config('ozu-client.api_host'), '/'),
+            config('ozu-client.api_version'),
+            'test',
+            'dummy-parent'
+        ) && $request['subCollections']->count() === 1
+          && $request['subCollections']->first() === 'dummy-subcollection';
+    });
+
+    // Assert subcollection is also processed and sent
+    Http::assertSent(function (Request $request) {
+        return $request->url() == sprintf(
+            '%s/api/%s/%s/collections/%s/configure',
+            rtrim(config('ozu-client.api_host'), '/'),
+            config('ozu-client.api_version'),
+            'test',
+            'dummy-subcollection'
+        );
     });
 });

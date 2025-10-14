@@ -15,8 +15,11 @@ use Illuminate\Support\Facades\Schema;
 class ConfigureCmsCommand extends Command
 {
     protected $signature = 'ozu:configure-cms';
-    protected $description = 'Send CMS configuration to Ozu.';
+    protected $aliases = ['ozu:configure', 'configure:ozu'];
+    protected $description = 'Sends CMS configuration to Ozu.';
     private Client $ozuClient;
+
+    private array $processedCollections = [];
 
     public function handle(Client $ozuClient): int
     {
@@ -28,9 +31,14 @@ class ConfigureCmsCommand extends Command
 
         $this->ozuClient = $ozuClient;
 
+        $this->newLine();
+        $this->line('<fg=white>Sending configuration to <options=bold>'.config('ozu-client.api_host').'</></>');
+        $this->newLine();
+
         collect(config('ozu-client.collections'))
             ->each(fn ($collection, $k) => $this->updateCmsConfigurationFor($collection, $k+1));
 
+        $this->newLine();
         $this->info('CMS configuration sent to Ozu.');
 
         return self::SUCCESS;
@@ -44,6 +52,22 @@ class ConfigureCmsCommand extends Command
             default => $collectionClass,
         };
 
+        // avoid processing the same collection twice
+        if (in_array($model::class, $this->processedCollections)) {
+            /*
+             * We avoid processing multiple times the same subcollection, but we'll warn the
+             * user only if it's not a subcollection, because subcollection models can be
+             * declared in multiple parent collections.
+             */
+
+            if(!$isSubCollection) {
+                $this->line('<fg=yellow>Skipping <options=bold>'.($model->ozuCollectionKey() ?? $model::class).'</> because it has already been processed.</>');
+                $this->line('<fg=yellow>You may have wrongly configured your subcollections, or included a subcollection to the collections array in the ozu-client config file...</>');
+            }
+
+            return;
+        } else { $this->processedCollections[] = $model::class; }
+
         $collection = $model::configureOzuCollection(new OzuCollectionConfig());
         $list = $model::configureOzuCollectionList(new OzuCollectionListConfig());
         $form = $model::configureOzuCollectionForm(new OzuCollectionFormConfig());
@@ -52,7 +76,7 @@ class ConfigureCmsCommand extends Command
             'key' => $model->ozuCollectionKey(),
             'label' => $collection->label(),
             'icon' => $collection->icon(),
-            'isMenu' => !$isSubCollection,
+            'isSubCollection' => !$isSubCollection,
             'hasPublicationState' => $collection->hasPublicationState(),
             'autoDeployDateField' => $collection->autoDeployDateField(),
             'isCreatable' => $collection->isCreatable(),
@@ -97,7 +121,7 @@ class ConfigureCmsCommand extends Command
                 ]),
         ];
 
-        $this->info('Update CMS configuration for ['.$payload['key'].'].');
+        $this->line('<fg=green>Updating CMS configuration for <options=bold>'.$payload['key'].'</>...</>');
 
         try {
             $this->ozuClient->updateCollectionSharpConfiguration($payload['key'], $payload);
@@ -112,7 +136,17 @@ class ConfigureCmsCommand extends Command
                 if (!isset($message['message'])) {
                     throw $e;
                 }
-                $this->error('['.$payload['key'].'] '.$message['message']);
+
+                // Display by priority: validations errors, generic error, json dump of the response
+                $this->error(sprintf(
+                    '[%s] %s',
+                    $collection['key'],
+                    isset($message['errors']) ?
+                        collect(is_array($message['errors']) ? $message['errors'] : [])
+                            ->map(fn ($error, $key) => sprintf('%s: %s', $key, $error[0]))
+                            ->implode(', ') ?? ($message['message'] ?? json_encode($message))
+                        : ($message['message'] ?? json_encode($message))
+                ));
             } else {
                 throw $e;
             }
