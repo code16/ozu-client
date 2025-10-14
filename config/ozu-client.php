@@ -1,7 +1,8 @@
 <?php
 
 return [
-    // List here your collections, ie the Models that will be handled by the Ozu CMS.
+    // List here your (parent) collections, ie the Models that will be handled by the Ozu CMS.
+    // You must not declare the subcollections here, they will be automatically handled by their parents.
     // You must also properly configure them (see documentation).
     'collections' => [
         //        \App\Models\Project::class,
