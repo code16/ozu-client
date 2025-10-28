@@ -19,29 +19,25 @@ class MediaFactory extends Factory
     public function image(string $key): Factory
     {
         return $this
-            ->state(function (array $attributes) use ($key) {
-                return [
-                    'model_key' => $key,
-                    'file_name' => sprintf('data/medias/%s.jpg', $this->faker->unique()->slug()),
-                    'mime_type' => 'image/jpeg',
-                    'disk' => 'local',
-                    'size' => $this->faker->numberBetween(100, 100000),
-                ];
-            });
+            ->state(fn () => [
+                'model_key' => $key,
+                'file_name' => sprintf('data/medias/%s.jpg', $this->faker->unique()->slug()),
+                'mime_type' => 'image/jpeg',
+                'disk' => 'local',
+                'size' => $this->faker->numberBetween(100, 100000),
+            ]);
     }
 
     public function file(string $key): Factory
     {
         return $this
-            ->state(function (array $attributes) use ($key) {
-                return [
-                    'model_key' => $key,
-                    'file_name' => sprintf('data/files/%s.jpg', $this->faker->unique()->slug()),
-                    'mime_type' => 'image/jpeg',
-                    'disk' => 'local',
-                    'size' => $this->faker->numberBetween(100, 100000),
-                ];
-            });
+            ->state(fn () => [
+                'model_key' => $key,
+                'file_name' => sprintf('data/files/%s.jpg', $this->faker->unique()->slug()),
+                'mime_type' => 'image/jpeg',
+                'disk' => 'local',
+                'size' => $this->faker->numberBetween(100, 100000),
+            ]);
     }
 
     public function withFile(?string $fileName = null, string $type = 'image')
