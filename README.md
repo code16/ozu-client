@@ -410,9 +410,6 @@ At this stage, you should be able to see your custom CMS at the address https://
 > [!NOTE]
 > Sharp is the underlying content management framework used by Ozu: although you really don’t have to know it to use Ozu, you can [check its website](https://sharp.code16.fr) if you are curious.
 
-> [!NOTE]
-> For now there is no way to seed production data, but it’s high in the roadmap. 
-
 ### Deploy your project
 
 Once you have entered your content in the CMS, you can deploy the project as a static website following these steps:
