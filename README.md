@@ -334,7 +334,7 @@ php artisan db:seed --class=ProductionSeeder
 
 ### Check the demo project for an example
 
-You can refer to the Ozu demo project [dvlpp/ozu-demo](https://github.com/dvlpp/ozu-demo) for an example of a simple project that uses Ozu.
+You can refer to the Ozu demo project [code16/ozu-demo](https://github.com/code16/ozu-demo) for an example of a simple project that uses Ozu.
 
 ## Restrictions
 
