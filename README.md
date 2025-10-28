@@ -300,7 +300,7 @@ To ease the first deployment of your project, you can use the `OzuProductionSeed
 use Code16\OzuClient\Support\Database\OzuProductionSeeder;
 // ...
 
-class DatabaseSeeder extends OzuProductionSeeder
+class ProductionSeeder extends OzuProductionSeeder
 {
     public function run(): void
     {
@@ -324,6 +324,12 @@ class DatabaseSeeder extends OzuProductionSeeder
         // ...
     }
 }
+```
+
+Then you need to run the command:
+
+```bash
+php artisan db:seed --class=ProductionSeeder
 ```
 
 ### Check the demo project for an example
