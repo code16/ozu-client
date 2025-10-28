@@ -27,14 +27,15 @@ class ConfigureCmsCommand extends Command
             return self::SUCCESS;
         }
 
-        collect(config('ozu-client.collections'))
-            ->map(function ($collection, $k) {
-                $model = match (true) {
-                    is_string($collection) => app($collection),
-                    $collection instanceof Closure => $collection(),
-                    default => $collection,
-                };
+        $collectionModels = collect(config('ozu-client.collections'))
+            ->map(fn ($collection) => match (true) {
+                is_string($collection) => app($collection),
+                $collection instanceof Closure => $collection(),
+                default => $collection
+            });
 
+        $collectionModels
+            ->map(function ($model, $k) {
                 $collection = $model::configureOzuCollection(new OzuCollectionConfig());
                 $list = $model::configureOzuCollectionList(new OzuCollectionListConfig());
                 $form = $model::configureOzuCollectionForm(new OzuCollectionFormConfig());
@@ -103,6 +104,12 @@ class ConfigureCmsCommand extends Command
                     }
                 }
             });
+
+        $ozuClient->deleteCollectionSharpConfigurationExcept(
+            $collectionModels
+                ->map(fn($model) => $model->ozuCollectionKey())
+                ->toArray()
+        );
 
         $this->info('CMS configuration sent to Ozu.');
 

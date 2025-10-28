@@ -58,8 +58,6 @@ it('sends cms configuration to Ozu for each configured collection', function () 
 });
 
 it('sends general cms configuration to Ozu', function () {
-    Http::fake();
-
     config(['ozu-client.collections' => [
         new class extends DummyTestModel
         {
@@ -103,8 +101,6 @@ it('sends general cms configuration to Ozu', function () {
 });
 
 it('sends list cms configuration to Ozu', function () {
-    Http::fake();
-
     config(['ozu-client.collections' => [
         new class extends DummyTestModel
         {
@@ -131,8 +127,8 @@ it('sends list cms configuration to Ozu', function () {
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
-    Http::assertSent(function (Request $request) {
-        return $request['list']['isReorderable'] == true
+    Http::assertSentInOrder([
+        fn (Request $request) => $request['list']['isReorderable'] == true
             && $request['list']['isSearchable'] == true
             && $request['list']['isPaginated'] == true
             && $request['list']['defaultSort'] == ['column' => 'dummy-date', 'direction' => 'asc']
@@ -161,13 +157,12 @@ it('sends list cms configuration to Ozu', function () {
                     'label' => 'Dummy date',
                     'size' => 3,
                 ],
-            ]);
-    });
+            ]),
+        fn (Request $request) => $request->method() == 'DELETE',
+    ]);
 });
 
 it('sends form cms configuration to Ozu', function () {
-    Http::fake();
-
     config(['ozu-client.collections' => [
         new class extends DummyTestModel
         {
@@ -199,8 +194,8 @@ it('sends form cms configuration to Ozu', function () {
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
-    Http::assertSent(function (Request $request) {
-        return $request['form']['fields'] == collect([
+    Http::assertSentInOrder([
+        fn (Request $request) => $request['form']['fields'] == collect([
             [
                 'type' => 'text',
                 'key' => 'dummy-text',
@@ -221,13 +216,12 @@ it('sends form cms configuration to Ozu', function () {
                 'helpMessage' => 'Select an option',
                 'isUpdatable' => true,
             ],
-        ]);
-    });
+        ]),
+        fn (Request $request) => $request->method() == 'DELETE',
+    ]);
 });
 
 it('sends custom fields configuration to Ozu', function () {
-    Http::fake();
-
     Schema::partialMock()
         ->shouldReceive(
             'getColumnListing',
@@ -255,9 +249,46 @@ it('sends custom fields configuration to Ozu', function () {
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
-    Http::assertSent(function (Request $request) {
-        return $request['customFields'] == collect([
-            'dummy_text' => 'string',
-        ]);
-    });
+    Http::assertSentInOrder([
+        fn (Request $request) => $request['customFields'] == collect(['dummy_text' => 'string']),
+        fn (Request $request) => $request->method() == 'DELETE',
+    ]);
 });
+
+it('deletes pre-existing and unconfigured collections', function () {
+    config(['ozu-client.collections' => [
+        new class extends DummyTestModel
+        {
+            public function ozuCollectionKey(): string
+            {
+                return 'dummy1';
+            }
+        },
+        new class extends DummyTestModel
+        {
+            public function ozuCollectionKey(): string
+            {
+                return 'dummy2';
+            }
+        },
+    ]]);
+
+    $this->artisan('ozu:configure-cms')
+        ->expectsOutput('CMS configuration sent to Ozu.')
+        ->assertExitCode(Command::SUCCESS);
+
+    Http::assertSentInOrder([
+        fn ($request) => $request->method() == 'POST',
+        fn ($request) => $request->method() == 'POST',
+        fn (Request $request) => $request
+                ->url() == sprintf(
+                    '%s/api/%s/%s/collections/configure',
+                    rtrim(config('ozu-client.api_host'), '/'),
+                    config('ozu-client.api_version'),
+                    'test',
+                )
+            && $request->method() == 'DELETE'
+            && $request->data()['except'] == ['dummy1','dummy2']
+        ]);
+});
+

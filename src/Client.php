@@ -18,18 +18,29 @@ class Client
 
     public function updateCollectionSharpConfiguration(string $collectionKey, array $collectionData): void
     {
-        $this->http()->post(
-            sprintf('/collections/%s/configure', $collectionKey),
-            $collectionData
-        );
+        $this->http()
+            ->post(
+                sprintf('/collections/%s/configure', $collectionKey),
+                $collectionData
+            );
+    }
+
+    public function deleteCollectionSharpConfigurationExcept(array $collections): void
+    {
+        $this->http()
+            ->delete(
+                '/collections/configure',
+                [
+                    'except' => $collections,
+                ]
+            );
     }
 
     public function seed(string $collection, array $payload): mixed
     {
-        return $this->http()->post(
-            sprintf('/collections/%s/seed', $collection),
-            $payload
-        )->json();
+        return $this->http()
+            ->post(sprintf('/collections/%s/seed', $collection), $payload)
+            ->json();
     }
 
     public function seedFile(string $collection, int $id, string $field, string $path): mixed
@@ -41,7 +52,9 @@ class Client
                 [
                     'field' => $field,
                 ]
-            )->getBody()?->getContents();
+            )
+            ->getBody()
+            ?->getContents();
     }
 
     public function downloadOzuDatabase(): ?string
