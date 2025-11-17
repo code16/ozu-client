@@ -7,10 +7,21 @@ use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Carbon;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-/** @mixin Model */
+/**
+ * @mixin Model
+ *
+ * @property int $id
+ * @property ?string $title
+ * @property ?string $content
+ * @property ?string $slug
+ * @property ?int $order
+ * @property ?Carbon $created_at
+ * @property ?Carbon $updated_at
+ */
 trait IsOzuModel
 {
     use HasSlug;
