@@ -1,11 +1,11 @@
 @php
     /**
-     * @var \Code16\OzuClient\Eloquent\Media $fileModel
+     * @var \Code16\OzuClient\Eloquent\Media $media
      */
 @endphp
 
 <p>
-    <a href="{{ $fileModel->downloadUrl() }}" download="{{ $name }}" target="_blank">
+    <a href="{{ $media->downloadUrl() }}" download="{{ $name }}" target="_blank">
         {{ $legend ?? $name }}
     </a>
 </p>

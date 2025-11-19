@@ -1,11 +1,11 @@
 @php
 /**
- * @var \Code16\OzuClient\Eloquent\Media $fileModel
+ * @var \Code16\OzuClient\Eloquent\Media $media
  */
 @endphp
 
 <figure>
-    <img src="{{ $fileModel->thumbnail($thumbnailWidth, $thumbnailHeight) }}" {{ $attributes }}>
+    <img src="{{ $media->thumbnail($thumbnailWidth, $thumbnailHeight) }}" {{ $attributes }}>
     @if($legend)
         <figcaption>
             {{ $legend }}

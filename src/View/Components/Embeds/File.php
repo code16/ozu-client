@@ -15,7 +15,7 @@ class File extends Component
 
     public ?string $name = null;
 
-    public ?Media $fileModel = null;
+    public ?Media $media = null;
 
     public ?Filesystem $disk = null;
 
@@ -26,19 +26,19 @@ class File extends Component
         public ?string $legend = null
     ) {
         if ($this->file = json_decode(htmlspecialchars_decode($file), true)) {
-            $this->fileModel = Media::make([
+            $this->media = Media::make([
                 'file_name' => $this->file['file_name'],
                 'disk' => $this->file['disk'] ?? null,
             ]);
-            $this->disk = Storage::disk($this->fileModel->disk);
-            $this->exists = $this->disk->exists($this->fileModel->file_name);
-            $this->name ??= basename($this->fileModel->file_name);
+            $this->disk = Storage::disk($this->media->disk);
+            $this->exists = $this->disk->exists($this->media->file_name);
+            $this->name ??= basename($this->media->file_name);
         }
     }
 
     public function render(): View
     {
-        if (!$this->fileModel) {
+        if (!$this->media) {
             throw new OzuClientException('Unable to render embedded file: invalid file');
         }
 
