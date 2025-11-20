@@ -60,6 +60,27 @@ it('allows to configure title field', function () {
     expect($ozuCollectionFormConfig->titleField()->toArray()['label'])->toBe('new label');
 });
 
+it('allows to configure title field as editor when type-hinted', function () {
+    $ozuCollectionFormConfig = new OzuCollectionFormConfig();
+
+    // When the callback parameter is type-hinted with OzuEditorField,
+    // the config should instantiate an editor field with specific defaults
+    $ozuCollectionFormConfig
+        ->configureTitleField(function (OzuEditorField $field) {
+            // ensure we can still customize it inside the callback
+            $field->setLabel('editor title');
+        });
+
+    $titleField = $ozuCollectionFormConfig->titleField();
+
+    expect($titleField)->toBeInstanceOf(OzuEditorField::class)
+        ->and($titleField->toArray()['label'])->toBe('editor title')
+        ->and($titleField->toArray()['withoutParagraphs'])->toBeTrue()
+        ->and($titleField->toArray()['hideToolbar'])->toBeTrue()
+        ->and($titleField->toArray()['height'])->toBe(50)
+        ->and($titleField->toArray()['maxHeight'])->toBe(120);
+});
+
 it('allows to configure cover field', function () {
     $ozuCollectionFormConfig = new OzuCollectionFormConfig();
 

@@ -10,10 +10,12 @@ use Code16\OzuClient\OzuCms\Form\OzuField;
 use Code16\OzuClient\OzuCms\Form\OzuImageField;
 use Code16\OzuClient\OzuCms\Form\OzuTextField;
 use Illuminate\Support\Collection;
+use ReflectionException;
+use ReflectionFunction;
 
 class OzuCollectionFormConfig
 {
-    protected ?OzuTextField $titleField;
+    protected OzuTextField|OzuEditorField|null $titleField;
 
     protected bool $hideTitleField = false;
 
@@ -40,7 +42,23 @@ class OzuCollectionFormConfig
     {
         unset($this->titleField);
 
-        $titleField = $this->titleField();
+        try {
+            $reflection = new ReflectionFunction($callback);
+            $arguments = $reflection->getParameters();
+            $field = $arguments[0];
+
+            if ($field->getType()?->getName() == OzuEditorField::class) {
+               $titleField = OzuField::makeEditor('title')
+                   ->setWithoutParagraphs()
+                   ->setHeight(50, 120)
+                   ->hideToolbar();
+            } else {
+                $titleField = $this->titleField();
+            }
+        } catch (ReflectionException $e) {
+            $titleField = $this->titleField();
+        }
+
         $this->titleField = tap($titleField, fn (&$titleField) => $callback($titleField));
 
         return $this;
@@ -110,7 +128,7 @@ class OzuCollectionFormConfig
             ->values();
     }
 
-    public function titleField(): ?OzuTextField
+    public function titleField(): OzuTextField|OzuEditorField|null
     {
         if ($this->hideTitleField) {
             return null;

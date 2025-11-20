@@ -35,6 +35,7 @@ class OzuEditorField extends OzuField
 
     public function setToolbar(array $toolbar): self
     {
+        $this->hideToolbar = false;
         $this->toolbar = $toolbar;
 
         return $this;
