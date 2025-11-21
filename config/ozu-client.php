@@ -7,6 +7,9 @@ return [
         //        \App\Models\Project::class,
     ],
 
+    // You can configure Site Settings and administrate them from Ozu by setting your settings class here (see documentation).
+    'settings' => null,
+
     // The Ozu unique key of the website to use
     'website_key' => env('OZU_WEBSITE_KEY'),
 

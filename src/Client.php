@@ -36,6 +36,15 @@ class Client
             );
     }
 
+    public function updateSettingsSharpConfiguration(array $settings): void
+    {
+        $this->http()
+            ->post(
+                '/settings/configure',
+                $settings
+            );
+    }
+
     public function seed(string $collection, array $payload): mixed
     {
         return $this->http()
