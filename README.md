@@ -175,7 +175,7 @@ public static function configureOzuCollectionForm(OzuCollectionFormConfig $confi
 
 > [!NOTE]
 > When using an editor as a title field, the `$title` variable will be an instance of OzuEditorField with some pre-configured options.
-> Editor is set as default with no toolbar, without paragraphs (no <p> tags), and with a small height. If this configuration suits you, you'll have to declare ``` ->configureTitleField(fn(OzuEditorField $title) => $title)```
+> Editor is set as default with no toolbar, without paragraphs (no `<p>` tags), and with a small height. If this configuration suits you, you'll have to declare ``` ->configureTitleField(fn(OzuEditorField $title) => $title)```
 
 ### Handle `BelongsTo` relationships
 
