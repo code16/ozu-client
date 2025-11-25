@@ -45,15 +45,20 @@ class OzuCollectionFormConfig
         try {
             $reflection = new ReflectionFunction($callback);
             $arguments = $reflection->getParameters();
-            $field = $arguments[0];
 
-            if ($field->getType()?->getName() == OzuEditorField::class) {
-               $titleField = OzuField::makeEditor('title')
-                   ->setWithoutParagraphs()
-                   ->setHeight(50, 120)
-                   ->hideToolbar();
-            } else {
+            if (empty($arguments)) {
                 $titleField = $this->titleField();
+            } else {
+                $field = $arguments[0];
+
+                if ($field->getType()?->getName() === OzuEditorField::class) {
+                    $titleField = OzuField::makeEditor('title')
+                        ->setWithoutParagraphs()
+                        ->setHeight(50, 120)
+                        ->hideToolbar();
+                } else {
+                    $titleField = $this->titleField();
+                }
             }
         } catch (ReflectionException $e) {
             $titleField = $this->titleField();
