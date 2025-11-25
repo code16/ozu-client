@@ -47,7 +47,8 @@ class ConfigureCmsCommand extends Command
         return self::SUCCESS;
     }
 
-    private function configureCollections(Client $ozuClient) {
+    private function configureCollections(Client $ozuClient): void
+    {
         $collectionModels = collect(config('ozu-client.collections'))
             ->map(fn ($collection) => match (true) {
                 is_string($collection) => app($collection),
@@ -133,13 +134,29 @@ class ConfigureCmsCommand extends Command
         );
     }
 
-    private function configureSettings(Client $ozuClient)
+    private function configureSettings(Client $ozuClient): void
     {
         /** @var OzuSiteSettings $settingsClass */
         $settingsClass = app(config('ozu-client.settings'));
 
         $configuration = $settingsClass::configureSettingsForm(new OzuSettingsFormConfig());
 
-        dd($configuration->fields()?->map(fn (OzuField $field) => $field->toArray()));
+        try {
+            $ozuClient->updateSettingsSharpConfiguration(
+                ['fields' => $configuration->fields()
+                        ?->map(fn (OzuField $field) => $field->toArray())
+                        ->toArray()
+                    ?? []]
+            );
+        } catch (RequestException $e) {
+            if ($message = $e->response->json()) {
+                if (!isset($message['message'])) {
+                    throw $e;
+                }
+                $this->error('['.(class_basename(config('ozu-client.settings')) ?? 'SETTINGS').'] '.$message['message']);
+            } else {
+                throw $e;
+            }
+        }
     }
 }

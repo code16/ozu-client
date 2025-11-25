@@ -5,20 +5,24 @@ namespace Code16\OzuClient\Support\Settings;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuSettingsFormConfig;
 use Illuminate\Support\Facades\Cache;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionProperty;
 
 abstract class OzuSiteSettings
 {
-    public function __get(string $name) {
-        $prefix = class_basename(static::class).'_';
 
-        $cachedValue = Cache::get($prefix.$name);
+    public function __construct()
+    {
+        $prefix = class_basename(static::class) . '_';
 
-        return $cachedValue
-            ?: (
-                property_exists($this, $name)
-                    ? $this->$name
-                    : (method_exists($this, $name) ? $this->$name() : null)
-            );
+        foreach (get_object_vars($this) as $propertyName => $currentValue) {
+            $this->$propertyName = Cache::get($prefix . $propertyName, $currentValue);
+        }
+    }
+
+    public function get(string $name) {
+        return $this->$name;
     }
 
     abstract public static function configureSettingsForm(OzuSettingsFormConfig $config): OzuSettingsFormConfig;

@@ -36,9 +36,9 @@ class Client
             );
     }
 
-    public function updateSettingsSharpConfiguration(array $settings): void
+    public function updateSettingsSharpConfiguration(array $settings)
     {
-        $this->http()
+        return $this->http()
             ->post(
                 '/settings/configure',
                 $settings
@@ -105,6 +105,17 @@ class Client
         if($data->successful()) {
             Storage::put('tmp/ozu-assets.zip', $data->body());
             return Storage::path('tmp/ozu-assets.zip');
+        }
+
+        return null;
+    }
+
+    public function fetchSettings(): ?array
+    {
+        $data = $this->http()->get('/settings/fetch');
+
+        if($data->successful()) {
+            return $data->json();
         }
 
         return null;
