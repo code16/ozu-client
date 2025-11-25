@@ -16,8 +16,9 @@ class FetchSettingsFromOzu extends Command
 
     public function handle(Client $ozuClient): int
     {
-        if(config('ozu-client.settings') === null) {
+        if (config('ozu-client.settings') === null) {
             $this->error('OZU settings are not configured.');
+
             return $this->option('ci') ? self::SUCCESS : self::FAILURE;
         }
 
@@ -25,6 +26,7 @@ class FetchSettingsFromOzu extends Command
 
         if ($settings === null) {
             $this->error('Ozu’s response was not successful.');
+
             return self::FAILURE;
         }
 
@@ -33,6 +35,7 @@ class FetchSettingsFromOzu extends Command
         foreach ($settings as $settingKey => $settingValue) {
             if (json_validate($settingValue)) {
                 Cache::set($prefix.$settingKey, json_decode($settingValue, true));
+
                 continue;
             }
 
@@ -40,6 +43,7 @@ class FetchSettingsFromOzu extends Command
         }
 
         $this->line('Settings fetched successfully');
+
         return self::SUCCESS;
     }
 }

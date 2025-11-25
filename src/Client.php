@@ -80,8 +80,9 @@ class Client
             ->throw()
             ->get('/database');
 
-        if($data->successful()) {
+        if ($data->successful()) {
             Storage::put('tmp/ozu.sql', $data->body());
+
             return Storage::path('tmp/ozu.sql');
         }
 
@@ -102,8 +103,9 @@ class Client
             ->throw()
             ->get('/assets');
 
-        if($data->successful()) {
+        if ($data->successful()) {
             Storage::put('tmp/ozu-assets.zip', $data->body());
+
             return Storage::path('tmp/ozu-assets.zip');
         }
 
@@ -114,7 +116,7 @@ class Client
     {
         $data = $this->http()->get('/settings/fetch');
 
-        if($data->successful()) {
+        if ($data->successful()) {
             return $data->json();
         }
 

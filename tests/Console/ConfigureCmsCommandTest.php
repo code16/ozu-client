@@ -281,14 +281,13 @@ it('deletes pre-existing and unconfigured collections', function () {
         fn ($request) => $request->method() == 'POST',
         fn ($request) => $request->method() == 'POST',
         fn (Request $request) => $request
-                ->url() == sprintf(
-                    '%s/api/%s/%s/collections/configure',
-                    rtrim(config('ozu-client.api_host'), '/'),
-                    config('ozu-client.api_version'),
-                    'test',
-                )
+            ->url() == sprintf(
+                '%s/api/%s/%s/collections/configure',
+                rtrim(config('ozu-client.api_host'), '/'),
+                config('ozu-client.api_version'),
+                'test',
+            )
             && $request->method() == 'DELETE'
-            && $request->data()['except'] == ['dummy1','dummy2']
-        ]);
+            && $request->data()['except'] == ['dummy1', 'dummy2'],
+    ]);
 });
-

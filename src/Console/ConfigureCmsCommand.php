@@ -129,7 +129,7 @@ class ConfigureCmsCommand extends Command
 
         $ozuClient->deleteCollectionSharpConfigurationExcept(
             $collectionModels
-                ->map(fn($model) => $model->ozuCollectionKey())
+                ->map(fn ($model) => $model->ozuCollectionKey())
                 ->toArray()
         );
     }
@@ -144,8 +144,8 @@ class ConfigureCmsCommand extends Command
         try {
             $ozuClient->updateSettingsSharpConfiguration(
                 ['fields' => $configuration->fields()
-                        ?->map(fn (OzuField $field) => $field->toArray())
-                        ->toArray()
+                    ?->map(fn (OzuField $field) => $field->toArray())
+                    ->toArray()
                     ?? []]
             );
         } catch (RequestException $e) {
