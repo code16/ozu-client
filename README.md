@@ -149,6 +149,34 @@ php artisan vendor:publish --tag="ozu-views"
 > [!WARNING]  
 > To allow ozu to renders rich content in your front, please use the `<x-ozu-content>` component.
 
+## Configure your title field
+You can configure your title field by using the `configureTitleField` method in the form configuration method such as this example:
+
+```php 
+public static function configureOzuCollectionForm(OzuCollectionFormConfig $config): OzuCollectionFormConfig
+{
+    return $config 
+        ->configureTitleField(fn(OzuTextField $title) => $title->setLabel("Project's name"));
+}
+```
+
+But you can also use an editor as a title field just by *type-hinting* it !
+```php 
+public static function configureOzuCollectionForm(OzuCollectionFormConfig $config): OzuCollectionFormConfig
+{
+    return $config 
+        ->configureTitleField(fn(OzuEditorField $title) => $title->setToolbar([
+                    OzuEditorToolbarButton::Bold,
+                    OzuEditorToolbarButton::Italic,
+                    OzuEditorToolbarButton::Link,
+        ]);
+}
+```
+
+> [!NOTE]
+> When using an editor as a title field, the `$title` variable will be an instance of OzuEditorField with some pre-configured options.
+> Editor is set as default with no toolbar, without paragraphs (no `<p>` tags), and with a small height. If this configuration suits you, you'll have to declare ```->configureTitleField(fn(OzuEditorField $title) => $title)```
+
 ### Handle `BelongsTo` relationships
 
 A common use case is to have a `BelongsTo` relationship between two Ozu Models. There are two possibilities:
