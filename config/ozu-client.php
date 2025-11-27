@@ -7,7 +7,7 @@ return [
         //        \App\Models\Project::class,
     ],
 
-    // You can configure Site Settings and administrate them from Ozu by setting your settings class here (see documentation).
+    // The \Code16\OzuClient\Support\Settings\OzuSiteSettings implementation to manage your site general settings
     'settings' => null,
 
     // The Ozu unique key of the website to use

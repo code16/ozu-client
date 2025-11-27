@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class FetchSettingsFromOzu extends Command
 {
-    protected $signature = 'ozu:fetch-settings {--ci}';
+    protected $signature = 'ozu:fetch-settings {--dontFailIfNoSettingsClass}';
 
     protected $aliases = ['ozu:settings'];
 
@@ -19,7 +19,7 @@ class FetchSettingsFromOzu extends Command
         if (config('ozu-client.settings') === null) {
             $this->error('OZU settings are not configured.');
 
-            return $this->option('ci') ? self::SUCCESS : self::FAILURE;
+            return $this->option('dontFailIfNoSettingsClass') ? self::SUCCESS : self::FAILURE;
         }
 
         $settings = $ozuClient->fetchSettings();
