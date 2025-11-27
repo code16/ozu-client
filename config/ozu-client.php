@@ -7,6 +7,9 @@ return [
         //        \App\Models\Project::class,
     ],
 
+    // The \Code16\OzuClient\Support\Settings\OzuSiteSettings implementation to manage your site general settings
+    'settings' => null,
+
     // The Ozu unique key of the website to use
     'website_key' => env('OZU_WEBSITE_KEY'),
 

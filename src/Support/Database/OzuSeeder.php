@@ -3,7 +3,6 @@
 namespace Code16\OzuClient\Support\Database;
 
 use Code16\OzuClient\Eloquent\Media;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 class OzuSeeder extends Seeder
@@ -57,11 +56,11 @@ class OzuSeeder extends Seeder
                 'The only thing we have to fear is fear itself.',
                 'I think, therefore I am.',
                 'Be the change that you wish to see in the world.',
-                'In the middle of difficulty lies opportunity.'
+                'In the middle of difficulty lies opportunity.',
             ])
             ->random();
 
-        $author = $author ?: collect(['Franklin D. Roosevelt','René Descartes','Gandhi','Albert Einstein',])
+        $author = $author ?: collect(['Franklin D. Roosevelt', 'René Descartes', 'Gandhi', 'Albert Einstein'])
             ->random();
 
         return sprintf('<x-ozu-content-quote author="%s">%s</x-ozu-content-quote>', $author, $quote);

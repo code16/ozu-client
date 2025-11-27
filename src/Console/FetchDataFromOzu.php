@@ -15,7 +15,9 @@ class FetchDataFromOzu extends Command
     protected $description = 'Gets Ozu’s CMS data and replaces your local database and assets with it.';
 
     private string $databaseDumpPath;
+
     private string $assetsZipPath;
+
     private string $assetsExtractPath;
 
     public function handle(Client $ozuClient): int
@@ -23,7 +25,7 @@ class FetchDataFromOzu extends Command
 
         $this->warn('/!\\ This action will erase your local database and assets.');
 
-        if (!$this->confirm("Are you sure you want to continue? This cannot be undone.")) {
+        if (!$this->confirm('Are you sure you want to continue? This cannot be undone.')) {
             return self::SUCCESS;
         }
 
@@ -47,6 +49,7 @@ class FetchDataFromOzu extends Command
 
         $this->cleanTemporaryFiles();
         $this->info('✅ Ozu data successfully imported.');
+
         return self::SUCCESS;
     }
 
@@ -54,7 +57,7 @@ class FetchDataFromOzu extends Command
     {
         $this->databaseDumpPath = storage_path('app/tmp/ozu.sql');
         $this->assetsZipPath = storage_path('app/tmp/ozu-assets.zip');
-        $this->assetsExtractPath = storage_path('app/public/data/' . config('ozu-client.website_key') . '/');
+        $this->assetsExtractPath = storage_path('app/public/data/'.config('ozu-client.website_key').'/');
     }
 
     private function downloadDatabase(Client $ozuClient): bool
@@ -64,10 +67,12 @@ class FetchDataFromOzu extends Command
 
         if (!$dbPath) {
             $this->error('❌ Failed to download the Ozu database.');
+
             return false;
         }
 
         $this->databaseDumpPath = $dbPath;
+
         return true;
     }
 
@@ -92,12 +97,14 @@ class FetchDataFromOzu extends Command
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $this->error("❌ Error importing the database:");
+            $this->error('❌ Error importing the database:');
             $this->error($process->getErrorOutput());
+
             return false;
         }
 
-        $this->info("✅ Database imported successfully.");
+        $this->info('✅ Database imported successfully.');
+
         return true;
     }
 
@@ -108,10 +115,12 @@ class FetchDataFromOzu extends Command
 
         if (!$zipPath) {
             $this->error('❌ Failed to download Ozu assets.');
+
             return false;
         }
 
         $this->assetsZipPath = $zipPath;
+
         return true;
     }
 
@@ -124,6 +133,7 @@ class FetchDataFromOzu extends Command
             if ($zip->open($this->assetsZipPath) === true) {
                 $zip->extractTo($this->assetsExtractPath);
                 $zip->close();
+
                 return true;
             }
 

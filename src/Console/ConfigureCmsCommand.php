@@ -9,6 +9,8 @@ use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionFormConfig;
 use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
+use Code16\OzuClient\OzuCms\OzuSettingsFormConfig;
+use Code16\OzuClient\Support\Settings\OzuSiteSettings;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Schema;
@@ -17,16 +19,36 @@ class ConfigureCmsCommand extends Command
 {
     protected $signature = 'ozu:configure-cms';
 
+    protected $aliases = ['ozu:configure'];
+
     protected $description = 'Send CMS configuration to Ozu.';
 
     public function handle(Client $ozuClient): int
     {
-        if (empty(config('ozu-client.collections'))) {
-            $this->info('No collections to configure.');
+        if (empty(config('ozu-client.collections')) && empty(config('ozu-client.settings'))) {
+            $this->info('No collection or settings to configure.');
 
             return self::SUCCESS;
         }
+        $this->info('Syncing collections’ configuration with Ozu...');
+        $this->newLine();
 
+        $this->configureCollections($ozuClient);
+
+        if (!empty(config('ozu-client.settings'))) {
+            $this->info('Syncing settings configuration with Ozu...');
+            $this->newLine();
+
+            $this->configureSettings($ozuClient);
+        }
+
+        $this->info('CMS configuration sent to Ozu.');
+
+        return self::SUCCESS;
+    }
+
+    private function configureCollections(Client $ozuClient): void
+    {
         $collectionModels = collect(config('ozu-client.collections'))
             ->map(fn ($collection) => match (true) {
                 is_string($collection) => app($collection),
@@ -107,12 +129,34 @@ class ConfigureCmsCommand extends Command
 
         $ozuClient->deleteCollectionSharpConfigurationExcept(
             $collectionModels
-                ->map(fn($model) => $model->ozuCollectionKey())
+                ->map(fn ($model) => $model->ozuCollectionKey())
                 ->toArray()
         );
+    }
 
-        $this->info('CMS configuration sent to Ozu.');
+    private function configureSettings(Client $ozuClient): void
+    {
+        /** @var OzuSiteSettings $settingsClass */
+        $settingsClass = app(config('ozu-client.settings'));
 
-        return self::SUCCESS;
+        $configuration = $settingsClass::configureSettingsForm(new OzuSettingsFormConfig());
+
+        try {
+            $ozuClient->updateSettingsSharpConfiguration(
+                ['fields' => $configuration->fields()
+                    ?->map(fn (OzuField $field) => $field->toArray())
+                    ->toArray()
+                    ?? []]
+            );
+        } catch (RequestException $e) {
+            if ($message = $e->response->json()) {
+                if (!isset($message['message'])) {
+                    throw $e;
+                }
+                $this->error('['.(class_basename(config('ozu-client.settings')) ?? 'SETTINGS').'] '.$message['message']);
+            } else {
+                throw $e;
+            }
+        }
     }
 }
