@@ -16,7 +16,7 @@ class MediaFactory extends Factory
         ];
     }
 
-    public function image(string $key): Factory
+    public function image(?string $key = null): self
     {
         return $this
             ->state(fn () => [
@@ -28,7 +28,7 @@ class MediaFactory extends Factory
             ]);
     }
 
-    public function file(string $key): Factory
+    public function file(?string $key = null): self
     {
         return $this
             ->state(fn () => [
@@ -40,17 +40,25 @@ class MediaFactory extends Factory
             ]);
     }
 
-    public function withFile(?string $fileName = null, string $type = 'image')
+    public function withFile(?string $fileName = null, string $type = 'image'): self
     {
         return $this->state(function (array $attributes) use ($fileName, $type) {
-            $fileName = $fileName ?: fake()->slug().($type === 'image' ? '.jpg' : '.pdf');
-            $path = ($type === 'image' ? $this->getRandomFixtureImagePath() : $this->getRandomFixtureDocumentPath());
+            if ($fileName && file_exists($fileName)) {
+                $fileName = basename($fileName);
+                $path = $fileName;
+            } else {
+                $fileName = $fileName ?: fake()->slug().($type === 'image' ? '.jpg' : '.pdf');
+                $path = $type === 'image' ? $this->getRandomFixtureImagePath() : $this->getRandomFixtureDocumentPath();
+            }
 
             Storage::disk('local')
                 ->put('/data/'.($type === 'image' ? 'medias' : 'files')."/$fileName", file_get_contents($path));
 
             return [
                 'file_name' => 'data/'.($type === 'image' ? 'medias' : 'files')."/$fileName",
+                'mime_type' => mime_content_type($path),
+                'disk' => 'local',
+                'size' => filesize($path),
             ];
         });
     }
