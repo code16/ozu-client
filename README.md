@@ -260,14 +260,14 @@ class Project extends Model
     public function visuals(): MorphMany
     {
         return $this->morphMany(Media::class, 'model')
-            ->where('model_key', 'visuals')
+            ->withAttributes(['model_key' => 'visuals'])
             ->orderBy('order');
     }
 
     public function ogImage(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')
-            ->where('model_key', 'ogImage');
+            ->withAttributes(['model_key' => 'ogImage']);
     }
     
     // ...
