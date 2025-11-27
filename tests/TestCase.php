@@ -27,6 +27,10 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
+        config()->set('ozu-client.api_host', 'http://ozu.test');
+        config()->set('ozu-client.api_version', 'v1');
+        config()->set('ozu-client.api_key', 'api_key');
+        config()->set('ozu-client.website_key', 'test');
 
         /*
         $migration = include __DIR__.'/../database/migrations/create_ozu-client_table.php.stub';

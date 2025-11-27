@@ -28,6 +28,7 @@ class OzuServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 Console\ConfigureCmsCommand::class,
                 Console\FetchDataFromOzu::class,
+                Console\FetchSettingsFromOzu::class,
             ])
             ->hasConfigFile();
     }

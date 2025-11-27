@@ -36,6 +36,15 @@ class Client
             );
     }
 
+    public function updateSettingsSharpConfiguration(array $settings)
+    {
+        return $this->http()
+            ->post(
+                '/settings/configure',
+                $settings
+            );
+    }
+
     public function seed(string $collection, array $payload): mixed
     {
         return $this->http()
@@ -71,8 +80,9 @@ class Client
             ->throw()
             ->get('/database');
 
-        if($data->successful()) {
+        if ($data->successful()) {
             Storage::put('tmp/ozu.sql', $data->body());
+
             return Storage::path('tmp/ozu.sql');
         }
 
@@ -93,9 +103,21 @@ class Client
             ->throw()
             ->get('/assets');
 
-        if($data->successful()) {
+        if ($data->successful()) {
             Storage::put('tmp/ozu-assets.zip', $data->body());
+
             return Storage::path('tmp/ozu-assets.zip');
+        }
+
+        return null;
+    }
+
+    public function fetchSettings(): ?array
+    {
+        $data = $this->http()->get('/settings/fetch');
+
+        if ($data->successful()) {
+            return $data->json();
         }
 
         return null;
