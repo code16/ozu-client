@@ -307,8 +307,8 @@ class DatabaseSeeder extends OzuSeeder
 
         Project::factory()
             ->count(12)
-            ->has(Media::factory()->image('cover')->withFile(), 'cover')
-            ->has(Media::factory()->image('visuals')->withFile()->count(3), 'visuals')
+            ->has(Media::factory()->image()->withFile(), 'cover')
+            ->has(Media::factory()->image()->withFile()->count(3), 'visuals')
             ->sequence(fn ($sequence) => [
                 'order' => $sequence->index + 1,
                 'country' => fake()->country(),
@@ -336,8 +336,8 @@ class ProductionSeeder extends OzuProductionSeeder
         // it in your local database, since Ozu will accept a model without an ID, and seed it in Production.
         $myRealProjects = Project::factory()
             ->count(12)
-            ->has(Media::factory()->image('cover')->withFile(), 'cover')
-            ->has(Media::factory()->image('visuals')->withFile()->count(3), 'visuals')
+            ->has(Media::factory()->image()->withFile(), 'cover')
+            ->has(Media::factory()->image()->withFile()->count(3), 'visuals')
             ->sequence(fn ($sequence) => [
                 'order' => $sequence->index + 1,
                 'country' => fake()->country(),
