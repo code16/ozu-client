@@ -44,8 +44,8 @@ class MediaFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($fileName, $type) {
             if ($fileName && file_exists($fileName)) {
-                $fileName = basename($fileName);
                 $path = $fileName;
+                $fileName = basename($fileName);
             } else {
                 $fileName = $fileName ?: fake()->slug().($type === 'image' ? '.jpg' : '.pdf');
                 $path = $type === 'image' ? $this->getRandomFixtureImagePath() : $this->getRandomFixtureDocumentPath();
