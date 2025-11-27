@@ -19,8 +19,9 @@ class MediaFactory extends Factory
     public function image(?string $key = null): self
     {
         return $this
+            ->when($key, fn () => $this->state(fn () => ['model_key' => $key]))
             ->state(fn () => [
-                'model_key' => $key,
+                ...$key ? ['model_key' => $key] : [],
                 'file_name' => sprintf('data/medias/%s.jpg', $this->faker->unique()->slug()),
                 'mime_type' => 'image/jpeg',
                 'disk' => 'local',
@@ -31,8 +32,8 @@ class MediaFactory extends Factory
     public function file(?string $key = null): self
     {
         return $this
+            ->when($key, fn () => $this->state(fn () => ['model_key' => $key]))
             ->state(fn () => [
-                'model_key' => $key,
                 'file_name' => sprintf('data/files/%s.jpg', $this->faker->unique()->slug()),
                 'mime_type' => 'image/jpeg',
                 'disk' => 'local',
