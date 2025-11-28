@@ -40,7 +40,7 @@ trait IsOzuModel
     public function cover(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')
-            ->where('model_key', 'cover');
+            ->withAttributes(['model_key' => 'cover']);
     }
 
     public function getSlugOptions(): SlugOptions
