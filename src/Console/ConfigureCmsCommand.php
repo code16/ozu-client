@@ -36,7 +36,7 @@ class ConfigureCmsCommand extends Command
         $this->newLine();
 
         collect(config('ozu-client.collections'))
-            ->each(fn ($collection, $k) => $this->updateCmsConfigurationFor($collection, $k+1));
+            ->each(fn ($collection, $k) => $this->updateCmsConfigurationFor($collection, $k + 1));
 
         $this->newLine();
         $this->info('CMS configuration sent to Ozu.');
@@ -60,13 +60,15 @@ class ConfigureCmsCommand extends Command
              * declared in multiple parent collections.
              */
 
-            if(!$isSubCollection) {
+            if (!$isSubCollection) {
                 $this->line('<fg=yellow>Skipping <options=bold>'.($model->ozuCollectionKey() ?? $model::class).'</> because it has already been processed.</>');
                 $this->line('<fg=yellow>You may have wrongly configured your subcollections, or included a subcollection to the collections array in the ozu-client config file...</>');
             }
 
             return;
-        } else { $this->processedCollections[] = $model::class; }
+        } else {
+            $this->processedCollections[] = $model::class;
+        }
 
         $collection = $model::configureOzuCollection(new OzuCollectionConfig());
         $list = $model::configureOzuCollectionList(new OzuCollectionListConfig());
@@ -76,7 +78,7 @@ class ConfigureCmsCommand extends Command
             'key' => $model->ozuCollectionKey(),
             'label' => $collection->label(),
             'icon' => $collection->icon(),
-            'isSubCollection' => !$isSubCollection,
+            'isSubCollection' => $isSubCollection,
             'hasPublicationState' => $collection->hasPublicationState(),
             'autoDeployDateField' => $collection->autoDeployDateField(),
             'isCreatable' => $collection->isCreatable(),
@@ -140,7 +142,7 @@ class ConfigureCmsCommand extends Command
                 // Display by priority: validations errors, generic error, json dump of the response
                 $this->error(sprintf(
                     '[%s] %s',
-                    $collection['key'],
+                    $payload['key'],
                     isset($message['errors']) ?
                         collect(is_array($message['errors']) ? $message['errors'] : [])
                             ->map(fn ($error, $key) => sprintf('%s: %s', $key, $error[0]))
