@@ -38,20 +38,18 @@ it('sends cms configuration to Ozu for each configured collection', function () 
 
     Http::assertSent(function (Request $request) {
         return $request->url() == sprintf(
-            '%s/api/%s/%s/collections/%s/configure',
+            '%s/api/%s/collections/%s/configure',
             rtrim(config('ozu-client.api_host'), '/'),
             config('ozu-client.api_version'),
-            'test',
             'dummy1'
         );
     });
 
     Http::assertSent(function (Request $request) {
         return $request->url() == sprintf(
-            '%s/api/%s/%s/collections/%s/configure',
+            '%s/api/%s/collections/%s/configure',
             rtrim(config('ozu-client.api_host'), '/'),
             config('ozu-client.api_version'),
-            'test',
             'dummy2'
         );
     });
@@ -85,10 +83,9 @@ it('sends general cms configuration to Ozu', function () {
 
     Http::assertSent(function (Request $request) {
         return $request->url() == sprintf(
-            '%s/api/%s/%s/collections/%s/configure',
+            '%s/api/%s/collections/%s/configure',
             rtrim(config('ozu-client.api_host'), '/'),
             config('ozu-client.api_version'),
-            'test',
             'dummy'
         )
             && $request['label'] == 'Dummy label'
@@ -282,10 +279,9 @@ it('deletes pre-existing and unconfigured collections', function () {
         fn ($request) => $request->method() == 'POST',
         fn (Request $request) => $request
             ->url() == sprintf(
-                '%s/api/%s/%s/collections/configure',
+                '%s/api/%s/collections/configure',
                 rtrim(config('ozu-client.api_host'), '/'),
                 config('ozu-client.api_version'),
-                'test',
             )
             && $request->method() == 'DELETE'
             && $request->data()['except'] == ['dummy1', 'dummy2'],
