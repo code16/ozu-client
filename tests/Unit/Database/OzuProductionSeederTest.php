@@ -24,7 +24,7 @@ it('allows users to seed models in production', function () {
     $seeder->run();
     Http::assertSent(function (Illuminate\Http\Client\Request $request) {
         return
-            $request->url() === (sprintf('http://ozu.test/api/v1/key/collections/%s/seed', app(DummyTestModel::class)->ozuCollectionKey()))
+            $request->url() === (sprintf('http://ozu.test/api/v1/collections/%s/seed', app(DummyTestModel::class)->ozuCollectionKey()))
             && collect($request->data())->has('title')
             && $request->data()['title'] === 'Project 1';
     });
@@ -55,7 +55,7 @@ it('allows users to seed images on models in production', function () {
     $seeder->run();
     Http::assertSent(function (Illuminate\Http\Client\Request $request) {
         return
-            $request->url() === (sprintf('http://ozu.test/api/v1/key/collections/%s/seed/5/file', app(DummyTestModel::class)->ozuCollectionKey()))
+            $request->url() === (sprintf('http://ozu.test/api/v1/collections/%s/seed/5/file', app(DummyTestModel::class)->ozuCollectionKey()))
             && collect($request->data())->keyBy('name')->has(['file', 'field']);
     });
 });

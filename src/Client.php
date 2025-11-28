@@ -12,7 +12,6 @@ class Client
         protected string $apiHost,
         protected ?string $apiKey,
         protected string $apiVersion,
-        protected string $websiteKey,
     ) {
     }
 
@@ -68,17 +67,8 @@ class Client
 
     public function downloadOzuDatabase(): ?string
     {
-        $data = Http::withToken($this->apiKey)
-            ->baseUrl(
-                sprintf(
-                    '%s/api/websites/%s',
-                    rtrim($this->apiHost, '/'),
-                    $this->apiKey,
-                )
-            )
-            ->acceptJson()
-            ->throw()
-            ->get('/database');
+        $data = $this->http()
+            ->get('/websites/database');
 
         if ($data->successful()) {
             Storage::put('tmp/ozu.sql', $data->body());
@@ -91,17 +81,8 @@ class Client
 
     public function downloadOzuAssets(): ?string
     {
-        $data = Http::withToken($this->apiKey)
-            ->baseUrl(
-                sprintf(
-                    '%s/api/websites/%s',
-                    rtrim($this->apiHost, '/'),
-                    $this->apiKey,
-                )
-            )
-            ->acceptJson()
-            ->throw()
-            ->get('/assets');
+        $data = $this->http()
+            ->get('/websites/assets');
 
         if ($data->successful()) {
             Storage::put('tmp/ozu-assets.zip', $data->body());
@@ -114,7 +95,8 @@ class Client
 
     public function fetchSettings(): ?array
     {
-        $data = $this->http()->get('/settings/fetch');
+        $data = $this->http()
+            ->get('/settings/fetch');
 
         if ($data->successful()) {
             return $data->json();
@@ -133,10 +115,9 @@ class Client
         return Http::withToken($this->apiKey)
             ->baseUrl(
                 sprintf(
-                    '%s/api/%s/%s',
+                    '%s/api/%s',
                     rtrim($this->apiHost, '/'),
                     $this->apiVersion,
-                    $this->websiteKey,
                 )
             )
             ->acceptJson()

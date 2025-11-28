@@ -42,7 +42,6 @@ class OzuServiceProvider extends PackageServiceProvider
                 apiHost: config('ozu-client.api_host'),
                 apiKey: config('ozu-client.api_key'),
                 apiVersion: config('ozu-client.api_version'),
-                websiteKey: config('ozu-client.website_key'),
             );
         });
 
