@@ -18,9 +18,9 @@ class OzuSeeder extends Seeder
         }
     }
 
-    protected function makeImageEmbed(?string $legend = null): string
+    protected function makeImageEmbed(?Media $media = null, ?string $legend = null): string
     {
-        $media = Media::factory()->image('embed')->withFile()->make();
+        $media ??= Media::factory()->image('embed')->withFile()->make();
 
         return sprintf(
             '<x-ozu-content-image file="%s" legend="%s"></x-ozu-content-image>',
