@@ -2,19 +2,17 @@
 
 namespace Code16\OzuClient\OzuCms;
 
+use Illuminate\Support\Collection;
+
 class OzuCollectionConfig
 {
     protected string $label;
-
     protected string $icon;
-
     protected bool $hasPublicationState = false;
-
     protected ?string $autoDeployDateField = null;
-
     private bool $isCreatable = true;
-
     private bool $isDeletable = true;
+    private array $subCollections = [];
 
     public function setLabel(string $label): self
     {
@@ -37,11 +35,20 @@ class OzuCollectionConfig
         return $this;
     }
 
+    public function addSubCollection(string $collectionClass): self
+    {
+        $this->subCollections[] = $collectionClass;
+
+        return $this;
+    }
+
+    public function subCollections(): Collection
+    {
+        return collect($this->subCollections);
+    }
+
     /**
-     * Declare which date field will trigger auto-deploy when reached
-     *
-     * @param  string|null  $field
-     * @return $this
+     * Declare which date field will trigger auto-deploy when reached.
      */
     public function setAutoDeployDateField(string $fieldKey): self
     {
