@@ -66,6 +66,19 @@ class ConfigureCmsCommand extends Command
 
         $this->ozuClient->deleteCollectionSharpConfigurationExcept(
             $collectionModels
+                ->map(function ($model) {
+                    $sub = collect(
+                        $model::configureOzuCollection(new OzuCollectionConfig())
+                            ->subCollections()
+                    )->map(fn ($subModel) => match (true) {
+                        is_string($subModel) => app($subModel),
+                        $subModel instanceof Closure => $subModel(),
+                        default => $subModel
+                    });
+
+                    return collect([$model])->merge($sub);
+                })
+                ->flatten()
                 ->map(fn ($model) => $model->ozuCollectionKey())
                 ->toArray()
         );
@@ -97,8 +110,11 @@ class ConfigureCmsCommand extends Command
             $this->processedCollections[] = $model::class;
         }
 
+        /** @var OzuCollectionConfig $collection */
         $collection = $model::configureOzuCollection(new OzuCollectionConfig());
+        /** @var OzuCollectionListConfig $list */
         $list = $model::configureOzuCollectionList(new OzuCollectionListConfig());
+        /** @var OzuCollectionFormConfig $form */
         $form = $model::configureOzuCollectionForm(new OzuCollectionFormConfig());
 
         $payload = [
@@ -150,7 +166,7 @@ class ConfigureCmsCommand extends Command
                 ]),
         ];
 
-        $this->line('<fg=green>Update CMS configuration for <options=bold>'.$payload['key'].']</>...</>');
+        $this->line('<fg=green>Update CMS configuration for <options=bold>'.$payload['key'].'</>...</>');
         try {
             $this->ozuClient->updateCollectionSharpConfiguration(
                 $payload['key'],
