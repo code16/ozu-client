@@ -28,8 +28,8 @@ class LocalThumbnail extends Thumbnail
 
     public function __construct()
     {
-        $hasGd = (!extension_loaded('gd') || !function_exists('gd_info'));
-        $hasImagick = (!extension_loaded('imagick') || !class_exists('Imagick'));
+        $hasGd = (extension_loaded('gd') && function_exists('gd_info'));
+        $hasImagick = (extension_loaded('imagick') && class_exists('Imagick'));
         if (!$hasGd && !$hasImagick) {
             throw new \RuntimeException('Neither GD nor Imagick extension is installed. One of them is required to generate thumbnails.');
         }
