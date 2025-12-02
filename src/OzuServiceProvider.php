@@ -2,6 +2,8 @@
 
 namespace Code16\OzuClient;
 
+use Closure;
+use Code16\OzuClient\OzuCms\OzuCollectionConfig;
 use Code16\OzuClient\Support\Pagination\StaticLengthAwarePaginator;
 use Code16\OzuClient\Support\Pagination\StaticPaginator;
 use Code16\OzuClient\Support\Thumbnails\ImageKitThumbnail;
@@ -86,9 +88,25 @@ class OzuServiceProvider extends PackageServiceProvider
         // Use Ozu's collectionKey as the morphMap key
         Relation::enforceMorphMap(
             collect(config('ozu-client.collections'))
-                ->mapWithKeys(fn (string $className) => [
-                    (new $className())->ozuCollectionKey() => $className,
-                ])
+                ->map(fn ($collection) => match (true) {
+                    is_string($collection) => app($collection),
+                    $collection instanceof Closure => $collection(),
+                    default => $collection
+                })
+                ->map(function ($model) {
+                    $sub = collect(
+                        $model::configureOzuCollection(new OzuCollectionConfig())
+                            ->subCollections()
+                    )->map(fn ($subModel) => match (true) {
+                        is_string($subModel) => app($subModel),
+                        $subModel instanceof Closure => $subModel(),
+                        default => $subModel
+                    });
+
+                    return collect([$model])->merge($sub);
+                })
+                ->flatten()
+                ->mapWithKeys(fn ($class) => [$class->ozuCollectionKey() => $class::class])
                 ->toArray()
         );
     }
