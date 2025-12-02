@@ -4,6 +4,7 @@ namespace Code16\OzuClient\Support\Thumbnails;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
@@ -28,13 +29,46 @@ class LocalThumbnail extends Thumbnail
 
     public function __construct()
     {
-        $hasGd = (extension_loaded('gd') && function_exists('gd_info'));
-        $hasImagick = (extension_loaded('imagick') && class_exists('Imagick'));
-        if (!$hasGd && !$hasImagick) {
-            throw new \RuntimeException('Neither GD nor Imagick extension is installed. One of them is required to generate thumbnails.');
+        $hasGd = extension_loaded('gd') && function_exists('gd_info');
+        $hasImagickExt = extension_loaded('imagick') && class_exists(\Imagick::class);
+
+        $driver = null;
+
+        // Try to use Imagick driver first
+        if ($hasImagickExt && class_exists(ImagickDriver::class)) {
+            try {
+                $driver = new ImagickDriver();
+            } catch (\Throwable $e) {
+                // log pour diagnostic — très utile en prod
+                Log::warning('ImagickDriver instantiation failed', [
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'sapi' => php_sapi_name(),
+                    'php_version' => phpversion(),
+                ]);
+                $driver = null;
+            }
         }
 
-        $this->imageManager = new ImageManager($hasImagick ? new ImagickDriver() : new GdDriver());
+        // 2) Fallback sur GD si Imagick non disponible ou instanciation échoue
+        if ($driver === null && $hasGd && class_exists(GdDriver::class)) {
+            try {
+                $driver = new GdDriver();
+            } catch (\Throwable $e) {
+                Log::warning('GdDriver instantiation failed', [
+                    'message' => $e->getMessage(),
+                    'sapi' => php_sapi_name(),
+                ]);
+                $driver = null;
+            }
+        }
+
+        // 3) Si toujours rien -> exception claire
+        if ($driver === null) {
+            throw new \RuntimeException('Neither GD nor Imagick driver can be instantiated. Check PHP extensions (gd, imagick) and ImageMagick binaries for the SAPI running this code.');
+        }
+
+        $this->imageManager = new ImageManager($driver);
         $this->storage = app(FilesystemManager::class);
     }
 
