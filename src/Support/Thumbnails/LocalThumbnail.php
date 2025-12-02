@@ -6,7 +6,7 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
-use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\Exceptions\DecoderException;
 use Intervention\Image\ImageManager;
 
@@ -28,13 +28,13 @@ class LocalThumbnail extends Thumbnail
 
     public function __construct()
     {
-        $hasGd = extension_loaded('gd');
-        $hasImagick = extension_loaded('imagick');
+        $hasGd = (!extension_loaded('gd') || !function_exists('gd_info'));
+        $hasImagick = (!extension_loaded('imagick') || !class_exists('Imagick'));
         if (!$hasGd && !$hasImagick) {
             throw new \RuntimeException('Neither GD nor Imagick extension is installed. One of them is required to generate thumbnails.');
         }
 
-        $this->imageManager = new ImageManager($hasImagick ? new Driver() : new GdDriver());
+        $this->imageManager = new ImageManager($hasImagick ? new ImagickDriver() : new GdDriver());
         $this->storage = app(FilesystemManager::class);
     }
 
