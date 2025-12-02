@@ -110,6 +110,11 @@ class Client
         return $this->apiKey;
     }
 
+    public function getWebsiteKey(): ?string
+    {
+        return $this->http()->get('/website')->json()['key'] ?? null;
+    }
+
     protected function http(): PendingRequest
     {
         return Http::withToken($this->apiKey)

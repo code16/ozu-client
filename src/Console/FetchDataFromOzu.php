@@ -8,9 +8,13 @@ use Illuminate\Support\Facades\Artisan;
 use Symfony\Component\Process\Process;
 use ZipArchive;
 
+use function Laravel\Prompts\confirm;
+
 class FetchDataFromOzu extends Command
 {
     protected $signature = 'ozu:fetch-ozu-data';
+
+    protected $aliases = ['ozu:fetch-data', 'ozu:pull'];
 
     protected $description = 'Gets Ozu’s CMS data and replaces your local database and assets with it.';
 
@@ -23,13 +27,16 @@ class FetchDataFromOzu extends Command
     public function handle(Client $ozuClient): int
     {
 
-        $this->warn('/!\\ This action will erase your local database and assets.');
+        $this->warn('⚠️ This action will erase your local database and assets.');
 
-        if (!$this->confirm('Are you sure you want to continue? This cannot be undone.')) {
+        if (!confirm(
+            'Are you sure you want to continue? This cannot be undone.',
+            default: false,
+        )) {
             return self::SUCCESS;
         }
 
-        $this->initializePaths();
+        $this->initializePaths($ozuClient);
 
         if (!$this->downloadDatabase($ozuClient)) {
             return self::FAILURE;
@@ -53,11 +60,12 @@ class FetchDataFromOzu extends Command
         return self::SUCCESS;
     }
 
-    private function initializePaths(): void
+    private function initializePaths(Client $ozuClient): void
     {
+        $websiteKey = config('ozu-client.website_key') ?? $ozuClient->getWebsiteKey();
         $this->databaseDumpPath = storage_path('app/tmp/ozu.sql');
         $this->assetsZipPath = storage_path('app/tmp/ozu-assets.zip');
-        $this->assetsExtractPath = storage_path('app/public/data/'.config('ozu-client.website_key').'/');
+        $this->assetsExtractPath = storage_path('app/public/data/'.$websiteKey.'/');
     }
 
     private function downloadDatabase(Client $ozuClient): bool
