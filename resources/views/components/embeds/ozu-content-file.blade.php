@@ -6,6 +6,6 @@
 
 <p>
     <a href="{{ $media->downloadUrl() }}" download="{{ $name }}" target="_blank">
-        {{ $legend ?? $name }}
+        {{ $legend ?: $name }}
     </a>
 </p>

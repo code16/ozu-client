@@ -26,10 +26,7 @@ class File extends Component
         public ?string $legend = null
     ) {
         if ($this->file = json_decode(htmlspecialchars_decode($file), true)) {
-            $this->media = Media::make([
-                'file_name' => $this->file['file_name'],
-                'disk' => $this->file['disk'] ?? null,
-            ]);
+            $this->media = Media::make($this->file);
             $this->disk = Storage::disk($this->media->disk);
             $this->exists = $this->disk->exists($this->media->file_name);
             $this->name ??= basename($this->media->file_name);

@@ -20,14 +20,30 @@ class OzuSeeder extends Seeder
 
     protected function makeImageEmbed(?Media $media = null, ?string $legend = null): string
     {
-        $media ??= Media::factory()->image('embed')->withFile()->make();
+        $media ??= Media::factory()->image()->withFile()->make();
 
         return sprintf(
             '<x-ozu-content-image file="%s" legend="%s"></x-ozu-content-image>',
             e(json_encode([
                 'file_name' => $media->file_name,
                 'disk' => $media->disk,
+                'mime_type' => $media->mime_type,
                 'filters' => $media->filters,
+            ])),
+            $legend ?: ''
+        );
+    }
+
+    protected function makeFileEmbed(?Media $media = null, ?string $legend = null): string
+    {
+        $media ??= Media::factory()->image()->withFile()->make();
+
+        return sprintf(
+            '<x-ozu-content-file file="%s" legend="%s"></x-ozu-content-file>',
+            e(json_encode([
+                'file_name' => $media->file_name,
+                'disk' => $media->disk,
+                'mime_type' => $media->mime_type,
             ])),
             $legend ?: ''
         );

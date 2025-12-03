@@ -28,11 +28,7 @@ class Image extends Component
         public ?int $thumbnailHeight = null,
     ) {
         if ($this->file = json_decode(htmlspecialchars_decode($file), true)) {
-            $this->media = Media::make([
-                'file_name' => $this->file['file_name'],
-                'disk' => $this->file['disk'] ?? null,
-                'filters' => $this->file['filters'] ?? null,
-            ]);
+            $this->media = Media::make($this->file);
             $this->disk = Storage::disk($this->media->disk);
             $this->exists = $this->disk->exists($this->media->file_name);
             $this->name = $this->file['name'] ?? basename($this->media->file_name);
