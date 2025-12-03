@@ -17,5 +17,24 @@
                 }
             ]
         }
-    }
+    },
+    "completions": [
+        {
+            "complete": "validationRule",
+            "condition": [
+                {
+                    "classFqn": [
+                        "\\Code16\\OzuClient\\OzuCms\\Form\\OzuField"
+                    ],
+                    "methodNames": [
+                        "setValidationRules"
+                    ],
+                    "parameters": [
+                        1
+                    ],
+                    "place": "arrayValue"
+                }
+            ]
+        }
+    ]
 }
