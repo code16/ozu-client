@@ -34,29 +34,46 @@ class MediaFactory extends Factory
         return $this
             ->when($key, fn () => $this->state(fn () => ['model_key' => $key]))
             ->state(fn () => [
-                'file_name' => sprintf('data/files/%s.jpg', $this->faker->unique()->slug()),
-                'mime_type' => 'image/jpeg',
+                'file_name' => sprintf('data/files/%s.pdf', $this->faker->unique()->slug()),
+                'mime_type' => 'application/pdf',
                 'disk' => 'local',
                 'size' => $this->faker->numberBetween(100, 100000),
             ]);
     }
 
-    public function withFile(?string $fileName = null, string $type = 'image'): self
+    public function withFile(?string $fileName = null): self
     {
-        return $this->state(function (array $attributes) use ($fileName, $type) {
+        return $this->state(function (array $attributes) use ($fileName) {
             if ($fileName && file_exists($fileName)) {
                 $path = $fileName;
                 $fileName = basename($fileName);
             } else {
-                $fileName = $fileName ?: fake()->slug().($type === 'image' ? '.jpg' : '.pdf');
-                $path = $type === 'image' ? $this->getRandomFixtureImagePath() : $this->getRandomFixtureDocumentPath();
+                $path = str_starts_with($attributes['mime_type'], 'image/')
+                    ? $this->getRandomFixtureImagePath()
+                    : $this->getRandomFixtureDocumentPath();
+                $fileName = basename($attributes['file_name']);
             }
 
-            Storage::disk('local')
-                ->put('/data/'.($type === 'image' ? 'medias' : 'files')."/$fileName", file_get_contents($path));
-
             return [
-                'file_name' => 'data/'.($type === 'image' ? 'medias' : 'files')."/$fileName",
+                'file_name' => function ($attributes) use ($fileName, $path) {
+                    $storagePath = isset($attributes['model_type'])
+                        ? sprintf(
+                            'data/medias/%s/%s/%s',
+                            class_basename($attributes['model_type']),
+                            $attributes['model_id'],
+                            $fileName
+                        )
+                        : sprintf(
+                            'data/medias/embeds/%s-%s.%s',
+                            pathinfo($fileName, PATHINFO_FILENAME),
+                            uniqid(),
+                            pathinfo($fileName, PATHINFO_EXTENSION)
+                        );
+
+                    Storage::disk('local')->put($storagePath, file_get_contents($path));
+
+                    return $storagePath;
+                },
                 'mime_type' => mime_content_type($path),
                 'disk' => 'local',
                 'size' => filesize($path),
