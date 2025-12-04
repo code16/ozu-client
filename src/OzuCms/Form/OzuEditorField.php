@@ -86,7 +86,7 @@ class OzuEditorField extends OzuField
             throw new OzuClientException('You should allow uploads by adding OzuEditorToolbarButton::File in toolbar configuration before setting the allowed extensions for uploads');
         }
 
-        // formating extensions to be compatible with the editor
+        // formatting extensions to be compatible with the editor
         $this->allowedExtensions = collect($extensions)
             ->map(fn ($filter) => str($filter)->trim()->start('.')->value())
             ->all();
