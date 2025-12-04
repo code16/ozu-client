@@ -4,18 +4,13 @@ namespace Code16\OzuClient\Support\Database;
 
 use Code16\OzuClient\Eloquent\Media;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class OzuSeeder extends Seeder
 {
     protected function clearMediaDirectory(): void
     {
-        $mediaDirectory = storage_path('app/data/medias');
-
-        if (file_exists($mediaDirectory)) {
-            collect(scandir($mediaDirectory))
-                ->filter(fn ($file) => !in_array($file, ['.', '..']))
-                ->each(fn ($file) => unlink($mediaDirectory.'/'.$file));
-        }
+        Storage::disk('local')->deleteDirectory('data/medias');
     }
 
     protected function makeImageEmbed(?Media $media = null, ?string $legend = null): string

@@ -66,7 +66,7 @@ class MediaFactory extends Factory
                         : sprintf(
                             'data/medias/embeds/%s-%s.%s',
                             pathinfo($fileName, PATHINFO_FILENAME),
-                            uniqid(),
+                            hash_file('xxh3', $path),
                             pathinfo($fileName, PATHINFO_EXTENSION)
                         );
 
