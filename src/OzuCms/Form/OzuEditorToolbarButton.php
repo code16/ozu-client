@@ -18,4 +18,6 @@ enum OzuEditorToolbarButton: string
     case File = 'upload';
     case Video = 'video';
     case Quote = 'blockquote';
+    case Code = 'code';
+    case CodeBlock = 'code-block';
 }
