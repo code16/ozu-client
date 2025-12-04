@@ -39,10 +39,15 @@ it('includes allowedExtensions in payload only when File upload is enabled', fun
     ]);
 
     expect($field->toArray())
+        ->not->toHaveKey('allowedExtensions');
+
+    $field->setAllowedExtensions(['.jpg', '.pdf']);
+
+    expect($field->toArray())
         ->toHaveKey('allowedExtensions')
         ->and($field->toArray()['allowedExtensions'])
         ->toBe([
-            '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp',
+            '.jpg', '.pdf',
         ]);
 });
 

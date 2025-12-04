@@ -24,7 +24,7 @@ class OzuEditorField extends OzuField
 
     private int $maxFileSize = 5;
 
-    private array $allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp'];
+    private ?array $allowedExtensions = null;
 
     private ?string $cropRatio = null;
 
@@ -105,7 +105,7 @@ class OzuEditorField extends OzuField
             'withoutParagraphs' => $this->withoutParagraphs,
             'hideToolbar' => $this->hideToolbar,
             'toolbar' => collect($this->toolbar)->map(fn ($item) => $item->value)->toArray(),
-            ...(in_array(OzuEditorToolbarButton::File, $this->toolbar) ? ['allowedExtensions' => $this->allowedExtensions] : []),
+            ...(!empty($this->allowedExtensions) ? ['allowedExtensions' => $this->allowedExtensions] : []),
             'height' => $this->height,
             'maxHeight' => $this->maxHeight,
             'maxFileSize' => $this->maxFileSize,
