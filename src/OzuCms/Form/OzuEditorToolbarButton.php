@@ -15,6 +15,7 @@ enum OzuEditorToolbarButton: string
     case Heading2 = 'heading-2';
     case Iframe = 'iframe';
     case Image = 'upload-image';
+    case File = 'upload';
     case Video = 'video';
     case Quote = 'blockquote';
 }
