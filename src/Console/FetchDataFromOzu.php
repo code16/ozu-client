@@ -12,7 +12,7 @@ use function Laravel\Prompts\confirm;
 
 class FetchDataFromOzu extends Command
 {
-    protected $signature = 'ozu:fetch-ozu-data';
+    protected $signature = 'ozu:fetch-ozu-data {--force : Do not ask for confirmation} {--withoutAssets : Do not download assets}';
 
     protected $aliases = ['ozu:fetch-data', 'ozu:pull'];
 
@@ -26,14 +26,16 @@ class FetchDataFromOzu extends Command
 
     public function handle(Client $ozuClient): int
     {
+        $this->newLine(2);
+        $this->warn('⚠️  This action will erase your local database and assets.');
 
-        $this->warn('⚠️ This action will erase your local database and assets.');
-
-        if (!confirm(
-            'Are you sure you want to continue? This cannot be undone.',
-            default: false,
-        )) {
-            return self::SUCCESS;
+        if (!$this->option('force')) {
+            if (!confirm(
+                'Are you sure you want to continue? This cannot be undone.',
+                default: false,
+            )) {
+                return self::SUCCESS;
+            }
         }
 
         $this->initializePaths($ozuClient);
@@ -46,12 +48,14 @@ class FetchDataFromOzu extends Command
             return self::FAILURE;
         }
 
-        if (!$this->downloadAssets($ozuClient)) {
-            return self::FAILURE;
-        }
+        if (!$this->option('withoutAssets')) {
+            if (!$this->downloadAssets($ozuClient)) {
+                return self::FAILURE;
+            }
 
-        if (!$this->extractAssets()) {
-            return self::FAILURE;
+            if (!$this->extractAssets()) {
+                return self::FAILURE;
+            }
         }
 
         $this->cleanTemporaryFiles();
