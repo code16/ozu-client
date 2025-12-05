@@ -83,7 +83,7 @@ class OzuEditorField extends OzuField
     public function setAllowedExtensions(array $extensions): self
     {
         if (!in_array(OzuEditorToolbarButton::File, $this->toolbar)) {
-            throw new OzuClientException('You should allow uploads by adding OzuEditorToolbarButton::File in toolbar configuration before setting the allowed extensions for uploads');
+            throw new OzuClientException('You should allow uploads by adding OzuEditorToolbarButton::File or OzuEditorToolbarButton::Image in toolbar configuration before setting the allowed extensions for uploads');
         }
 
         // formatting extensions to be compatible with the editor
@@ -101,6 +101,10 @@ class OzuEditorField extends OzuField
 
     public function toArray(): array
     {
+        if (in_array(OzuEditorToolbarButton::File, $this->toolbar) && empty($this->allowedExtensions)) {
+            throw new OzuClientException('You have to set allowed extensions (via ->setAllowedExtensions()’s method) when using the OzuEditorToolbarButton::File in your toolbar');
+        }
+
         return array_merge(parent::toArray(), [
             'withoutParagraphs' => $this->withoutParagraphs,
             'hideToolbar' => $this->hideToolbar,

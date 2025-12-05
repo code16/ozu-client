@@ -137,12 +137,12 @@ class ConfigureCmsCommand extends Command
                 'belongsToFilter' => $list->belongsToFilter()?->toArray(),
                 'columns' => $list
                     ->columns()
-                    ->map(fn (OzuColumn $column) => [
+                    ->mapWithKeys(fn (OzuColumn $column) => [$column->key() => [
                         'type' => $column->type(),
                         'key' => $column->key(),
                         'label' => $column->label(),
                         'size' => $column->size(),
-                    ]),
+                    ]]),
             ],
             'form' => [
                 'title' => $form->titleField()?->toArray(),

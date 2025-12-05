@@ -10,26 +10,29 @@ abstract class OzuColumn
 
     protected string $sortDirection = 'asc';
 
-    protected function __construct(protected string $key, protected int $size)
+    /**
+     * @param  ?int  $size  Accepts no size (will auto-fit), 12-based column size (1-12) or a percentage (e.g. 25)
+     */
+    protected function __construct(protected string $key, protected ?int $size = null)
     {
     }
 
-    public static function makeText(string $key, int $size): OzuTextColumn
+    public static function makeText(string $key, ?int $size = null): OzuTextColumn
     {
         return new OzuTextColumn($key, $size);
     }
 
-    public static function makeDate(string $key, int $size): OzuDateColumn
+    public static function makeDate(string $key, ?int $size = null): OzuDateColumn
     {
         return new OzuDateColumn($key, $size);
     }
 
-    public static function makeImage(string $key, int $size): OzuThumbnailColumn
+    public static function makeImage(string $key, ?int $size = null): OzuThumbnailColumn
     {
         return new OzuThumbnailColumn($key, $size);
     }
 
-    public static function makeCheck(string $key, int $size): OzuCheckColumn
+    public static function makeCheck(string $key, ?int $size = null): OzuCheckColumn
     {
         return new OzuCheckColumn($key, $size);
     }
@@ -39,7 +42,7 @@ abstract class OzuColumn
         return $this->key;
     }
 
-    public function size(): int
+    public function size(): ?int
     {
         return $this->size;
     }
