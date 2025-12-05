@@ -23,7 +23,7 @@ class LocalThumbnail extends Thumbnail
 
     protected bool $fit;
 
-    protected bool $appendTimestamp = true;
+    protected bool $appendHash = true;
 
     public function __construct()
     {
@@ -88,8 +88,11 @@ class LocalThumbnail extends Thumbnail
             }
         }
 
-        return $thumbnailDisk->url($thumbnailPath)
-            .($this->appendTimestamp ? '?'.$thumbnailDisk->lastModified($thumbnailPath) : '');
+        return sprintf(
+            '/%s?%s',
+            uri($thumbnailDisk->url($thumbnailPath))->path(),
+            hash_file('xxh3', $thumbnailDisk->path($thumbnailPath))
+        );
     }
 
     public function download(): ?string
@@ -109,6 +112,9 @@ class LocalThumbnail extends Thumbnail
             }
         }
 
-        return $this->storage->disk('public')->url($this->mediaModel->file_name);
+        return sprintf(
+            '/%s',
+            uri($this->storage->disk('public')->url($this->mediaModel->file_name))->path()
+        );
     }
 }
