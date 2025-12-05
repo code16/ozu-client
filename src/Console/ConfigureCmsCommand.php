@@ -150,7 +150,7 @@ class ConfigureCmsCommand extends Command
                 'content' => $form->contentField()?->toArray(),
                 'fields' => $form
                     ->customFields()
-                    ->map(fn (OzuField $field) => $field->toArray()),
+                    ->mapWithKeys(fn (OzuField $field) => [$field->getKey() => $field->toArray()]),
             ],
             'customFields' => collect(Schema::getColumnListing($model->getTable()))
                 ->filter(fn (string $column) => !in_array($column, $model::$ozuColumns))

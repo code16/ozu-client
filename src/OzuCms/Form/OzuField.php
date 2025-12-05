@@ -86,6 +86,11 @@ abstract class OzuField
 
     abstract public function type(): string;
 
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
     public function toArray(): array
     {
         return [
