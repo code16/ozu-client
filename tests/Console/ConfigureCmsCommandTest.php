@@ -131,25 +131,25 @@ it('sends list cms configuration to Ozu', function () {
             && $request['list']['isPaginated'] == true
             && $request['list']['defaultSort'] == ['column' => 'dummy-date', 'direction' => 'asc']
             && $request['list']['columns'] == collect([
-                [
+                'dummy-text' => [
                     'type' => 'text',
                     'key' => 'dummy-text',
                     'label' => 'Dummy text',
                     'size' => 1,
                 ],
-                [
+                'dummy-check' => [
                     'type' => 'check',
                     'key' => 'dummy-check',
                     'label' => 'Dummy check',
                     'size' => 2,
                 ],
-                [
+                'dummy-image' => [
                     'type' => 'image',
                     'key' => 'dummy-image',
                     'label' => 'Dummy image',
                     'size' => 3,
                 ],
-                [
+                'dummy-date' => [
                     'type' => 'date',
                     'key' => 'dummy-date',
                     'label' => 'Dummy date',
@@ -194,7 +194,7 @@ it('sends form cms configuration to Ozu', function () {
 
     Http::assertSentInOrder([
         fn (Request $request) => $request['form']['fields'] == collect([
-            [
+            'dummy-text' => [
                 'type' => 'text',
                 'key' => 'dummy-text',
                 'label' => 'Dummy text',
@@ -202,7 +202,7 @@ it('sends form cms configuration to Ozu', function () {
                 'helpMessage' => null,
                 'isUpdatable' => true,
             ],
-            [
+            'dummy-select' => [
                 'type' => 'select',
                 'key' => 'dummy-select',
                 'label' => 'Dummy select',

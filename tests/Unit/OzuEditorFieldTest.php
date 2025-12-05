@@ -32,16 +32,9 @@ it('includes allowedExtensions in payload only when File upload is enabled', fun
     expect($field->toArray())
         ->not->toHaveKey('allowedExtensions');
 
-    // Enable File button -> allowedExtensions present with defaults
-    $field->setToolbar([
-        OzuEditorToolbarButton::Bold,
-        OzuEditorToolbarButton::File,
-    ]);
-
-    expect($field->toArray())
-        ->not->toHaveKey('allowedExtensions');
-
-    $field->setAllowedExtensions(['.jpg', '.pdf']);
+    $field
+        ->setToolbar([OzuEditorToolbarButton::File])
+        ->setAllowedExtensions(['.jpg', '.pdf']);
 
     expect($field->toArray())
         ->toHaveKey('allowedExtensions')
@@ -60,7 +53,9 @@ it('enforces max file size can only be set when Image or File upload is enabled'
 
     // With File -> should work
     $fieldWithFile = OzuField::makeEditor('content')
-        ->setToolbar([OzuEditorToolbarButton::File]);
+        ->setToolbar([OzuEditorToolbarButton::File])
+        ->setAllowedExtensions(['.jpg', '.jpeg', '.png', '.pdf']);
+
     $fieldWithFile->setMaxFileSize(12);
     expect($fieldWithFile->toArray()['maxFileSize'])->toBe(12);
 
