@@ -2,6 +2,7 @@
 
 namespace Code16\OzuClient;
 
+use Code16\OzuClient\Exceptions\OzuClientException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Storage;
@@ -46,9 +47,15 @@ class Client
 
     public function seed(string $collection, array $payload): mixed
     {
-        return $this->http()
-            ->post(sprintf('/collections/%s/seed', $collection), $payload)
-            ->json();
+        $res = $this->http()
+            ->post(sprintf('/collections/%s/seed', $collection), $payload);
+
+        if (!$res->successful()) {
+            $error = $res->json('error') ?? $res->body();
+            throw new OzuClientException("Error seeding {$collection}: {$error}");
+        }
+
+        return $res->json();
     }
 
     public function seedFile(string $collection, int $id, string $field, string $path): mixed
