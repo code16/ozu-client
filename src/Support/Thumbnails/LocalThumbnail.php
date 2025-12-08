@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Exceptions\DecoderException;
 use Intervention\Image\ImageManager;
+use Storage;
 
 class LocalThumbnail extends Thumbnail
 {
@@ -35,6 +36,14 @@ class LocalThumbnail extends Thumbnail
     {
         if (!$this->mediaModel->disk || !$this->mediaModel->file_name) {
             return null;
+        }
+
+        if ($this->mediaModel->mime_type === 'image/gif') {
+            // Gif images are not thumbnail’ed
+            return $this->gifThumbnail(
+                $this->mediaModel->disk,
+                $this->mediaModel->file_name
+            );
         }
 
         $this->width = $width ?: null;
@@ -92,6 +101,19 @@ class LocalThumbnail extends Thumbnail
             '/%s?%s',
             uri($thumbnailDisk->url($thumbnailPath))->path(),
             hash_file('xxh3', $thumbnailDisk->path($thumbnailPath))
+        );
+    }
+
+    private function gifThumbnail(string $sourceDisk, string $sourceRelPath): ?string
+    {
+        if ($sourceDisk !== 'public' && !Storage::disk('public')->exists($sourceRelPath)) {
+            // Copy gif to public disk
+            Storage::disk('public')->put($sourceRelPath, Storage::disk($sourceDisk)->get($sourceRelPath));
+        }
+
+        return sprintf(
+            '/%s',
+            uri(Storage::disk('public')->url($sourceRelPath))->path()
         );
     }
 
