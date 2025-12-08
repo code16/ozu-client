@@ -24,15 +24,13 @@ class LocalThumbnail extends Thumbnail
 
     protected bool $fit;
 
-    protected bool $appendHash = true;
-
     public function __construct()
     {
         $this->imageManager = new ImageManager(new Driver());
         $this->storage = app(FilesystemManager::class);
     }
 
-    public function make(?int $width, ?int $height = null, bool $fit = false): ?string
+    public function make(?int $width, ?int $height = null, bool $fit = false): ?ThumbnailResult
     {
         if (!$this->mediaModel->disk || !$this->mediaModel->file_name) {
             return null;
@@ -70,7 +68,7 @@ class LocalThumbnail extends Thumbnail
         );
     }
 
-    private function generateThumbnail(string $sourceDisk, string $sourceRelPath, string $thumbnailPath): ?string
+    private function generateThumbnail(string $sourceDisk, string $sourceRelPath, string $thumbnailPath): ?ThumbnailResult
     {
         $thumbnailDisk = $this->storage->disk('public');
 
@@ -97,23 +95,31 @@ class LocalThumbnail extends Thumbnail
             }
         }
 
-        return sprintf(
-            '/%s?%s',
-            uri($thumbnailDisk->url($thumbnailPath))->path(),
-            hash_file('xxh3', $thumbnailDisk->path($thumbnailPath))
+        return new ThumbnailResult(
+            sprintf(
+                '/%s?%s',
+                uri($thumbnailDisk->url($thumbnailPath))->path(),
+                hash_file('xxh3', $thumbnailDisk->path($thumbnailPath))
+            ),
+            image: $sourceImg ?? null,
+            path: $thumbnailDisk->path($thumbnailPath),
         );
     }
 
-    private function gifThumbnail(string $sourceDisk, string $sourceRelPath): ?string
+    private function gifThumbnail(string $sourceDisk, string $sourceRelPath): ?ThumbnailResult
     {
         if ($sourceDisk !== 'public' && !Storage::disk('public')->exists($sourceRelPath)) {
             // Copy gif to public disk
             Storage::disk('public')->put($sourceRelPath, Storage::disk($sourceDisk)->get($sourceRelPath));
         }
 
-        return sprintf(
-            '/%s',
-            uri(Storage::disk('public')->url($sourceRelPath))->path()
+        return new ThumbnailResult(
+            sprintf(
+                '/%s?%s',
+                uri(Storage::disk('public')->url($sourceRelPath))->path(),
+                hash_file('xxh3', Storage::disk('public')->path($sourceRelPath))
+            ),
+            path: $sourceRelPath
         );
     }
 

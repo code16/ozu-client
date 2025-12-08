@@ -4,6 +4,7 @@ namespace Code16\OzuClient\Eloquent;
 
 use Code16\OzuClient\Database\Factories\MediaFactory;
 use Code16\OzuClient\Support\Thumbnails\Thumbnail;
+use Code16\OzuClient\Support\Thumbnails\ThumbnailResult;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -33,7 +34,7 @@ class Media extends Model
         return $this->morphTo('model');
     }
 
-    public function thumbnail(?int $width = null, ?int $height = null, bool $fit = false): ?string
+    public function thumbnail(?int $width = null, ?int $height = null, bool $fit = false): ?ThumbnailResult
     {
         return app(Thumbnail::class)
             ->forMedia($this)
