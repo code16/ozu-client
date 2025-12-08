@@ -2,9 +2,6 @@
 
 namespace Code16\OzuClient\Support\Thumbnails;
 
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Http;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
@@ -31,12 +28,10 @@ class ThumbnailResult implements Stringable
 
     protected function image(): ?Image
     {
-        if (!$this->image) {
+        if (!$this->image && $this->path) {
             try {
-                $this->image = new ImageManager(new Driver())->read(
-                    $this->path ?: Http::get($this->url)->throw()->resource()
-                );
-            } catch (\Intervention\Image\Exceptions\RuntimeException|RequestException|ConnectionException $e) {
+                $this->image = new ImageManager(new Driver())->read($this->path);
+            } catch (\Intervention\Image\Exceptions\RuntimeException $e) {
                 return null;
             }
         }
