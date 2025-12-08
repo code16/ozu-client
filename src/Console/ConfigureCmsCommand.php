@@ -137,8 +137,9 @@ class ConfigureCmsCommand extends Command
                 'belongsToFilter' => $list->belongsToFilter()?->toArray(),
                 'columns' => $list
                     ->columns()
-                    ->mapWithKeys(fn (OzuColumn $column) => [$column->key() => [
+                    ->mapWithKeys(fn (OzuColumn $column, int $key) => [$column->key() => [
                         'type' => $column->type(),
+                        'order' => $key,
                         'key' => $column->key(),
                         'label' => $column->label(),
                         'size' => $column->size(),
@@ -150,7 +151,10 @@ class ConfigureCmsCommand extends Command
                 'content' => $form->contentField()?->toArray(),
                 'fields' => $form
                     ->customFields()
-                    ->mapWithKeys(fn (OzuField $field) => [$field->getKey() => $field->toArray()]),
+                    ->mapWithKeys(fn (OzuField $field, int $key) => [$field->getKey() => [
+                        'order' => $key,
+                        ...$field->toArray(),
+                    ]]),
             ],
             'customFields' => collect(Schema::getColumnListing($model->getTable()))
                 ->filter(fn (string $column) => !in_array($column, $model::$ozuColumns))
