@@ -36,13 +36,13 @@ class ConfigureCmsCommand extends Command
         $this->info('Syncing collections’ configuration with Ozu...');
         $this->newLine();
 
-        $this->configureCollections($ozuClient);
+        $this->configureCollections();
 
         if (!empty(config('ozu-client.settings'))) {
             $this->info('Syncing settings configuration with Ozu...');
             $this->newLine();
 
-            $this->configureSettings($ozuClient);
+            $this->configureSettings();
         }
 
         $this->info('CMS configuration sent to Ozu.');
@@ -207,29 +207,30 @@ class ConfigureCmsCommand extends Command
         }
     }
 
-    private function configureSettings(Client $ozuClient): void
+    private function configureSettings(): void
     {
         /** @var OzuSiteSettings $settingsClass */
         $settingsClass = app(config('ozu-client.settings'));
-
         $configuration = $settingsClass::configureSettingsForm(new OzuSettingsFormConfig());
 
         try {
-            $ozuClient->updateSettingsSharpConfiguration(
-                ['fields' => $configuration->fields()
+            $this->ozuClient->updateSettingsSharpConfiguration([
+                'fields' => $configuration->fields()
                     ?->map(fn (OzuField $field) => $field->toArray())
                     ->toArray()
-                    ?? []]
+                    ?? []
+                ]
             );
         } catch (RequestException $e) {
-            if ($message = $e->response->json()) {
-                if (!isset($message['message'])) {
-                    throw $e;
-                }
-                $this->error('['.(class_basename(config('ozu-client.settings')) ?? 'SETTINGS').'] '.$message['message']);
-            } else {
-                throw $e;
+            if (($message = $e->response->json()) && isset($message['message'])) {
+                $this->error('['
+                    .(class_basename(config('ozu-client.settings')) ?? 'SETTINGS')
+                    .'] '
+                    .$message['message']
+                );
+                return;
             }
+            throw $e;
         }
     }
 }
