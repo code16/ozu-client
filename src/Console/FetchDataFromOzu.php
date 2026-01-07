@@ -13,15 +13,10 @@ use function Laravel\Prompts\confirm;
 class FetchDataFromOzu extends Command
 {
     protected $signature = 'ozu:fetch-ozu-data {--force : Do not ask for confirmation} {--withoutAssets : Do not download assets}';
-
     protected $aliases = ['ozu:fetch-data', 'ozu:pull'];
-
     protected $description = 'Gets Ozu’s CMS data and replaces your local database and assets with it.';
-
     private string $databaseDumpPath;
-
     private string $assetsZipPath;
-
     private string $assetsExtractPath;
 
     public function handle(Client $ozuClient): int

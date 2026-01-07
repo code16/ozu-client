@@ -160,11 +160,12 @@ class ConfigureCmsCommand extends Command
                 ->filter(fn (string $column) => !in_array($column, $model::$ozuColumns))
                 ->mapWithKeys(fn (string $column) => [
                     $column => match (Schema::getColumnType($model->getTable(), $column)) {
-                        'datetime', 'timestamps' => 'dateTime',
+                        'datetime', 'time' => 'dateTime',
                         'date' => 'date',
                         'int', 'bigint', 'smallint', 'mediumint', 'tinyint' => 'integer',
                         'float', 'double' => 'float',
                         'text', 'json' => 'text',
+                        'boolean' => 'boolean',
                         default => 'string',
                     },
                 ]),
