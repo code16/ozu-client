@@ -4,6 +4,7 @@ namespace Code16\OzuClient\Console;
 
 use Closure;
 use Code16\OzuClient\Client;
+use Code16\OzuClient\Exceptions\OzuConfigureCmsException;
 use Code16\OzuClient\OzuCms\Form\OzuField;
 use Code16\OzuClient\OzuCms\List\OzuColumn;
 use Code16\OzuClient\OzuCms\OzuCollectionConfig;
@@ -12,8 +13,14 @@ use Code16\OzuClient\OzuCms\OzuCollectionListConfig;
 use Code16\OzuClient\OzuCms\OzuSettingsFormConfig;
 use Code16\OzuClient\Support\Settings\OzuSiteSettings;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use ReflectionClass;
+use ReflectionMethod;
 
 class ConfigureCmsCommand extends Command
 {
@@ -61,7 +68,11 @@ class ConfigureCmsCommand extends Command
 
         $collectionModels
             ->each(function ($model, $k) {
-                $this->updateCmsConfigurationFor($model, $k + 1);
+                try {
+                    $this->updateCmsConfigurationFor($model, $k + 1);
+                } catch (OzuConfigureCmsException $e) {
+                    $this->error($e->getMessage());
+                }
             });
 
         $this->ozuClient->deleteCollectionSharpConfigurationExcept(
@@ -84,9 +95,9 @@ class ConfigureCmsCommand extends Command
         );
     }
 
-    private function updateCmsConfigurationFor($model, int $order = 1, bool $isSubCollection = false)
+    private function updateCmsConfigurationFor($model, int $order = 1, bool $isSubCollection = false): void
     {
-        // avoid processing the same collection twice
+        // Avoid processing the same collection twice
         if (in_array($model::class, $this->processedCollections)) {
             /*
              * We avoid processing multiple times the same subcollection, but we'll warn the
@@ -95,13 +106,13 @@ class ConfigureCmsCommand extends Command
              */
             if (!$isSubCollection) {
                 $this->line(
-                    '<fg=yellow>Skipping <options=bold>'.($model->ozuCollectionKey(
-                    ) ?? $model::class).'</> because it has already been processed.</>'
+                    '<fg=yellow>Skipping <options=bold>'
+                    .($model->ozuCollectionKey() ?? $model::class)
+                    .'</> because it has already been processed.</>'
                 );
                 $this->line(
                     '<fg=yellow>You may have wrongly configured your subcollections, or included a subcollection to the collections array in the ozu-client config file...</>'
                 );
-
             }
 
             return;
@@ -110,12 +121,31 @@ class ConfigureCmsCommand extends Command
             $this->processedCollections[] = $model::class;
         }
 
+        $this->line('<fg=green>Update CMS configuration for <options=bold>'.$model->ozuCollectionKey().'</>...</>');
+
+        $customFields = collect(Schema::getColumnListing($model->getTable()))
+            ->filter(fn (string $column) => !in_array($column, $model::$ozuColumns))
+            ->mapWithKeys(fn (string $column) => [
+                $column => match (Schema::getColumnType($model->getTable(), $column)) {
+                    'datetime', 'time' => 'dateTime',
+                    'date' => 'date',
+                    'int', 'bigint', 'smallint', 'mediumint', 'tinyint' => 'integer',
+                    'float', 'double' => 'float',
+                    'text', 'json' => 'text',
+                    'boolean' => 'boolean',
+                    default => 'string',
+                },
+            ]);
+
         /** @var OzuCollectionConfig $collection */
         $collection = $model::configureOzuCollection(new OzuCollectionConfig());
         /** @var OzuCollectionListConfig $list */
         $list = $model::configureOzuCollectionList(new OzuCollectionListConfig());
         /** @var OzuCollectionFormConfig $form */
         $form = $model::configureOzuCollectionForm(new OzuCollectionFormConfig());
+
+        $this->guardForUnknownKeys($model, $customFields, $list->columns());
+        $this->guardForUnknownKeys($model, $customFields, $form->customFields());
 
         $payload = [
             'key' => $model->ozuCollectionKey(),
@@ -151,27 +181,14 @@ class ConfigureCmsCommand extends Command
                 'content' => $form->contentField()?->toArray(),
                 'fields' => $form
                     ->customFields()
-                    ->mapWithKeys(fn (OzuField $field, int $key) => [$field->getKey() => [
+                    ->mapWithKeys(fn (OzuField $field, int $key) => [$field->key() => [
                         'order' => $key,
                         ...$field->toArray(),
                     ]]),
             ],
-            'customFields' => collect(Schema::getColumnListing($model->getTable()))
-                ->filter(fn (string $column) => !in_array($column, $model::$ozuColumns))
-                ->mapWithKeys(fn (string $column) => [
-                    $column => match (Schema::getColumnType($model->getTable(), $column)) {
-                        'datetime', 'time' => 'dateTime',
-                        'date' => 'date',
-                        'int', 'bigint', 'smallint', 'mediumint', 'tinyint' => 'integer',
-                        'float', 'double' => 'float',
-                        'text', 'json' => 'text',
-                        'boolean' => 'boolean',
-                        default => 'string',
-                    },
-                ]),
+            'customFields' => $customFields,
         ];
 
-        $this->line('<fg=green>Update CMS configuration for <options=bold>'.$payload['key'].'</>...</>');
         try {
             $this->ozuClient->updateCollectionSharpConfiguration(
                 $payload['key'],
@@ -184,7 +201,10 @@ class ConfigureCmsCommand extends Command
                     $subCollectionClass instanceof Closure => $subCollectionClass(),
                     default => $subCollectionClass
                 })
-                ->each(fn ($subCollectionClass) => $this->updateCmsConfigurationFor($subCollectionClass, isSubCollection: true));
+                ->each(fn ($subCollectionClass) => $this->updateCmsConfigurationFor(
+                    $subCollectionClass,
+                    isSubCollection: true
+                ));
 
         } catch (RequestException $e) {
             if ($message = $e->response->json()) {
@@ -192,15 +212,15 @@ class ConfigureCmsCommand extends Command
                     throw $e;
                 }
 
-                // Display by priority: validations errors, generic error, json dump of the response
+                // Display by priority: validations errors then generic error
                 $this->error(sprintf(
                     '[%s] %s',
                     $payload['key'],
-                    isset($message['errors']) ?
-                        collect(is_array($message['errors']) ? $message['errors'] : [])
+                    isset($message['errors']) && is_array($message['errors'])
+                        ? collect($message['errors'])
                             ->map(fn ($error, $key) => sprintf('%s: %s', $key, $error[0]))
-                            ->implode(', ') ?? ($message['message'] ?? json_encode($message))
-                        : ($message['message'] ?? json_encode($message))
+                            ->implode(', ')
+                        : $message['message']
                 ));
             } else {
                 throw $e;
@@ -233,5 +253,49 @@ class ConfigureCmsCommand extends Command
             }
             throw $e;
         }
+    }
+
+    private function guardForUnknownKeys($model, $customFields, Collection $fieldList): void
+    {
+        $knownKeys = [
+            ...$model::$ozuColumns,
+            ...array_keys($customFields->toArray()),
+            'cover',
+            ...$this->getMediaMorphKeysFor($model)
+        ];
+
+        $unknownKeys = $fieldList
+            ->map(fn($ozuField) => $ozuField->key())
+            ->filter(fn(string $ozuColumnKey) => !in_array($ozuColumnKey, $knownKeys))
+            ->toArray();
+
+        throw_if(
+            sizeof($unknownKeys) > 0,
+            OzuConfigureCmsException::unknownKeys($model::class, $unknownKeys)
+        );
+    }
+
+    private function getMediaMorphKeysFor(Model $model): array
+    {
+        $reflection = new ReflectionClass($model);
+        $relations = [];
+
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->class !== get_class($model) || $method->getNumberOfParameters() > 0) {
+                continue;
+            }
+
+            try {
+                $relation = $method->invoke($model);
+            } catch (\Throwable) {
+                continue;
+            }
+
+            if ($relation instanceof MorphOne || $relation instanceof MorphMany) {
+                $relations[] = $method->getName();
+            }
+        }
+
+        return $relations;
     }
 }

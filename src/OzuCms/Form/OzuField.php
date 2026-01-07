@@ -86,7 +86,13 @@ abstract class OzuField
 
     abstract public function type(): string;
 
+    /** @deprecated Use key() instead */
     public function getKey(): string
+    {
+        return $this->key();
+    }
+
+    public function key(): string
     {
         return $this->key;
     }

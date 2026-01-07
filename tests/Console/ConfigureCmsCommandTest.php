@@ -13,6 +13,21 @@ use Illuminate\Http\Client\Request;
 beforeEach(function () {
     config(['ozu-client.website_key' => 'test']);
     Http::fake();
+
+    Schema::swap(new class {
+        public function getColumnListing($table): array
+        {
+            return ['dummy-text', 'dummy-check', 'dummy-image', 'dummy-date', 'dummy-select'];
+        }
+        public function getColumnType($table, $column): string
+        {
+            return match($column) {
+                'dummy-check' => 'tinyint',
+                'dummy-date' => 'date',
+                default => 'string',
+            };
+        }
+    });
 });
 
 it('sends cms configuration to Ozu for each configured collection', function () {
@@ -226,18 +241,16 @@ it('sends form cms configuration to Ozu', function () {
 });
 
 it('sends custom fields configuration to Ozu', function () {
-    Schema::partialMock()
-        ->shouldReceive(
-            'getColumnListing',
-            'getColumnType'
-        )
-        ->andReturn(
-            [
-                ...DummyTestModel::$ozuColumns,
-                'dummy_text',
-            ],
-            'text'
-        );
+    Schema::swap(new class {
+        public function getColumnListing($table): array
+        {
+            return ['dummy-text'];
+        }
+        public function getColumnType($table, $column): string
+        {
+            return 'string';
+        }
+    });
 
     config(['ozu-client.collections' => [
         new class extends DummyTestModel
@@ -254,7 +267,7 @@ it('sends custom fields configuration to Ozu', function () {
         ->assertExitCode(Command::SUCCESS);
 
     Http::assertSentInOrder([
-        fn (Request $request) => $request['customFields'] == collect(['dummy_text' => 'string']),
+        fn (Request $request) => $request['customFields'] == collect(['dummy-text' => 'string']),
         fn (Request $request) => $request->method() == 'DELETE',
     ]);
 });
@@ -340,4 +353,51 @@ it('sends subcollections configuration to Ozu', function () {
             'dummy-subcollection'
         );
     });
+});
+
+it('fails if an unconfigured field is defined in the list cms configuration', function () {
+    config(['ozu-client.collections' => [
+        new class extends DummyTestModel
+        {
+            public function ozuCollectionKey(): string
+            {
+                return 'dummy';
+            }
+
+            public static function configureOzuCollectionList(OzuCollectionListConfig $config): OzuCollectionListConfig
+            {
+                return $config
+                    ->addColumn(OzuColumn::makeText('dummy-text'))
+                    ->addColumn(OzuColumn::makeCheck('dummy-another-check'));
+            }
+        }
+    ]]);
+
+    $this->artisan('ozu:configure-cms')
+        ->expectsOutputToContain('The keys [dummy-another-check] are defined either in the list or in the form but are not custom fields of the model')
+        ->assertExitCode(Command::SUCCESS);
+});
+
+it('fails if an unconfigured field is defined in the form cms configuration', function () {
+    config(['ozu-client.collections' => [
+        new class extends DummyTestModel
+        {
+            public function ozuCollectionKey(): string
+            {
+                return 'dummy';
+            }
+
+            public static function configureOzuCollectionForm(OzuCollectionFormConfig $config): OzuCollectionFormConfig
+            {
+                return $config
+                    ->addCustomField(
+                        OzuField::makeText('dummy-another-text')
+                    );
+            }
+        }
+    ]]);
+
+    $this->artisan('ozu:configure-cms')
+        ->expectsOutputToContain('The keys [dummy-another-text] are defined either in the list or in the form but are not custom fields of the model')
+        ->assertExitCode(Command::SUCCESS);
 });
