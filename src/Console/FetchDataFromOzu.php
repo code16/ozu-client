@@ -5,6 +5,7 @@ namespace Code16\OzuClient\Console;
 use Code16\OzuClient\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\Process\Process;
 use ZipArchive;
 
@@ -12,9 +13,8 @@ use function Laravel\Prompts\confirm;
 
 class FetchDataFromOzu extends Command
 {
-    protected $signature = 'ozu:fetch-ozu-data {--force : Do not ask for confirmation} {--withoutAssets : Do not download assets}';
-    protected $aliases = ['ozu:fetch-data', 'ozu:pull'];
-    protected $description = 'Gets Ozu’s CMS data and replaces your local database and assets with it.';
+    protected $signature = 'ozu:import {--settings : Import only settings values} {--force : Do not ask for confirmation} {--withoutAssets : Do not download assets}';
+    protected $description = 'Gets Ozu’s CMS data and or settings and replaces your local database and assets with it.';
     private string $databaseDumpPath;
     private string $assetsZipPath;
     private string $assetsExtractPath;
@@ -22,6 +22,12 @@ class FetchDataFromOzu extends Command
     public function handle(Client $ozuClient): int
     {
         $this->newLine(2);
+
+        if ($this->option('settings')) {
+            // Fetch only ozu's settings
+            return $this->fetchSettings($ozuClient);
+        }
+
         $this->warn('⚠️  This action will erase your local database and assets.');
 
         if (!$this->option('force')) {
@@ -54,6 +60,11 @@ class FetchDataFromOzu extends Command
         }
 
         $this->cleanTemporaryFiles();
+
+        if ($this->fetchSettings($ozuClient) === self::FAILURE) {
+            return self::FAILURE;
+        }
+
         $this->info('✅ Ozu data successfully imported.');
 
         return self::SUCCESS;
@@ -157,5 +168,40 @@ class FetchDataFromOzu extends Command
     {
         @unlink($this->databaseDumpPath);
         @unlink($this->assetsZipPath);
+    }
+
+    private function fetchSettings(Client $ozuClient): int
+    {
+        $this->info('⚙️ Importing Ozu settings...');
+
+        if (config('ozu-client.settings') === null) {
+            $this->info('❌ OZU settings are not configured.');
+
+            return self::SUCCESS;
+        }
+
+        $settings = $ozuClient->fetchSettings();
+
+        if ($settings === null) {
+            $this->error('❌ Ozu’s response was not successful.');
+
+            return self::FAILURE;
+        }
+
+        $prefix = class_basename(config('ozu-client.settings')).'_';
+
+        foreach ($settings as $settingKey => $settingValue) {
+            if (json_validate($settingValue)) {
+                Cache::set($prefix.$settingKey, json_decode($settingValue, true));
+
+                continue;
+            }
+
+            Cache::set($prefix.$settingKey, $settingValue);
+        }
+
+        $this->info('✅ Settings fetched successfully');
+
+        return self::SUCCESS;
     }
 }

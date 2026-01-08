@@ -24,8 +24,7 @@ use ReflectionMethod;
 
 class ConfigureCmsCommand extends Command
 {
-    protected $signature = 'ozu:configure-cms';
-    protected $aliases = ['ozu:configure', 'configure:ozu'];
+    protected $signature = 'ozu:configure';
     protected $description = 'Send CMS configuration to Ozu.';
     private Client $ozuClient;
     private array $processedCollections = [];
@@ -239,8 +238,8 @@ class ConfigureCmsCommand extends Command
                 'fields' => $configuration->fields()
                     ?->map(fn (OzuField $field) => $field->toArray())
                     ->toArray()
-                    ?? []
-                ]
+                    ?? [],
+            ]
             );
         } catch (RequestException $e) {
             if (($message = $e->response->json()) && isset($message['message'])) {
@@ -249,6 +248,7 @@ class ConfigureCmsCommand extends Command
                     .'] '
                     .$message['message']
                 );
+
                 return;
             }
             throw $e;
@@ -261,16 +261,16 @@ class ConfigureCmsCommand extends Command
             ...$model::$ozuColumns,
             ...array_keys($customFields->toArray()),
             'cover',
-            ...$this->getMediaMorphKeysFor($model)
+            ...$this->getMediaMorphKeysFor($model),
         ];
 
         $unknownKeys = $fieldList
-            ->map(fn($ozuField) => $ozuField->key())
-            ->filter(fn(string $ozuColumnKey) => !in_array($ozuColumnKey, $knownKeys))
+            ->map(fn ($ozuField) => $ozuField->key())
+            ->filter(fn (string $ozuColumnKey) => !in_array($ozuColumnKey, $knownKeys))
             ->toArray();
 
         throw_if(
-            sizeof($unknownKeys) > 0,
+            count($unknownKeys) > 0,
             OzuConfigureCmsException::unknownKeys($model::class, $unknownKeys)
         );
     }
