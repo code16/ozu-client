@@ -14,14 +14,16 @@ beforeEach(function () {
     config(['ozu-client.website_key' => 'test']);
     Http::fake();
 
-    Schema::swap(new class {
+    Schema::swap(new class
+    {
         public function getColumnListing($table): array
         {
             return ['dummy-text', 'dummy-check', 'dummy-image', 'dummy-date', 'dummy-select'];
         }
+
         public function getColumnType($table, $column): string
         {
-            return match($column) {
+            return match ($column) {
                 'dummy-check' => 'tinyint',
                 'dummy-date' => 'date',
                 default => 'string',
@@ -48,7 +50,7 @@ it('sends cms configuration to Ozu for each configured collection', function () 
         },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
@@ -93,7 +95,7 @@ it('sends general cms configuration to Ozu', function () {
         },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
@@ -136,7 +138,7 @@ it('sends list cms configuration to Ozu', function () {
         },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
@@ -207,7 +209,7 @@ it('sends form cms configuration to Ozu', function () {
         },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
@@ -241,11 +243,13 @@ it('sends form cms configuration to Ozu', function () {
 });
 
 it('sends custom fields configuration to Ozu', function () {
-    Schema::swap(new class {
+    Schema::swap(new class
+    {
         public function getColumnListing($table): array
         {
             return ['dummy-text'];
         }
+
         public function getColumnType($table, $column): string
         {
             return 'string';
@@ -262,7 +266,7 @@ it('sends custom fields configuration to Ozu', function () {
         },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
@@ -290,7 +294,7 @@ it('deletes pre-existing and unconfigured collections', function () {
         },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
@@ -329,7 +333,7 @@ it('sends subcollections configuration to Ozu', function () {
 
     config(['ozu-client.collections' => [$parentCollectionClass]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutput('CMS configuration sent to Ozu.')
         ->assertExitCode(Command::SUCCESS);
 
@@ -370,10 +374,10 @@ it('fails if an unconfigured field is defined in the list cms configuration', fu
                     ->addColumn(OzuColumn::makeText('dummy-text'))
                     ->addColumn(OzuColumn::makeCheck('dummy-another-check'));
             }
-        }
+        },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutputToContain('The keys [dummy-another-check] are defined either in the list or in the form but are not custom fields of the model')
         ->assertExitCode(Command::SUCCESS);
 });
@@ -394,10 +398,10 @@ it('fails if an unconfigured field is defined in the form cms configuration', fu
                         OzuField::makeText('dummy-another-text')
                     );
             }
-        }
+        },
     ]]);
 
-    $this->artisan('ozu:configure-cms')
+    $this->artisan('ozu:configure')
         ->expectsOutputToContain('The keys [dummy-another-text] are defined either in the list or in the form but are not custom fields of the model')
         ->assertExitCode(Command::SUCCESS);
 });
