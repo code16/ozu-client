@@ -5,9 +5,11 @@ namespace Code16\OzuClient\Support\Thumbnails;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Support\Str;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Drivers\Vips\Driver as VipsDriver;
 use Intervention\Image\Exceptions\DecoderException;
 use Intervention\Image\ImageManager;
+use Log;
 use Storage;
 
 class LocalThumbnail extends Thumbnail
@@ -26,7 +28,13 @@ class LocalThumbnail extends Thumbnail
 
     public function __construct()
     {
-        $this->imageManager = new ImageManager(new Driver());
+        try {
+            $this->imageManager = new ImageManager(new VipsDriver());
+        } catch (\Exception $e) {
+            Log::error($e);
+            $this->imageManager = new ImageManager(new GdDriver());
+        }
+
         $this->storage = app(FilesystemManager::class);
     }
 
