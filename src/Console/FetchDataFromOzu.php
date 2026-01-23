@@ -3,11 +3,11 @@
 namespace Code16\OzuClient\Console;
 
 use Code16\OzuClient\Client;
+use Code16\OzuClient\Support\ZipExtractor;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Symfony\Component\Process\Process;
-use ZipArchive;
+use Illuminate\Support\Facades\Process;
 
 use function Laravel\Prompts\confirm;
 
@@ -102,21 +102,19 @@ class FetchDataFromOzu extends Command
         $this->info('🛠 Importing Ozu database...');
         $config = config('database.connections.mysql');
 
-        $process = Process::fromShellCommandline(sprintf(
-            'mysql -h%s -P%s -u%s %s < %s',
-            $config['host'],
-            $config['port'],
-            $config['username'],
-            $config['database'],
-            $this->databaseDumpPath
-        ));
+        $result = Process::env(['MYSQL_PWD' => $config['password']])
+            ->run(sprintf(
+                'mysql -h%s -P%s -u%s %s < %s',
+                $config['host'],
+                $config['port'],
+                $config['username'],
+                $config['database'],
+                $this->databaseDumpPath
+            ));
 
-        $process->setEnv(['MYSQL_PWD' => $config['password']]);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
+        if (!$result->successful()) {
             $this->error('❌ Error importing the database:');
-            $this->error($process->getErrorOutput());
+            $this->error($result->errorOutput());
 
             return false;
         }
@@ -147,11 +145,7 @@ class FetchDataFromOzu extends Command
         $this->info('📦 Extracting Ozu assets...');
 
         try {
-            $zip = new ZipArchive();
-            if ($zip->open($this->assetsZipPath) === true) {
-                $zip->extractTo($this->assetsExtractPath);
-                $zip->close();
-
+            if (app(ZipExtractor::class)->extract($this->assetsZipPath, $this->assetsExtractPath)) {
                 return true;
             }
 
