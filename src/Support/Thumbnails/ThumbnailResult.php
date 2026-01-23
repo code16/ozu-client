@@ -30,7 +30,7 @@ class ThumbnailResult implements Stringable
     {
         if (!$this->image && $this->path) {
             try {
-                $this->image = new ImageManager(new Driver())->read($this->path);
+                $this->image = (new ImageManager(new Driver()))->read($this->path);
             } catch (\Intervention\Image\Exceptions\RuntimeException $e) {
                 return null;
             }

@@ -4,6 +4,7 @@ namespace Code16\OzuClient\Support\Thumbnails;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Vips\Driver as VipsDriver;
@@ -29,7 +30,7 @@ class LocalThumbnail extends Thumbnail
     public function __construct()
     {
         try {
-            $this->imageManager = new ImageManager(new VipsDriver());
+            $this->imageManager = new ImageManager(new VipsDriver(), strip: true);
         } catch (\Exception $e) {
             Log::error($e);
             $this->imageManager = new ImageManager(new GdDriver());
@@ -86,20 +87,42 @@ class LocalThumbnail extends Thumbnail
                 $thumbnailDisk->makeDirectory(dirname($thumbnailPath));
             }
 
-            try {
-                $sourceImg = $this->imageManager->read(
-                    $this->storage->disk($sourceDisk)->get($sourceRelPath),
+            if ($this->shouldOnlyCopy()) {
+                $thumbnailDisk->put(
+                    $thumbnailPath,
+                    Storage::disk('public')->get($sourceRelPath)
                 );
+            } else {
+                try {
+                    $sourceImg = $this->imageManager->read(
+                        $this->storage->disk($sourceDisk)->get($sourceRelPath),
+                    );
 
-                if ($this->fit) {
-                    $sourceImg->cover($this->width, $this->height ?: $this->width);
-                } else {
-                    $sourceImg->scaleDown($this->width, $this->height);
+                    if ($this->mediaModel->filters) {
+                        if ($rotate = Arr::get($this->mediaModel->filters, 'rotate.angle')) {
+                            $sourceImg->rotate($rotate);
+                        }
+
+                        if ($cropData = Arr::get($this->mediaModel->filters, 'crop')) {
+                            $sourceImg->crop(
+                                intval(round($sourceImg->width() * $cropData['width'])),
+                                intval(round($sourceImg->height() * $cropData['height'])),
+                                intval(round($sourceImg->width() * $cropData['x'])),
+                                intval(round($sourceImg->height() * $cropData['y'])),
+                            );
+                        }
+                    }
+
+                    if ($this->fit) {
+                        $sourceImg->cover($this->width, $this->height ?: $this->width);
+                    } else {
+                        $sourceImg->scaleDown($this->width, $this->height);
+                    }
+
+                    $thumbnailDisk->put($thumbnailPath, $sourceImg->toJpeg(quality: $this->quality));
+                } catch (FileNotFoundException|DecoderException) {
+                    return null;
                 }
-
-                $thumbnailDisk->put($thumbnailPath, $sourceImg->toJpeg(quality: $this->quality));
-            } catch (FileNotFoundException|DecoderException) {
-                return null;
             }
         }
 
@@ -151,6 +174,16 @@ class LocalThumbnail extends Thumbnail
         return sprintf(
             '/%s',
             uri($this->storage->disk('public')->url($this->mediaModel->file_name))->path()
+        );
+    }
+
+    private function shouldOnlyCopy(): bool
+    {
+        return in_array(
+            pathinfo($this->mediaModel->file_name, PATHINFO_EXTENSION),
+            [
+                'svg',
+            ]
         );
     }
 }
