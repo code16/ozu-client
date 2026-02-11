@@ -3,7 +3,7 @@
 namespace Code16\OzuClient\Support\Database;
 
 use Code16\OzuClient\Client;
-use Code16\OzuClient\Eloquent\IsOzuModel;
+use Code16\OzuClient\Eloquent\IsOzuCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
@@ -23,7 +23,7 @@ class OzuProductionSeeder extends Seeder
 
     protected function createInOzu(Model $item): static
     {
-        if (!in_array(IsOzuModel::class, class_uses_recursive($item))) {
+        if (!in_array(IsOzuCollection::class, class_uses_recursive($item))) {
             throw new \InvalidArgumentException($item::class." doesn't have the IsOzuModel trait");
         }
 
