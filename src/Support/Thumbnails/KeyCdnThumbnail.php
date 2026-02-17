@@ -6,22 +6,34 @@ class KeyCdnThumbnail extends CdnThumbnail
 {
     protected function generateUrlParameters(?int $width, ?int $height, bool $fit): string
     {
-        if (!$fit) {
-            if ($width && $height) {
-                return sprintf('width=%s&height=%s&fit=inside', $width, $height);
-            }
-
-            return $width
-                ? sprintf('width=%s', $width)
-                : sprintf('height=%s', $height ?: 400);
+        if (
+            isset($this->mediaModel->filters)
+            && isset($this->mediaModel->filters['crop'])
+            && $coords = $this->convertCropParamsToPixels()
+        ) {
+            return sprintf(
+                'crop=%s,%s,%s,%s%s%s',
+                $coords['w'],
+                $coords['h'],
+                $coords['x'],
+                $coords['y'],
+                $width ? "&width=$width" : '',
+                $height ? "&height=$height" : '',
+            );
         }
 
         if ($width && $height) {
-            return sprintf('width=%s&height=%s&fit=cover', $width, $height);
+            return sprintf('width=%s&height=%s&fit='.($fit ? 'cover' : 'inside'), $width, $height);
         }
 
         $side = ($width ?: $height) ?: 400;
 
-        return sprintf('width=%s&height=%s&fit=cover', $side, $side);
+        return $fit ?
+            sprintf('width=%s&height=%s&fit=cover', $side, $side) :
+            (
+                $width
+                    ? sprintf('width=%s', $width)
+                    : sprintf('height=%s', $height ?: 400)
+            );
     }
 }
