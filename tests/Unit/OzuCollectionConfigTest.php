@@ -10,6 +10,7 @@ it('set defauls config values', function () {
         ->and($ozuCollectionConfig->autoDeployDateField())->toBeNull()
         ->and($ozuCollectionConfig->isCreatable())->toBeTrue()
         ->and($ozuCollectionConfig->isDeletable())->toBeTrue()
+        ->and($ozuCollectionConfig->labelAttribute())->toBe('title')
         ->and($ozuCollectionConfig)->toHaveProperties([
             'label',
             'icon',
@@ -17,6 +18,7 @@ it('set defauls config values', function () {
             'autoDeployDateField',
             'isCreatable',
             'isDeletable',
+            'labelAttribute',
         ])
         ->and($ozuCollectionConfig::class)->toHaveMethods([
             'setLabel',
@@ -25,6 +27,9 @@ it('set defauls config values', function () {
             'setAutoDeployDateField',
             'setIsCreatable',
             'setIsDeletable',
+            'addSubCollection',
+            'subCollections',
+            'overrideLabelAttributeInDashboard',
             'label',
             'icon',
             'hasPublicationState',
@@ -32,6 +37,7 @@ it('set defauls config values', function () {
             'hasAutoDeployDateField',
             'isCreatable',
             'isDeletable',
+            'labelAttribute',
         ]);
 
 });
@@ -67,6 +73,22 @@ it('allows to set isCreatable and isDeletable', function () {
         ->and($ozuCollectionConfig->isDeletable())->toBeFalse();
 });
 
+it('allows to add a sub collection', function () {
+    $ozuCollectionConfig = new OzuCollectionConfig();
+
+    $ozuCollectionConfig->addSubCollection('CollectionClass');
+
+    expect($ozuCollectionConfig->subCollections()->toArray())->toBe(['CollectionClass']);
+});
+
+it('allows to override label attribute', function () {
+    $ozuCollectionConfig = new OzuCollectionConfig();
+
+    $ozuCollectionConfig->overrideLabelAttributeInDashboard('name');
+
+    expect($ozuCollectionConfig->labelAttribute())->toBe('name');
+});
+
 it('allows to chain methods', function () {
     $ozuCollectionConfig = new OzuCollectionConfig();
 
@@ -76,12 +98,14 @@ it('allows to chain methods', function () {
         ->setHasPublicationState()
         ->setAutoDeployDateField('date')
         ->setIsCreatable(false)
-        ->setIsDeletable(false);
+        ->setIsDeletable(false)
+        ->overrideLabelAttributeInDashboard('name');
 
     expect($ozuCollectionConfig->label())->toBe('label')
         ->and($ozuCollectionConfig->icon())->toBe('icon')
         ->and($ozuCollectionConfig->hasPublicationState())->toBeTrue()
         ->and($ozuCollectionConfig->autoDeployDateField())->toBe('date')
         ->and($ozuCollectionConfig->isCreatable())->toBeFalse()
-        ->and($ozuCollectionConfig->isDeletable())->toBeFalse();
+        ->and($ozuCollectionConfig->isDeletable())->toBeFalse()
+        ->and($ozuCollectionConfig->labelAttribute())->toBe('name');
 });

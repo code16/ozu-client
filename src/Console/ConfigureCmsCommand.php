@@ -157,6 +157,7 @@ class ConfigureCmsCommand extends Command
             'isDeletable' => $collection->isDeletable(),
             'subCollections' => $collection->subCollections()
                 ->map(fn ($subCollectionClass) => app($subCollectionClass)->ozuCollectionKey()),
+            'labelAttribute' => $collection->labelAttribute(),
             'order' => $order,
             'list' => [
                 'isReorderable' => $list->isReorderable(),
