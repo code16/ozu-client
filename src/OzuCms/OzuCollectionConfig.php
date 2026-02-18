@@ -12,6 +12,7 @@ class OzuCollectionConfig
     protected ?string $autoDeployDateField = null;
     private bool $isCreatable = true;
     private bool $isDeletable = true;
+    private string $labelAttribute = 'title';
     private array $subCollections = [];
 
     public function setLabel(string $label): self
@@ -69,6 +70,18 @@ class OzuCollectionConfig
         $this->isDeletable = $isDeletable;
 
         return $this;
+    }
+
+    public function overrideLabelAttributeInDashboard(string $attribute): self
+    {
+        $this->labelAttribute = $attribute;
+
+        return $this;
+    }
+
+    public function labelAttribute(): string
+    {
+        return $this->labelAttribute;
     }
 
     public function label(): string
