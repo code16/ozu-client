@@ -24,4 +24,6 @@ return [
     'api_version' => env('OZU_API_VERSION', 'v1'),
 
     'cdn_url' => env('OZU_CDN_URL'),
+
+    'use_vips' => env('OZU_IMAGE_DRIVER_USE_VIPS', false),
 ];

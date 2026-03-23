@@ -10,7 +10,6 @@ use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Vips\Driver as VipsDriver;
 use Intervention\Image\Exceptions\DecoderException;
 use Intervention\Image\ImageManager;
-use Log;
 use Storage;
 
 class LocalThumbnail extends Thumbnail
@@ -29,12 +28,10 @@ class LocalThumbnail extends Thumbnail
 
     public function __construct()
     {
-        try {
-            $this->imageManager = new ImageManager(new VipsDriver(), strip: true);
-        } catch (\Exception $e) {
-            Log::error($e);
-            $this->imageManager = new ImageManager(new GdDriver());
-        }
+        $this->imageManager =
+            config()->boolean('ozu-client.use_vips')
+                ? new ImageManager(new VipsDriver(), strip: true)
+                : new ImageManager(new GdDriver());
 
         $this->storage = app(FilesystemManager::class);
     }
