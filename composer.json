@@ -31,7 +31,7 @@
         "intervention/image-driver-vips": "^1.0",
         "intervention/image-laravel": "^1.0",
         "jcupitt/vips": "^2.6",
-        "laravel/prompts": "^0.3.8",
+        "laravel/prompts": "^0.3.18",
         "spatie/laravel-package-tools": "^1.14.0",
         "spatie/laravel-sluggable": "^3.6"
     },
