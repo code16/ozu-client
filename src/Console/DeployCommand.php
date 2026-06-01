@@ -22,8 +22,6 @@ class DeployCommand extends Command
     protected $description = 'Trigger a deployment.';
 
     protected ?string $deploymentTargetUrl = null;
-
-    protected $targets = [];
     private Client $ozuClient;
 
     public function handle(Client $ozuClient)
@@ -62,6 +60,10 @@ class DeployCommand extends Command
         /* Ask for which deployment target to deploy to */
         $targetId = $this->getTarget();
 
+        if ($targetId === null) {
+            return self::FAILURE;
+        }
+
         clear();
         $this->newLine(2);
 
@@ -99,7 +101,7 @@ class DeployCommand extends Command
 
         $targets = collect($targets['data'] ?? []);
 
-        if (!$targets) {
+        if ($targets->isEmpty()) {
             error('No deployment targets found.');
             $this->fail();
         }
@@ -163,8 +165,10 @@ class DeployCommand extends Command
                         $status = $this->ozuClient
                             ->fetchDeploymentStatus($deploymentUuid);
 
+                        $deploymentStatus = fluent($status)->get('data.status', null);
+
                         if (in_array(
-                            $status['status'] ?? null,
+                            $deploymentStatus,
                             ['success', 'failed'],
                             true
                         )) {
@@ -212,7 +216,9 @@ class DeployCommand extends Command
             $status ??= $this->ozuClient
                 ->fetchDeploymentStatus($deploymentUuid);
 
-            match ($status['status'] ?? null) {
+            $deploymentStatus = fluent($status)->get('data.status', null);
+
+            match ($deploymentStatus) {
                 'success' => info(sprintf('Deployment finished successfully!%s', $this->deploymentTargetUrl ? sprintf(' Visit %s to see the changes.', $this->deploymentTargetUrl) : '')),
                 'failed' => error('Deployment failed.'),
                 default => error('Deployment ended with unknown status.'),

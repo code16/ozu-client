@@ -38,7 +38,7 @@ it('can sync project before deployment', function () {
     });
 
     $this->artisan('ozu:deploy')
-        ->expectsQuestion('Are you sure you want to deploy your website?', '1')
+        ->expectsConfirmation('Are you sure you want to deploy your website?', 'yes')
         ->expectsConfirmation('Do you want to sync your project with Ozu before deploying?', 'yes')
         ->expectsQuestion('Select a deployment target to deploy to:', '1')
         ->assertExitCode(Command::SUCCESS);
@@ -58,7 +58,7 @@ it('can deploy without project sync', function () {
     $client->shouldReceive('fetchDeploymentStatus')->andReturn(['data' => ['status' => 'success']]);
 
     $this->artisan('ozu:deploy')
-        ->expectsQuestion('Are you sure you want to deploy your website?', '1')
+        ->expectsConfirmation('Are you sure you want to deploy your website?', 'yes')
         ->expectsConfirmation('Do you want to sync your project with Ozu before deploying?', 'no')
         ->expectsQuestion('Select a deployment target to deploy to:', '1')
         ->assertExitCode(Command::SUCCESS);
@@ -72,7 +72,7 @@ it('fails when no deployment targets are found', function () {
     $client->shouldReceive('getDeploymentTargets')->andReturn([]);
 
     $this->artisan('ozu:deploy')
-        ->expectsQuestion('Are you sure you want to deploy your website?', '1')
+        ->expectsConfirmation('Are you sure you want to deploy your website?', 'yes')
         ->expectsConfirmation('Do you want to sync your project with Ozu before deploying?', 'no')
         ->assertExitCode(Command::FAILURE);
 });
@@ -87,7 +87,7 @@ it('fails when no ready deployment targets are found', function () {
     ]]);
 
     $this->artisan('ozu:deploy')
-        ->expectsQuestion('Are you sure you want to deploy your website?', '1')
+        ->expectsConfirmation('Are you sure you want to deploy your website?', 'yes')
         ->expectsConfirmation('Do you want to sync your project with Ozu before deploying?', 'no')
         ->assertExitCode(Command::FAILURE);
 });
@@ -104,7 +104,7 @@ it('handles failed deployment trigger', function () {
     $client->shouldReceive('triggerDeployment')->andReturn([]);
 
     $this->artisan('ozu:deploy')
-        ->expectsQuestion('Are you sure you want to deploy your website?', '1')
+        ->expectsConfirmation('Are you sure you want to deploy your website?', 'yes')
         ->expectsConfirmation('Do you want to sync your project with Ozu before deploying?', 'no')
         ->expectsQuestion('Select a deployment target to deploy to:', '1')
         ->assertExitCode(Command::FAILURE);
