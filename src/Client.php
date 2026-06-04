@@ -5,6 +5,7 @@ namespace Code16\OzuClient;
 use Code16\OzuClient\Exceptions\OzuClientException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Log;
 use Storage;
 
 class Client
@@ -162,15 +163,37 @@ class Client
         return $deploy->json();
     }
 
-    public function fetchDeploymentStatus(string $deploymentUuid): ?array
+    public function fetchDeploymentLogs(string $deploymentUuid, ?int $offset = 0): ?array
     {
-        $res = $this->http()->get("/targets/{$deploymentUuid}/deploys/status");
+        $getStreamUrl = $this->http()->get("/targets/{$deploymentUuid}/logs/stream");
 
-        if ($res->failed()) {
-            throw new OzuClientException('Error fetching deployment status: '.$res->body());
+        if ($getStreamUrl->failed()) {
+            if (!empty($getStreamUrl->json()['message'])) {
+                throw new OzuClientException($getStreamUrl->json()['message']);
+            }
+            throw new OzuClientException('Error fetching deployment logs stream URL: '.$getStreamUrl->body());
         }
 
-        return $res->json();
+        if ($getStreamUrl->json()['url'] ?? null) {
+            $streamUrl = $getStreamUrl->json()['url'];
+        } else {
+            return null;
+        }
+
+        try {
+            $response = Http::throw()->post($streamUrl, [
+                'offset' => $offset,
+            ]);
+
+            if ($response->failed()) {
+                return null;
+            }
+
+            return $response->json();
+
+        } catch (\Throwable $e) {
+            throw new OzuClientException('Error fetching deployment logs: '.$response->body());
+        }
     }
 
     public function streamDeploymentLogs(string $deploymentUuid, ?callable $onLog = null): ?string
@@ -190,6 +213,8 @@ class Client
             return null;
         }
 
+        Log::info("Streaming deployment logs from {$streamUrl}");
+
         $response = Http::withOptions([
             'stream' => true,
         ])->get($streamUrl);
@@ -198,7 +223,7 @@ class Client
         $buffer = '';
 
         while (!$body->eof()) {
-            $chunk = $body->read(1024);
+            $chunk = $body->read(65536);
             $buffer .= $chunk;
 
             while (($pos = strpos($buffer, "\n")) !== false) {
@@ -215,6 +240,18 @@ class Client
                     if ($onLog($data) === false) {
                         return null;
                     }
+                } else {
+                    echo $data;
+                }
+            }
+        }
+
+        if ($buffer !== '') {
+            $line = $buffer;
+            if (str_starts_with($line, 'data: ')) {
+                $data = substr($line, 6);
+                if ($onLog) {
+                    $onLog($data);
                 } else {
                     echo $data;
                 }

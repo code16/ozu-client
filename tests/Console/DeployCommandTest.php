@@ -29,8 +29,20 @@ it('can sync project before deployment', function () {
     ]]);
     $client->shouldReceive('getUndeployedPostsForTarget')->andReturn([]);
     $client->shouldReceive('triggerDeployment')->andReturn(['data' => ['uuid' => 'test-uuid']]);
-    $client->shouldReceive('streamDeploymentLogs')->andReturn('logs');
-    $client->shouldReceive('fetchDeploymentStatus')->andReturn(['data' => ['status' => 'success']]);
+    $client->shouldReceive('fetchDeploymentLogs')->once()->andReturn([
+        'status' => 'pending',
+        'logs' => "logs\n",
+        'offset' => 10,
+        'step' => 'Working',
+        'progression' => 50,
+    ]);
+    $client->shouldReceive('fetchDeploymentLogs')->once()->andReturn([
+        'status' => 'success',
+        'logs' => "more logs\n",
+        'offset' => 20,
+        'step' => 'Done',
+        'progression' => 100,
+    ]);
 
     // Mock ozu:configure command
     Artisan::command('ozu:configure', function () {
@@ -54,8 +66,13 @@ it('can deploy without project sync', function () {
     ]]);
     $client->shouldReceive('getUndeployedPostsForTarget')->andReturn([]);
     $client->shouldReceive('triggerDeployment')->andReturn(['data' => ['uuid' => 'test-uuid']]);
-    $client->shouldReceive('streamDeploymentLogs')->andReturn('logs');
-    $client->shouldReceive('fetchDeploymentStatus')->andReturn(['data' => ['status' => 'success']]);
+    $client->shouldReceive('fetchDeploymentLogs')->andReturn([
+        'status' => 'success',
+        'logs' => "more logs\n",
+        'offset' => 20,
+        'step' => 'Done',
+        'progression' => 100,
+    ]);
 
     $this->artisan('ozu:deploy')
         ->expectsConfirmation('Are you sure you want to deploy your website?', 'yes')
@@ -122,11 +139,23 @@ it('displays unpublished posts and asks for confirmation', function () {
         ['id' => 1, 'title' => 'Post 1', 'collection_key' => 'posts'],
     ]]);
     $client->shouldReceive('triggerDeployment')->andReturn(['data' => ['uuid' => 'test-uuid']]);
-    $client->shouldReceive('streamDeploymentLogs')->andReturn('logs');
-    $client->shouldReceive('fetchDeploymentStatus')->andReturn(['data' => ['status' => 'success']]);
+    $client->shouldReceive('fetchDeploymentLogs')->once()->andReturn([
+        'status' => 'pending',
+        'logs' => "logs\n",
+        'offset' => 10,
+        'step' => 'Working',
+        'progression' => 50,
+    ]);
+    $client->shouldReceive('fetchDeploymentLogs')->once()->andReturn([
+        'status' => 'success',
+        'logs' => "more logs\n",
+        'offset' => 20,
+        'step' => 'Done',
+        'progression' => 100,
+    ]);
 
     $this->artisan('ozu:deploy')
-        ->expectsQuestion('Are you sure you want to deploy your website?', '1')
+        ->expectsConfirmation('Are you sure you want to deploy your website?', 'yes')
         ->expectsConfirmation('Do you want to sync your project with Ozu before deploying?', 'no')
         ->expectsQuestion('Select a deployment target to deploy to:', '1')
         ->expectsConfirmation('Deploying will publish all unpublished posts, do you want to continue?', 'yes')

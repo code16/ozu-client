@@ -5,15 +5,18 @@ namespace Code16\OzuClient\Console;
 use Code16\OzuClient\Client;
 use Code16\OzuClient\Exceptions\OzuClientException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Uri;
+use Laravel\Prompts\Support\Logger;
 use Throwable;
 
 use function Laravel\Prompts\clear;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
+use function Laravel\Prompts\note;
 use function Laravel\Prompts\select;
-use function Laravel\Prompts\stream;
 use function Laravel\Prompts\table;
+use function Laravel\Prompts\task;
 use function Laravel\Prompts\warning;
 
 class DeployCommand extends Command
@@ -134,7 +137,6 @@ class DeployCommand extends Command
 
     private function triggerDeployment(int $targetId): void
     {
-        info('Triggering deployment...');
 
         try {
             /** @var string|null $deploymentUuid */
@@ -144,89 +146,75 @@ class DeployCommand extends Command
                 $this->fail('Deployment failed.');
             }
 
-            $stream = stream();
+            task('Deploying...', function (Logger $logger) use (&$deploymentUuid, &$status) {
+                $offset = 0;
+                $status = 'pending';
 
-            $status = null;
-            $lastStatusCheck = 0;
+                while (in_array($status, ['pending', 'waiting'])) {
+                    try {
+                        $response = $this->ozuClient->fetchDeploymentLogs($deploymentUuid, $offset);
 
-            $this->ozuClient->streamDeploymentLogs(
-                $deploymentUuid,
-                function (string $chunk) use (
-                    $stream,
-                    $deploymentUuid,
-                    &$status,
-                    &$lastStatusCheck
-                ) {
-                    // Check deployment status every 5 seconds
-                    if ((time() - $lastStatusCheck) >= 5) {
+                        if ($response) {
+                            $status = $response['status'] ?? 'pending';
+                            $offset = $response['offset'] ?? $offset;
+                            $progression = $response['progression'] ?? 0;
+                            $step = $response['step'] ?? '';
 
-                        $lastStatusCheck = time();
+                            if ($step) {
+                                $logger->subLabel(sprintf(
+                                    '%s (%d%%)',
+                                    $step,
+                                    $progression
+                                ));
+                            }
 
-                        $status = $this->ozuClient
-                            ->fetchDeploymentStatus($deploymentUuid);
+                            if (!empty($response['logs'])) {
+                                foreach (explode("\n", trim($response['logs'])) as $line) {
+                                    if ($line) {
+                                        $logger->line($this->stripAnsi($line));
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Throwable $e) {
+                        $logger->warning('Error fetching deployment logs: '.$e->getMessage());
+                    }
 
-                        $deploymentStatus = fluent($status)->get('data.status', null);
-
-                        if (in_array(
-                            $deploymentStatus,
-                            ['success', 'failed'],
-                            true
-                        )) {
-                            return false;
+                    if ($status === 'pending') {
+                        if (config('app.env') !== 'testing') {
+                            sleep(1);
                         }
                     }
-
-                    try {
-                        $data = json_decode($chunk, true, flags: JSON_THROW_ON_ERROR);
-
-                        match ($data['type'] ?? null) {
-                            'ping' => null,
-                            'message' => !empty($data['message'])
-                                ? $stream->append(
-                                    $stream->white(
-                                        $this->stripAnsi($data['message'])
-                                    )
-                                 ."\n"
-                                )
-                                : null,
-
-                            default => $stream->append(
-                                $stream->white(
-                                    $this->stripAnsi($chunk)
-                                )
-                                ."\n"
-                            ),
-                        };
-
-                    } catch (Throwable $e) {
-                        $stream->append(
-                            $stream->bgRed(
-                                $stream->white(
-                                    $chunk."\n"
-                                )
-                            )
-                        );
-                    }
-
-                    return true;
                 }
+            },
+                limit: 20,
+                subLabel: 'Waiting for deployment logs to be available...',
             );
 
-            // Final status refresh
-            $status ??= $this->ozuClient
-                ->fetchDeploymentStatus($deploymentUuid);
+            $this->newLine(2);
 
-            $deploymentStatus = fluent($status)->get('data.status', null);
-
-            match ($deploymentStatus) {
-                'success' => info(sprintf('Deployment finished successfully!%s', $this->deploymentTargetUrl ? sprintf(' Visit %s to see the changes.', $this->deploymentTargetUrl) : '')),
+            match ($status) {
+                'success' => info('Deployment successful !'),
                 'failed' => error('Deployment failed.'),
-                default => error('Deployment ended with unknown status.'),
+                default => warning('Unable to fetch deployment status.')
             };
+
+            note(
+                sprintf('Access your deployment logs and information at %s',
+                    Uri::of(config('ozu-client.api_host'))
+                        ->withPath(
+                            sprintf('/dashboard/%s/s-show/config/s-show/websiteDeploymentTargets/%s/s-show/deployments/%s',
+                                (config('ozu-client.website_key') ?: $this->ozuClient->getWebsiteKey()) ?: 'root',
+                                $targetId,
+                                $deploymentUuid,
+                            )
+                        )
+                        ->toString()
+                )
+            );
+
         } catch (OzuClientException $e) {
             $this->fail($e->getMessage());
-
-            return;
         }
     }
 
