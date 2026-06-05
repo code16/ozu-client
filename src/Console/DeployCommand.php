@@ -209,7 +209,6 @@ class DeployCommand extends Command
                                 $deploymentUuid,
                             )
                         )
-                        ->toString()
                 )
             );
 
