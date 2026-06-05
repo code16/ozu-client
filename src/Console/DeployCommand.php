@@ -22,7 +22,7 @@ use function Laravel\Prompts\warning;
 class DeployCommand extends Command
 {
     protected $signature = 'ozu:deploy';
-    protected $description = 'Trigger a deployment.';
+    protected $description = 'Triggers a deployment.';
 
     protected ?string $deploymentTargetUrl = null;
     private Client $ozuClient;
