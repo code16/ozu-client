@@ -264,6 +264,7 @@ class Client
     protected function http(): PendingRequest
     {
         return Http::withToken($this->apiKey)
+            ->throw()
             ->baseUrl(
                 sprintf(
                     '%s/api/%s',
