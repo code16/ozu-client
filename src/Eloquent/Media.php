@@ -8,7 +8,6 @@ use Code16\OzuClient\Support\Thumbnails\ThumbnailResult;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Facades\Schema;
 use Number;
 
 class Media extends Model
@@ -18,6 +17,14 @@ class Media extends Model
     protected $guarded = [];
 
     protected $table = 'medias';
+
+    /**
+     * Column names per connection and table, cached for the whole process
+     * to avoid querying the schema on every attribute access.
+     *
+     * @var array<string, array<string, true>>
+     */
+    protected static array $columnCache = [];
 
     protected $casts = [
         'custom_properties' => 'array',
@@ -97,6 +104,24 @@ class Media extends Model
 
     protected function isRealAttribute(string $name): bool
     {
-        return Schema::hasColumn($this->getTable(), $name) ?? false;
+        $cacheKey = $this->getConnection()->getName().'.'.$this->getTable();
+
+        if (!isset(static::$columnCache[$cacheKey])) {
+            $columns = $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+
+            if (empty($columns)) {
+                // Table does not exist (yet): don't cache, so it's checked again later
+                return false;
+            }
+
+            static::$columnCache[$cacheKey] = array_fill_keys(array_map('strtolower', $columns), true);
+        }
+
+        return isset(static::$columnCache[$cacheKey][strtolower($name)]);
+    }
+
+    public static function flushColumnCache(): void
+    {
+        static::$columnCache = [];
     }
 }

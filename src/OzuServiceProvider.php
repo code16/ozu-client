@@ -14,9 +14,11 @@ use Code16\OzuClient\View\Components\Content;
 use Code16\OzuClient\View\Components\Embeds\File;
 use Code16\OzuClient\View\Components\Embeds\Image;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Http;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -67,6 +69,10 @@ class OzuServiceProvider extends PackageServiceProvider
     public function boot()
     {
         parent::boot();
+
+        if (method_exists(PendingRequest::class, 'dontTruncateExceptions')) {
+            Http::dontTruncateExceptions();
+        }
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'ozu');
 
